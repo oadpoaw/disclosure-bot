@@ -1,0 +1,38 @@
+{
+	"$schema": "http://json.schemastore.org/package",
+	"name": "ts-project-template",
+	"version": "0.1.0",
+	"private": true,
+	"main": "./dist/index.js",
+	"scripts": {
+		"start": "concurrently \"tsc -w\" \"nodemon ./dist/index.js\"",
+		"prebuild": "npm run clean",
+		"build": "tsc --build",
+		"clean": "rimraf dist",
+		"lint": "prettier --check \"src/**/*.{ts,tsx}\"",
+		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
+		"v:patch": "npm version patch -m \"chore(release): %s\"",
+		"v:minor": "npm version minor -m \"chore(release): %s\""
+	},
+	"devDependencies": {
+		"@sapphire/ts-config": "^3.3.2",
+		"@types/node": "^17.0.21",
+		"concurrently": "^7.0.0",
+		"nodemon": "^2.0.15",
+		"prettier": "^2.5.1",
+		"rimraf": "^3.0.2",
+		"typescript": "^4.6.2"
+	},
+	"engines": {
+		"node": ">=v16.0.0",
+		"npm": ">=7.0.0"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"trailingComma": "all",
+		"tabWidth": 4,
+		"semi": true,
+		"endOfLine": "auto",
+		"useTabs": true
+	}
+}
