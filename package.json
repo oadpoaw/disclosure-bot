@@ -8,7 +8,7 @@
 		"start": "ts-node . --transpileOnly --esm",
 		"update": "ts-node src/core/scripts/update.ts --transpileOnly --esm",
 		"env": "ts-node src/core/scripts/env.ts --transpileOnly --esm",
-		"build": "tsc --build --noEmit",
+		"build": "tsc --noEmit",
 		"lint": "prettier --check \"src/**/*.{ts,tsx}\"",
 		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
 		"v:patch": "npm version patch -m \"chore(release): %s\"",
