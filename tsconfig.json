@@ -6,8 +6,6 @@
 		"composite": false,
 		"declaration": false,
 		"declarationMap": false,
-		"rootDir": "src",
-		"outDir": "dist",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true
 	},
