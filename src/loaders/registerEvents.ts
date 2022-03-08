@@ -1,14 +1,19 @@
 import path from 'path';
-import fs from 'fs/promises';
 import DiscordEvent from '../structures/DiscordEvent';
 import type { Client } from 'discord.js';
+import { readdir } from '../utils/FileSystem';
 
-export default async function registerEvents(client: Client, filePath: string) {
-	const files = (await fs.readdir(filePath)).filter((e) => e.endsWith('.ts'));
+export default async function registerEvents(client: Client) {
+	const files = readdir('src', 'events').filter((e) => e.endsWith('.ts'));
 
 	for (const eventFile of files) {
 		try {
-			const eventPath = path.join(filePath, eventFile);
+			const eventPath = path.join(
+				process.cwd(),
+				'src',
+				'events',
+				eventFile,
+			);
 			const instance = (await import(eventPath))
 				.default as DiscordEvent<any>;
 

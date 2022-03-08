@@ -6,7 +6,6 @@ import { processor } from '@oadpoaw/utils';
 import registerCommands from './loaders/registerCommands';
 import registerEvents from './loaders/registerEvents';
 import registerPlugins from './loaders/registerPlugins';
-import path from 'path';
 import Updater from './Updater';
 import ms from 'ms';
 
@@ -20,8 +19,8 @@ processor(client.logger);
 
 	if (await Updater(client)) return;
 
-	await registerCommands(client, path.join(process.cwd(), 'src', 'commands'));
-	await registerEvents(client, path.join(process.cwd(), 'src', 'events'));
+	await registerCommands(client);
+	await registerEvents(client);
 	await registerPlugins(client);
 
 	client.login(client.config.bot.token).then(() => {

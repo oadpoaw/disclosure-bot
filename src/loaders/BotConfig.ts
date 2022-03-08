@@ -1,6 +1,5 @@
 import yaml from 'yaml';
-import fs from 'fs';
-import path from 'path';
+import { readFile } from '../utils/FileSystem';
 
 interface Config {
 	environment: 'development' | 'production';
@@ -17,7 +16,7 @@ let config: Config;
 
 export default function BotConfig(): Config {
 	if (config) return config;
-	const buffer = fs.readFileSync(path.join(process.cwd(), 'config.yml'));
+	const buffer = readFile('config.yml');
 	config = yaml.parse(buffer.toString());
 	return config;
 }
