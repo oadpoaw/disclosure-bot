@@ -7,7 +7,7 @@ export interface CommandConfig {
 	/**
 	 * The Category of the command.
 	 */
-	category: string;
+	category?: string;
 
 	/**
 	 * The Cooldown of the command.

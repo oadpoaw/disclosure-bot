@@ -1,9 +1,7 @@
 import Command from '@structures/Command';
 
-export const cmd = new Command(
-	(builder) => builder.setName('ping').setDescription('Replies with pong!'),
+export const command = new Command(
+	(builder) => builder.setName('ping').setDescription('Pong!'),
 	(interaction) => interaction.reply('Pong!'),
-	{
-		category: '',
-	},
+	{},
 );

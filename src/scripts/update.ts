@@ -20,10 +20,7 @@ const execute = promisify(exec);
 		throw new Error(`Everything is up-to-date.`);
 	}
 
-	await fs.unlink(path.join(process.cwd(), 'src', 'core')).catch(() => {});
-	await fs
-		.unlink(path.join(process.cwd(), 'src', 'index.ts'))
-		.catch(() => {});
+	await fs.unlink(path.join(process.cwd(), 'src')).catch(() => {});
 
 	const archive = path.join(process.cwd(), Config.filename);
 

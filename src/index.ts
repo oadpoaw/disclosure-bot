@@ -1,47 +1,32 @@
+const before = Date.now();
+
+import { clientOptions } from '../config';
 import Client from './Client';
 import { processor } from '@oadpoaw/utils';
-import { Intents } from 'discord.js';
-import BotConfig from './loaders/BotConfig';
 import registerCommands from './loaders/registerCommands';
 import registerEvents from './loaders/registerEvents';
+import registerPlugins from './loaders/registerPlugins';
 import path from 'path';
-import { checkUpdates, Update } from './Updater';
+import Updater from './Updater';
+import ms from 'ms';
 
-const client = new Client({
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES],
-});
+const client = new Client(clientOptions);
 
 processor(client.logger);
 
 (async function Start() {
-	const config = BotConfig();
+	console.log('Loading libraries...');
+	client.logger.info(`Starting...`);
 
-	client.logger.info('[updater] Checking for software updates...');
+	if (await Updater(client)) return;
 
-	const newVersion = await checkUpdates();
-	if (newVersion) {
-		client.logger.info(`[updater] Software Update found: ${newVersion}`);
-		if (config.autoUpdates) {
-			client.logger.info(
-				`[updater] Auto Updates is enabled. Updating to ${newVersion}...`,
-			);
-			client.logger.info(
-				`[updater] Please re-run the program when the software update is finished.`,
-			);
-			Update();
-		} else {
-			client.logger.info(
-				`[updater] Auto Updates is disabled. Not updating...`,
-			);
-		}
-	} else {
-		client.logger.info(`[updater] No software updates found.`);
-	}
-
-	await registerEvents(client, path.join(process.cwd(), 'src', 'events'));
 	await registerCommands(client, path.join(process.cwd(), 'src', 'commands'));
+	await registerEvents(client, path.join(process.cwd(), 'src', 'events'));
+	await registerPlugins(client);
 
-	client.login(config.token);
+	client.login(client.config.bot.token).then(() => {
+		client.logger.info(`Done! ${ms(Date.now() - before)}`);
+	});
 })().catch((err) => {
 	client.logger.error(err);
 	process.exit(1);
