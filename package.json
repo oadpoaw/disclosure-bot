@@ -6,8 +6,8 @@
 	"main": "./src/index.ts",
 	"scripts": {
 		"start": "ts-node .",
-		"update": "ts-node src/core/scripts/update.ts",
-		"env": "ts-node src/core/scripts/env.ts",
+		"update": "ts-node src/scripts/update.ts",
+		"env": "ts-node src/scripts/env.ts",
 		"build": "tsc --noEmit",
 		"lint": "prettier --check \"src/**/*.{ts,tsx}\"",
 		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
