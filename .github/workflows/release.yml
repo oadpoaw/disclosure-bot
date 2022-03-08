@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Create release archive
+        run: tar -cvzf disclosure-bot.tar.gz package.json package-lock.json src data LICENSE
+
+      - name: Create checksum.txt
+        run: |
+          SUM=`sha256sum disclosure-bot.tar.gz`
+          echo $SUM > checksum.txt
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            disclosure-bot.tar.gz
+            checksum.txt
