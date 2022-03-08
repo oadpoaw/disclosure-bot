@@ -14,7 +14,9 @@ export default async function registerEvents(client: Client, filePath: string) {
 					.default as DiscordEvent<any>;
 
 				if (instance instanceof DiscordEvent) {
-					client.logger.info(`[events] Loading '${instance.eventName}'`);
+					client.logger.info(
+						`[events] Loading '${instance.eventName}'`,
+					);
 					if (typeof instance.on === 'function') {
 						client.on(instance.eventName, async (...args: any) => {
 							if (typeof instance.on === 'function') {
