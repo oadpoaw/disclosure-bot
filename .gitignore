@@ -103,6 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-config.yml
-src/addons/*
-!src/addons/.gitkeep
+/config.yml
+plugins/*
+!plugins/.gitkeep

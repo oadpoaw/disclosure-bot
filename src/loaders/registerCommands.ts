@@ -15,7 +15,7 @@ export default async function registerCommands(
 				const instance = (await import(cmdPath)).cmd as Command;
 
 				if (instance instanceof Command) {
-					client.logger.info(`Loading command: ${instance.name}`);
+					client.logger.info(`[commands] Loading: '${instance.name}'`);
 					client.commands.set(instance.name, instance);
 				}
 

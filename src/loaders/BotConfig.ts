@@ -1,6 +1,6 @@
 import yaml from 'yaml';
-import fs from 'fs/promises';
-import path from 'path/posix';
+import fs from 'fs';
+import path from 'path';
 
 interface Config {
 	token: string;
@@ -11,10 +11,10 @@ interface Config {
 
 let config: Config;
 
-export default async function BotConfig(): Promise<Config> {
+export default function BotConfig(): Config {
 	if (config) return config;
 
-	const buffer = await fs.readFile(path.join(process.cwd(), 'config.yml'));
+	const buffer = fs.readFileSync(path.join(process.cwd(), 'config.yml'));
 
 	config = yaml.parse(buffer.toString());
 

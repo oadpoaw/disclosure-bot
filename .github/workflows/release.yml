@@ -19,7 +19,7 @@ jobs:
       - run: npm run build
 
       - name: Create release archive
-        run: tar -cvzf disclosure-bot.tar.gz package.json package-lock.json src data LICENSE tsconfig.json
+        run: tar -cvzf disclosure-bot.tar.gz package.json package-lock.json src data LICENSE tsconfig.json plugins
 
       - name: Create checksum.txt
         run: |

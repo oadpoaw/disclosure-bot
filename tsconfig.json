@@ -8,9 +8,24 @@
 		"declarationMap": false,
 		"skipLibCheck": true,
 		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "node",
+		"baseUrl": "src",
+		"paths": {
+			"@structures/*": [
+				"structures/*"
+			]
+		}
 	},
 	"include": [
-		"src"
-	]
+		"src",
+		"plugins"
+	],
+	"ts-node": {
+		"transpileOnly": true,
+		"require": [
+			"tsconfig-paths/register"
+		]
+	}
 }

@@ -1,11 +1,11 @@
-import Client from './core/Client';
+import Client from './Client';
 import { processor } from '@oadpoaw/utils';
 import { Intents } from 'discord.js';
-import BotConfig from './core/loaders/BotConfig';
-import registerCommands from './core/loaders/registerCommands';
-import registerEvents from './core/loaders/registerEvents';
+import BotConfig from './loaders/BotConfig';
+import registerCommands from './loaders/registerCommands';
+import registerEvents from './loaders/registerEvents';
 import path from 'path';
-import { checkUpdates, Update } from './core/Updater';
+import { checkUpdates, Update } from './Updater';
 
 const client = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES],
@@ -14,19 +14,19 @@ const client = new Client({
 processor(client.logger);
 
 (async function Start() {
-	const config = await BotConfig();
+	const config = BotConfig();
 
-	client.logger.info('[updater] Checking for new software updates...');
+	client.logger.info('[updater] Checking for software updates...');
 
 	const newVersion = await checkUpdates();
 	if (newVersion) {
-		client.logger.info(`[updater] Update found: ${newVersion}`);
+		client.logger.info(`[updater] Software Update found: ${newVersion}`);
 		if (config.autoUpdates) {
 			client.logger.info(
 				`[updater] Auto Updates is enabled. Updating to ${newVersion}...`,
 			);
 			client.logger.info(
-				`[updater] Please re-run the program when the update is finished.`,
+				`[updater] Please re-run the program when the software update is finished.`,
 			);
 			Update();
 		} else {
@@ -35,18 +35,11 @@ processor(client.logger);
 			);
 		}
 	} else {
-		client.logger.info(`[updater] No new software updates found.`);
+		client.logger.info(`[updater] No software updates found.`);
 	}
 
-	await registerEvents(
-		client,
-		path.join(process.cwd(), 'src', 'core', 'events'),
-	);
-
-	await registerCommands(
-		client,
-		path.join(process.cwd(), 'src', 'core', 'commands'),
-	);
+	await registerEvents(client, path.join(process.cwd(), 'src', 'events'));
+	await registerCommands(client, path.join(process.cwd(), 'src', 'commands'));
 
 	client.login(config.token);
 })().catch((err) => {

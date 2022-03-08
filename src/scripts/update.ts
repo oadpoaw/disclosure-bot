@@ -1,4 +1,4 @@
-import { version } from '../../../package.json';
+import { version } from '../../package.json';
 import Config from '../Config.json';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { version } from '../../package.json';
+import { version } from '../package.json';
 import Config from './Config.json';
 
 export async function checkUpdates() {
