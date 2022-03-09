@@ -10,7 +10,7 @@ Simple Highly Configurable and Customizable Discord Bot with no bullsht involved
   - It's toggleable 
 - **Highly customizable and configurable**
   - **Basic but pretty advanced plugin system**
-    - inspired by minecraft server plugin system
+    - Inspired by minecraft server plugin system
   - No built-in commands
     - Build your own commands using the plugin system
     - or you can use our pre-built plugins for your bot
