@@ -30,8 +30,6 @@ Simple Highly Configurable and Customizable Discord Bot with no bullsht involved
 
 - For installation guide [click this](docs/Getting%20Started.md)
 
-## Code of Conduct
-
 ## Contributing
 
 - See [Code of conduct](docs/CODE_OF_CONDUCT.md) first before [contributing](docs/CONTRIBUTING.md)
