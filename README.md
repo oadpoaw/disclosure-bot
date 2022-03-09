@@ -1,4 +1,4 @@
-# Welcome to disclosure-bot
+# Welcome to disclosure-bot [WIP]
 Simple Highly Configurable and Customizable Discord Bot with no bullsht involved. And it's on TypeScript
 
 ## Core Features
@@ -33,7 +33,6 @@ Simple Highly Configurable and Customizable Discord Bot with no bullsht involved
 ## Code of Conduct
 
 ## Contributing
-
 
 - See [Code of conduct](docs/CODE_OF_CONDUCT.md) first before [contributing](docs/CONTRIBUTING.md)
 
