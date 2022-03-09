@@ -70,7 +70,7 @@ export interface PluginMetaData {
 	 * ```js
 	 * dependencies: ['is-plain-object', 'lodash', 'fakePackageLol@1.2.3']
 	 * ```
-	 * 
+	 *
 	 * Note: This won't be save in package.json
 	 */
 	npmDependencies: string[];
