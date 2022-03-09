@@ -3,7 +3,8 @@ import { readFile } from '../utils/FileSystem';
 
 interface Config {
 	environment: 'development' | 'production';
-	autoUpdates: false;
+	autoUpdates: boolean;
+	database: string;
 	bot: {
 		token: string;
 		guild: string;
@@ -16,7 +17,7 @@ let config: Config;
 
 export default function BotConfig(): Config {
 	if (config) return config;
-	const buffer = readFile('config.yml');
+	const buffer = readFile(['config.yml']);
 	config = yaml.parse(buffer.toString());
 	return config;
 }
