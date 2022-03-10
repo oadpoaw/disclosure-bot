@@ -9,7 +9,7 @@
 		"predev": "npm run clean",
 		"dev": "concurrent \"tsc -w\" \"nodemon .\"",
 		"postdev": "npm run clean",
-		"update": "node dist/src/scripts/update.js",
+		"upgrade": "node dist/src/scripts/update.js",
 		"env": "node dist/src/scripts/env.js",
 		"prebuild": "npm run clean",
 		"build": "tsc --build",
