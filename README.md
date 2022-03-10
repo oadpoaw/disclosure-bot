@@ -5,15 +5,17 @@ Simple Highly Configurable and Customizable Discord Bot with no bullsht involved
 - Not bloated 😭
 - Easy to install and use
 - It's written in TypeScript for the best developer experience
-- Supports Auto Updates out of the box 
-  - This updates the bot's internal code and dependencies
-  - It's toggleable 
 - **Highly customizable and configurable**
   - **Basic but pretty advanced plugin system**
     - Inspired by minecraft server plugin system
-  - No built-in commands
+  - **No built-in commands**
     - Build your own commands using the plugin system
-    - or you can use our pre-built plugins for your bot
+    - or you can use our Official Plugins for commands in your bot in [here](plugins)
+  - Built-in slash command cooldown system
+- Supports Auto Updates out of the box 
+  - This updates the bot's internal code and dependencies
+  - It's toggleable.
+  - You don't have to redownload the bot everytime by just updating
 - Uses discord.js internally
   - Supports sharding
 - Fancy logging system

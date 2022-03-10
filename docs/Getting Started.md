@@ -24,8 +24,7 @@ Now that all of the files have been downloaded we need to configure some core as
 ```sh
 # First we need to install the project's dependencies
 npm install --production
-# Only run the command below if you are installing this for
-# the first time and do not have any data in the database.
+# Only run the command below if you are installing this for the first time.
 # Simply run the command below and follow any prompts.
 npm run env
 ```
@@ -42,4 +41,4 @@ Just run this and it will update everything including it's dependencies and it's
 npm run update
 ```
 
-> Just like that! and just restart your bot to apply the changes!
+> Just like that! Restart your bot to apply the changes!
