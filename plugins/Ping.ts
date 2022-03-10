@@ -1,4 +1,4 @@
-import Plugin, { PluginMetaData } from '@structures/Plugin';
+import { Plugin, PluginMetaData } from '@structures/Plugin';
 
 export default class Ping extends Plugin {
 	public readonly metadata: PluginMetaData = {
@@ -12,7 +12,7 @@ export default class Ping extends Plugin {
 	};
 
 	public getDefaultConfig() {
-		return {};
+		return '';
 	}
 
 	public onLoad() {

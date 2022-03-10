@@ -1,7 +1,7 @@
 import type Command from './classes/Command';
 import Logger from './utils/Logger';
 import BotConfig from './loaders/BotConfig';
-import type Plugin from './structures/Plugin';
+import type { Plugin } from './structures/Plugin';
 import { Client as DiscordClient, Collection, ClientOptions } from 'discord.js';
 import type Keyv from 'keyv';
 

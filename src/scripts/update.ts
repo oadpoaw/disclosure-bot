@@ -4,9 +4,9 @@ import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import path from 'path';
 import sha256File from 'sha256-file';
-import fetch from 'node-fetch';
 import { exec } from 'child_process';
 import Logger from '../utils/Logger';
+import fetch from '../utils/node-fetch';
 
 const execute = promisify(exec);
 
@@ -20,7 +20,7 @@ const execute = promisify(exec);
 		throw new Error(`Everything is up-to-date.`);
 	}
 
-	await fs.unlink(path.join(process.cwd(), 'src')).catch(() => {});
+	await fs.unlink(path.join(process.cwd(), 'dist')).catch(() => {});
 
 	const archive = path.join(process.cwd(), Config.filename);
 

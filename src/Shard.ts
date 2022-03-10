@@ -1,12 +1,11 @@
 import { ShardingManager } from 'discord.js';
 import Logger from './utils/Logger';
-import { shardOptions } from '../config';
-import BotConfig from 'loaders/BotConfig';
+import { shardOptions } from './config';
+import BotConfig from './loaders/BotConfig';
 
-const manager = new ShardingManager('./src/Bot.ts', {
+const manager = new ShardingManager('./dist/src/Bot.js', {
 	...shardOptions,
 	token: BotConfig().bot.token,
-	execArgv: ['node_modules/ts-node/dist/bin.js', '--transpileOnly'],
 });
 
 manager.on('shardCreate', (shard) => {

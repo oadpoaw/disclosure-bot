@@ -1,28 +1,19 @@
 import path from 'path';
-import Plugin, { PluginMetaData } from '@structures/Plugin';
+import { Plugin } from '@structures/Plugin';
 import type { Client } from 'discord.js';
 import { readdir } from '../utils/FileSystem';
 
-class ExtendedPlugin extends Plugin {
-	get metadata(): PluginMetaData {
-		throw new Error('Method not implemented.');
-	}
-	getDefaultConfig() {
-		return {};
-	}
-}
-
 export default async function PluginLoader(client: Client) {
-	const files = readdir(['plugins']).filter((e) => e.endsWith('.ts'));
+	const files = readdir(['plugins']).filter((e) => e.endsWith('.js'));
 
 	for (const file of files) {
 		const pluginPath = path.join(process.cwd(), 'plugins', file);
 
 		try {
-			const p = (await import(pluginPath))
-				.default as typeof ExtendedPlugin;
+			const p = (await import(pluginPath)).default as typeof Plugin;
 
 			if (p.prototype instanceof Plugin) {
+				// @ts-ignore
 				const instance = new p(client);
 
 				client.plugins.set(instance.metadata.name, instance);

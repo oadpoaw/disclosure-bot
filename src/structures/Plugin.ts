@@ -32,11 +32,12 @@ export interface PluginMetaData {
 	 */
 	version: string;
 	/**
-	 * Author of the plugin
+	 * Author(s) of the plugin
 	 *
 	 * Ex. `undefine <oadpoaw@gmail.com>`
+	 *
 	 */
-	author: string;
+	author: string | string[];
 	/**
 	 * Extra plugin dependencies for this plugin.
 	 * If provided, then this plugin will not be loaded if the specified plugin dependencies is not installed.
@@ -77,7 +78,7 @@ export interface PluginMetaData {
 	priority?: number;
 }
 
-export default interface PluginInterface {
+export interface Plugin {
 	/**
 	 * Called when this plugin is loaded
 	 */
@@ -89,8 +90,8 @@ export default interface PluginInterface {
 	onReload(): void | Promise<void>;
 }
 
-export default abstract class Plugin implements Partial<PluginInterface> {
-	private _cfg: Record<any, any> | null;
+export abstract class Plugin implements Partial<Plugin> {
+	private _cfg: any | null;
 	private _commands: Command[];
 	private _events: DiscordEvent<any>[];
 
@@ -113,7 +114,7 @@ export default abstract class Plugin implements Partial<PluginInterface> {
 	/**
 	 * Get the plugin's default configuration for plugins/[plugin-name]/config.yml
 	 */
-	abstract getDefaultConfig(): Record<any, any>;
+	abstract getDefaultConfig(): any;
 
 	/**
 	 * Add a command that is assigned to this plugin
@@ -156,7 +157,7 @@ export default abstract class Plugin implements Partial<PluginInterface> {
 	 * Set config for plugins/[plugin-name]/config.yml
 	 * @param cfg
 	 */
-	public setConfig(cfg: Record<any, any>) {
+	public setConfig(cfg: any) {
 		const str = yaml.stringify(cfg);
 
 		writeFile(['plugins', this.metadata.name, 'config.yml'], str);
@@ -170,7 +171,7 @@ export default abstract class Plugin implements Partial<PluginInterface> {
 	 * @param force Forcefully get the config from plugins/[plugin-name]/config.yml
 	 * @returns
 	 */
-	public getConfig(force = false): Record<any, any> {
+	public getConfig(force = false): any {
 		if (this._cfg && !force) return this._cfg;
 
 		const filePath = ['plugins', this.metadata.name, 'config.yml'];

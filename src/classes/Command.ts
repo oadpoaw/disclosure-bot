@@ -75,8 +75,4 @@ export default class Command {
 	public get ownerOnly() {
 		return this.config.ownerOnly || false;
 	}
-
-	public toJSON() {
-		return this.command.toJSON();
-	}
 }

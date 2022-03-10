@@ -1,5 +1,6 @@
+import 'module-alias/register';
 import { processor } from '@oadpoaw/utils';
-import BotConfig from 'loaders/BotConfig';
+import BotConfig from './loaders/BotConfig';
 import Updater from './Updater';
 import Logger from './utils/Logger';
 

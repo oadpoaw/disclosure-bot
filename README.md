@@ -1,5 +1,5 @@
 # Welcome to disclosure-bot [WIP]
-Simple Highly Configurable and Customizable Discord Bot with no bullsht involved. And it's on TypeScript
+Simple Highly Configurable and Customizable Discord Bot with no bullsht involved.
 
 ## Core Features
 - Not bloated 😭

@@ -3,14 +3,16 @@
 	"extends": "@sapphire/ts-config",
 	"compilerOptions": {
 		"target": "ESNext",
+		"moduleResolution": "node",
+		"outDir": "dist",
 		"composite": false,
-		"declaration": false,
+		"declaration": true,
 		"declarationMap": false,
+		"allowJs": true,
 		"skipLibCheck": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"resolveJsonModule": true,
-		"moduleResolution": "node",
 		"baseUrl": "src",
 		"paths": {
 			"@structures/*": [
@@ -21,11 +23,5 @@
 	"include": [
 		"src",
 		"plugins"
-	],
-	"ts-node": {
-		"transpileOnly": true,
-		"require": [
-			"tsconfig-paths/register"
-		]
-	}
+	]
 }

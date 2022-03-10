@@ -1,7 +1,7 @@
 import { createLogger } from '@oadpoaw/utils';
-import BotConfig from 'loaders/BotConfig';
 import path from 'path';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import BotConfig from '../loaders/BotConfig';
 
 const config = BotConfig();
 

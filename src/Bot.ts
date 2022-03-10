@@ -1,6 +1,6 @@
 const before = Date.now();
-
-import { clientOptions } from '../config';
+import 'module-alias/register';
+import { clientOptions } from './config';
 import { Client } from './Internals';
 import PluginLoader from './loaders/PluginLoader';
 import ms from 'ms';
@@ -124,7 +124,6 @@ async function db() {
 	switch (url.protocol) {
 		case 'redis:':
 		case 'rediss:':
-		case 'redis-socket:':
 			pkg = '@keyv/redis';
 			break;
 		case 'mongodb:':
@@ -149,7 +148,7 @@ async function db() {
 					str.endsWith('.sqlite3') ||
 					str.endsWith('.db'))
 					? str
-					: 'sqlite://data/data.sqlite';
+					: 'sqlite://data/data.db';
 			pkg = '@keyv/sqlite';
 		}
 	}

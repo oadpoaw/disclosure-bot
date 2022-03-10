@@ -23,7 +23,7 @@ Now that all of the files have been downloaded we need to configure some core as
 
 ```sh
 # First we need to install the project's dependencies
-npm install
+npm install --production
 # Only run the command below if you are installing this for
 # the first time and do not have any data in the database.
 # Simply run the command below and follow any prompts.

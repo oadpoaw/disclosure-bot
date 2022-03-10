@@ -1,8 +1,8 @@
-import fetch from 'node-fetch';
+import fetch from './utils/node-fetch';
 import Logger from './utils/Logger';
 import { version } from '../package.json';
 import Config from './Config.json';
-import BotConfig from 'loaders/BotConfig';
+import BotConfig from './loaders/BotConfig';
 
 async function checkUpdates() {
 	const response = await fetch(
