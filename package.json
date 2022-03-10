@@ -8,6 +8,7 @@
 		"start": "node .",
 		"predev": "npm run clean",
 		"dev": "concurrent \"tsc -w\" \"nodemon .\"",
+		"postdev": "npm run clean",
 		"update": "node dist/src/scripts/update.js",
 		"env": "node dist/src/scripts/env.js",
 		"prebuild": "npm run clean",
@@ -20,7 +21,8 @@
 		"build:plugins": "tsc --project plugin.tsconfig.json",
 		"postbuild:plugins": "node scripts/postbuild-plugins.js",
 		"v:patch": "npm version patch -m \"chore(release): %s\"",
-		"v:minor": "npm version minor -m \"chore(release): %s\""
+		"v:minor": "npm version minor -m \"chore(release): %s\"",
+		"v:major": "npm version major -m \"chore(release): %s\""
 	},
 	"dependencies": {
 		"@discordjs/builders": "^0.12.0",
