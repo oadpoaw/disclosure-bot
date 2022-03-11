@@ -1,10 +1,10 @@
 import { ShardingManager } from 'discord.js';
 import Logger from './utils/Logger';
-import { shardOptions } from './config';
+import Config from './config';
 import BotConfig from './loaders/BotConfig';
 
 const manager = new ShardingManager('./dist/src/Bot.js', {
-	...shardOptions,
+	...Config().shardOptions,
 	token: BotConfig().bot.token,
 });
 

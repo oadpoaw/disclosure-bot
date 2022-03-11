@@ -1,4 +1,4 @@
-import { Plugin, PluginMetaData } from '@structures/Plugin';
+import Plugin, { PluginMetaData } from '@disclosure/Plugin';
 
 export default class Ping extends Plugin {
 	public readonly metadata: PluginMetaData = {
@@ -6,17 +6,10 @@ export default class Ping extends Plugin {
 		description: 'Simple Plugin for Ping command',
 		version: '1.0.0',
 		author: 'oadpoaw',
-		dependencies: [],
-		optionalDependencies: [],
-		npmDependencies: [],
 	};
 
-	public getDefaultConfig() {
-		return '';
-	}
-
 	public onLoad() {
-		this.listen('messageCreate', (_, message) => {
+		this.addEvent('messageCreate', (_, message) => {
 			if (!message.author.bot && message.content.startsWith('?ping'))
 				message.channel.send('Pong!');
 		});
@@ -24,7 +17,6 @@ export default class Ping extends Plugin {
 		this.addCommand(
 			(builder) => builder.setName('ping').setDescription('Pong!'),
 			(interaction) => interaction.reply('Pong!'),
-			{},
 		);
 	}
 }

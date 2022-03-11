@@ -1,10 +1,11 @@
-import { ClientOptions, Intents, ShardingManagerOptions } from 'discord.js';
+import type { ClientOptions, ShardingManagerOptions } from 'discord.js';
+import path from 'path';
 
-export const clientOptions: ClientOptions = {
-	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+type Config = {
+	clientOptions: ClientOptions;
+	shardOptions: ShardingManagerOptions;
 };
 
-export const shardOptions: ShardingManagerOptions = {
-	totalShards: 'auto',
-	respawn: true,
-};
+export default function config(): Config {
+	return require(path.join(process.cwd(), 'config.js'));
+}

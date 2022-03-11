@@ -15,7 +15,7 @@
 		"resolveJsonModule": true,
 		"baseUrl": "src",
 		"paths": {
-			"@structures/*": [
+			"@disclosure/*": [
 				"structures/*"
 			]
 		}

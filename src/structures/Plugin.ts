@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
-import type { Client, ClientEvents } from 'discord.js';
+import type { ClientEvents, Interaction } from 'discord.js';
+import type { Client } from '../Internals';
 import { promisify } from 'util';
 import {
 	existsDirectory,
@@ -7,95 +8,130 @@ import {
 	mkdir,
 	readFile,
 	writeFile,
-} from '../utils/FileSystem';
+} from './FileSystem';
 import yaml from 'yaml';
-import Command from '../classes/Command';
+import Command, { BuilderFunction, ExecuteFunction } from '../classes/Command';
 import DiscordEvent, { Listener } from '../classes/DiscordEvent';
+import DisclosureError from '../classes/DisclosureError';
+import { Inhibitor, InhibitorFunction } from '../Dispatcher';
 
 const execute = promisify(exec);
 
 export interface PluginMetaData {
 	/**
-	 * Name of the plugin
+	 * - This attribute is the name of your plugin.
+	 * - Alphanumeric characters and underscores (a-z,A-Z,0-9, _)
+	 * - Used to determine the name of the plugin's data folder.
+	 * - It is good practice to name your `.js` the same as this (eg: MyPlugin.js)
 	 *
-	 * Should be alpnanumeric and it should not contain any spaces or special characters
 	 */
 	name: string;
 	/**
-	 * Description of the plugin
+	 * - The human friendly description of the plugin.
+	 * - The description can have multiple lines.
 	 */
 	description: string;
 	/**
-	 * Version of the plugin
+	 * - The version of the plugin.
+	 * - Use [Semantic Versioning](https://semver.org/).
 	 *
-	 * Ex. `1.2.3`
+	 * which is written as `MAJOR.MINOR.PATCH (eg: 0.6.9 or 4.2.0)`
+	 *
+	 * Example
+	 * ```js
+	 * version: '1.3.5'
+	 * ```
 	 */
 	version: string;
 	/**
-	 * Author(s) of the plugin
+	 * - Author(s) of the plugin
+	 * - Uniquely identifies who developed this plugin.
+	 * - Used in some server error messages to provide helpful feedback on who to contact when an error occurs.
 	 *
-	 * Ex. `undefine <oadpoaw@gmail.com>`
-	 *
+	 * Examples:
+	 * ```js
+	 * author: 'oadpoaw'
+	 * ```
+	 * ```js
+	 * author: ['oadpoaw', 'ZeroSync']
+	 * ```
+	 * With emails:
+	 * ```js
+	 * author: 'oadpoaw <oadpoaw@gmail.com>'
+	 * ```
+	 * ```js
+	 * author: ['oadpoaw <oadpoaw@gmail.com>']
+	 * ```
 	 */
 	author: string | string[];
 	/**
-	 * Extra plugin dependencies for this plugin.
-	 * If provided, then this plugin will not be loaded if the specified plugin dependencies is not installed.
+	 * - A list of plugins that your plugin requires to load.
+	 * - If any plugin listed here is not found your plugin will fail to load.
 	 *
 	 * This should be a valid plugin name and it's CaSe-SeNsItIvE
 	 *
-	 * Ex.
+	 * Example:
 	 * ```js
-	 * pluginDependencies: ['Economy', 'TicketP@1.3.4']
+	 * dependencies: ['Economy', 'Tickets']
+	 * ```
+	 */
+	dependencies?: string[];
+	/**
+	 * - A list of plugins that are required for your plugin to have full functionality
+	 * - Your plugin will load after any plugins listed here.
+	 */
+	optionalDependencies?: string[];
+	/**
+	 * - A list of plugins that should be loaded **after** your plugin.
+	 * - Treated as if the listed plugins are optional dependencies.
+	 * - Circular optional dependencies are loaded arbitrarily.
+	 */
+	loadBefore?: string[];
+	/**
+	 * - A list of packages that your plugin needs which can be loaded from NPM.
+	 *
+	 * Example:
+	 * ```js
+	 * dependencies: ['is-plain-object', 'lodash']
 	 * ```
 	 *
-	 * You can include the plugin's version by appending `@` then the plugin's version
+	 * Note: The dependencies listed won't be save to package.json
 	 */
-	dependencies: string[];
-	/**
-	 * Same as property 'dependencies' but optional. Kinda like plug n play plugins
-	 */
-	optionalDependencies: string[];
-	/**
-	 * Priority of the plugin. The higher the value the higher the priority when loading this plugin.
-	 * Ex.
-	 * If Plugin A's priority is greater than Plugin B's priority
-	 * then Plugin A will be the first plugin to be loaded and initialized.
-	 * @default 1
-	 *
-	 */
-	/**
-	 * Extra NPM dependencies for this plugin.
-	 *
-	 * Ex.
-	 * ```js
-	 * dependencies: ['is-plain-object', 'lodash', 'fakePackageLol@1.2.3']
-	 * ```
-	 *
-	 * Note: This won't be save in package.json
-	 */
-	npmDependencies: string[];
-	priority?: number;
+	npmDependencies?: string[];
 }
 
-export interface Plugin {
+export default interface Plugin {
 	/**
-	 * Called when this plugin is loaded
+	 * - Called when this plugin is loaded
 	 */
 	onLoad(): void | Promise<void>;
 
 	/**
-	 * Called when this plugin is reloaded
+	 * - Called when this plugin is reloaded
 	 */
 	onReload(): void | Promise<void>;
+
+	/**
+	 * - Called when some of this plugin's command is done executing.
+	 */
+	onCommand(interaction: Interaction, command: Command): void | Promise<void>;
+
+	/**
+	 * - Called when some of this plugin's command throws an error.
+	 */
+	onCommandError(
+		interaction: Interaction,
+		command: Command,
+		error: any,
+	): void | Promise<void>;
 }
 
-export abstract class Plugin implements Partial<Plugin> {
+export default abstract class Plugin implements Partial<Plugin> {
 	private _cfg: any | null;
 	private _commands: Command[];
 	private _events: DiscordEvent<any>[];
-
-	public static Command = Command;
+	private _inhibitors: Inhibitor[];
+	private _initialized: boolean;
 
 	protected readonly client: Client;
 
@@ -104,6 +140,8 @@ export abstract class Plugin implements Partial<Plugin> {
 		this._cfg = null;
 		this._commands = [];
 		this._events = [];
+		this._inhibitors = [];
+		this._initialized = false;
 	}
 
 	/**
@@ -113,36 +151,81 @@ export abstract class Plugin implements Partial<Plugin> {
 
 	/**
 	 * Get the plugin's default configuration for plugins/[plugin-name]/config.yml
+	 * - Can be override
 	 */
-	abstract getDefaultConfig(): any;
-
-	/**
-	 * Add a command that is assigned to this plugin
-	 * @param args
-	 */
-	protected addCommand(...args: ConstructorParameters<typeof Command>) {
-		this._commands.push(new Command(...args));
+	public getDefaultConfig(): any {
+		return '';
 	}
 
 	/**
-	 * Add an event listener that is assigned to this plugin
+	 * - Create and Add a command that is with the plugin.
+	 * @param args
 	 */
-	protected listen<K extends keyof ClientEvents>(event: K, fn: Listener<K>) {
+	protected addCommand(builder: BuilderFunction, exec: ExecuteFunction) {
+		this._commands.push(new Command(this, builder, exec));
+	}
+
+	/**
+	 * - Add an event listener that is with the plugin
+	 */
+	protected addEvent<K extends keyof ClientEvents>(
+		event: K,
+		fn: Listener<K>,
+	) {
 		this._events.push(new DiscordEvent(event, fn));
 	}
 
+	/**
+	 * - Create and Add an inhibitor function that runs first before executing a slash command.
+	 * - Return `true` to continue executing the command.
+	 * - Return `false` to discontinue executing the command.
+	 */
+	protected addInhibitor(inhibitor: InhibitorFunction) {
+		const wrapped: InhibitorFunction = (interaction, command) => {
+			try {
+				return inhibitor(interaction, command);
+			} catch (err) {
+				this.client.logger
+					.error(
+						`[plugin:${this.metadata.name}] Error occured. Contact ${this.metadata.author} for help - Ignoring inhibitor`,
+					)
+					.error(err);
+				return false;
+			}
+		};
+		this._inhibitors.push(new Inhibitor(this.client, this, wrapped));
+	}
+
+	/**
+	 * - An array of commands with the plugin
+	 */
 	public get commands() {
 		return this._commands;
 	}
 
+	/**
+	 * - An array of events with the plugin
+	 */
 	public get events() {
 		return this._events;
 	}
 
 	/**
-	 * Initialize the plugin
+	 * - An array of inhibitor with the plugin
+	 */
+	public get inhibitors() {
+		return this._inhibitors;
+	}
+
+	/**
+	 * - Initialize the plugin
 	 */
 	public async init() {
+		if (this._initialized)
+			throw new DisclosureError(
+				`Plugin '${this.metadata.name}' is already initialized.`,
+			);
+
 		const pluginFolder = ['plugins', this.metadata.name];
 
 		if (!existsDirectory(pluginFolder)) mkdir(pluginFolder);
@@ -151,10 +234,11 @@ export abstract class Plugin implements Partial<Plugin> {
 
 		await this.install();
 		if (typeof this.onLoad === 'function') await this.onLoad();
+		this._initialized = true;
 	}
 
 	/**
-	 * Set config for plugins/[plugin-name]/config.yml
+	 * S- et config for plugins/[plugin-name]/config.yml
 	 * @param cfg
 	 */
 	public setConfig(cfg: any) {
@@ -167,8 +251,8 @@ export abstract class Plugin implements Partial<Plugin> {
 	}
 
 	/**
-	 * Get the config for plugins/[plugin-name]/config.yml
-	 * @param force Forcefully get the config from plugins/[plugin-name]/config.yml
+	 * - Get the config for plugins/[plugin-name]/config.yml
+	 * @param force Forcefully get the config from plugins/[plugin-name]/config.yml and ignoring cache.
 	 * @returns
 	 */
 	public getConfig(force = false): any {
@@ -187,10 +271,13 @@ export abstract class Plugin implements Partial<Plugin> {
 	}
 
 	/**
-	 * Install the plugin's dependencies
+	 * I- nstall the plugin's dependencies
 	 */
 	public async install() {
-		if (this.metadata.npmDependencies.length) {
+		if (
+			this.metadata.npmDependencies &&
+			this.metadata.npmDependencies.length
+		) {
 			const { stderr } = await execute(
 				`npm install --no-save ${this.metadata.npmDependencies.join(
 					' ',
@@ -202,7 +289,7 @@ export abstract class Plugin implements Partial<Plugin> {
 	}
 
 	/**
-	 * Reload plugin's configuration from it's config.yml
+	 * - Reload plugin's configuration from it's config.yml
 	 * - includes reinstalling dependencies listed in the config.yml
 	 */
 	public async reload() {

@@ -1,10 +1,9 @@
 import yaml from 'yaml';
-import { readFile } from '../utils/FileSystem';
+import { readFile } from '../structures/FileSystem';
 
 interface Config {
 	environment: 'development' | 'production';
 	autoUpdates: boolean;
-	database: string;
 	bot: {
 		token: string;
 		guild: string;

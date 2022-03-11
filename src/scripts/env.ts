@@ -1,6 +1,6 @@
 import { prompt } from 'inquirer';
 import type BotConfig from '../loaders/BotConfig';
-import { writeFile, existsFile } from '../utils/FileSystem';
+import { writeFile, existsFile } from '../structures/FileSystem';
 import yaml from 'yaml';
 
 type BotConfiguration = ReturnType<typeof BotConfig>;
@@ -33,7 +33,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 	const cfg: BotConfiguration = {
 		environment: 'development',
 		autoUpdates: true,
-		database: 'sqlite://data/data.sqlite',
 		bot: {
 			token: '',
 			guild: '',
@@ -59,12 +58,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 			},
 			{
 				type: 'password',
-				message: `Enter Database URI`,
-				name: 'database',
-				default: cfg.database,
-			},
-			{
-				type: 'password',
 				message: `Enter Bot Token`,
 				name: 'token',
 				default: cfg.bot.token,
@@ -87,7 +80,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 		const cf: BotConfiguration = {
 			environment: config.environment,
 			autoUpdates: config.autoUpdates,
-			database: config.database,
 			bot: {
 				token: config.token,
 				guild: config.guild,
