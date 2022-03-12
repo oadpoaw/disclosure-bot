@@ -3,7 +3,7 @@ import Logger from './utils/Logger';
 import Config from './functions/config';
 import BotConfig from './loaders/BotConfig';
 
-const manager = new ShardingManager('./dist/src/Bot.js', {
+const manager = new ShardingManager('./dist/src/Disclosure.js', {
 	...Config().shardOptions,
 	token: BotConfig().bot.token,
 });
