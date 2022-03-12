@@ -1,6 +1,8 @@
-# Welcome to disclosure-bot [WIP]
+# Welcome to disclosure-bot
 
-## Documentation [WIP]
+## Documentation
+
+- See https://disclosure.gitbook.io
 
 ## Contributing
 
