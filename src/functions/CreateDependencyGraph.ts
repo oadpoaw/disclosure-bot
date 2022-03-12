@@ -1,5 +1,5 @@
 import type { Client } from 'discord.js';
-import { Graph } from '../classes/Graph';
+import { Graph } from '../classes/util/Graph';
 
 export function CreateDependencyGraph(client: Client<boolean>) {
 	const DependencyGraph = new Graph();

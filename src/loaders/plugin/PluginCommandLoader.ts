@@ -1,14 +1,16 @@
 import type Plugin from '@disclosure/Plugin';
 import type { Client } from 'discord.js';
-import type { Graph } from '../classes/Graph';
+import type { Graph } from '../../classes/util/Graph';
 
 export function PluginCommandLoader(
 	DependencyGraph: Graph,
 	client: Client<boolean>,
 ) {
-	for (const plugin of DependencyGraph.topologicalSort().map((name) =>
-		client.plugins.get(name),
-	) as Plugin[]) {
+	const plugins = DependencyGraph.topologicalSort()
+		.map((name) => client.plugins.get(name))
+		.filter((plugin) => plugin) as Plugin[];
+
+	for (const plugin of plugins) {
 		for (const instance of plugin.commands) {
 			const ex = client.commands.get(instance.name);
 

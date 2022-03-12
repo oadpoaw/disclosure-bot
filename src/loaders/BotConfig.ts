@@ -1,5 +1,5 @@
 import yaml from 'yaml';
-import { readFile } from '../structures/FileSystem';
+import { readFile } from '../functions/FileSystem';
 
 interface Config {
 	environment: 'development' | 'production';

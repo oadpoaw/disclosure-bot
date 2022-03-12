@@ -1,8 +1,8 @@
-import fetch from './utils/node-fetch';
-import Logger from './utils/Logger';
-import { version } from '../package.json';
-import Config from './Config.json';
-import BotConfig from './loaders/BotConfig';
+import fetch from '../utils/node-fetch';
+import Logger from '../utils/Logger';
+import { version } from '../../package.json';
+import Config from '../Config.json';
+import BotConfig from '../loaders/BotConfig';
 
 async function checkUpdates() {
 	const response = await fetch(
@@ -28,12 +28,12 @@ export default async function Updater() {
 		Logger.info(`[core] Software Update found: ${newVersion}`);
 		if (config.autoUpdates) {
 			Logger.info(
-				`[core] Auto Updates is enabled. Updating to ${newVersion}...`,
+				`[core] Auto Updates is enabled. Downloading ${newVersion}...`,
 			);
 			Logger.info(
-				`[core] Please re-run the program when the software update is finished.`,
+				`[core] Please re-run the program when the software update installation is finished.`,
 			);
-			void import('./scripts/update');
+			void import('../scripts/update');
 
 			return true;
 		} else {

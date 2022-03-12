@@ -1,12 +1,12 @@
 import path from 'path';
 import Plugin from '@disclosure/Plugin';
 import type { Client } from 'discord.js';
-import { readdir } from '../structures/FileSystem';
-import { CreateDependencyGraph } from './CreateDependencyGraph';
+import { readdir } from '../../functions/FileSystem';
+import { CreateDependencyGraph } from '../../functions/CreateDependencyGraph';
 import { PluginEventLoader as PluginEventLoader } from './PluginEventLoader';
 import { PluginCommandLoader } from './PluginCommandLoader';
 import { PluginInhibitorLoader } from './PluginInhibitorLoader';
-import { PluginInitializer } from './PluginInitializer';
+import { PluginInitializer } from '../../functions/plugin/PluginInitializer';
 
 export default async function PluginLoader(client: Client) {
 	const files = readdir(['plugins']).filter((e) => e.endsWith('.js'));

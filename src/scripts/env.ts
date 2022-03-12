@@ -1,6 +1,6 @@
 import { prompt } from 'inquirer';
 import type BotConfig from '../loaders/BotConfig';
-import { writeFile, existsFile } from '../structures/FileSystem';
+import { writeFile, existsFile } from '../functions/FileSystem';
 import yaml from 'yaml';
 
 type BotConfiguration = ReturnType<typeof BotConfig>;

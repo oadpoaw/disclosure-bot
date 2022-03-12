@@ -53,13 +53,17 @@ export async function VerifyMetaData(metadata: PluginMetaData) {
 				`Plugin.dependencies should be an array of plugin names (array of strings).`,
 			);
 		} else {
-			metadata.dependencies.forEach((plugin, i) =>
+			metadata.dependencies.forEach((plugin, i) => {
 				VerifyName(
 					plugin,
 					errors,
-					`Plugin.depedencies[${i}] should be specified and it's alphanumeric characters and underscores/`,
-				),
-			);
+					`Plugin.dependencies[${i}] should be specified and it's alphanumeric characters and underscores/`,
+				);
+				if (plugin === metadata.name)
+					errors.push(
+						`Plugin.dependencies[${i}] should not match the plugin name.`,
+					);
+			});
 		}
 	}
 
@@ -69,13 +73,17 @@ export async function VerifyMetaData(metadata: PluginMetaData) {
 				`Plugin.optionalDependencies should be an array of plugin names (array of strings).`,
 			);
 		} else {
-			metadata.optionalDependencies.forEach((plugin, i) =>
+			metadata.optionalDependencies.forEach((plugin, i) => {
 				VerifyName(
 					plugin,
 					errors,
 					`Plugin.optionalDependencies[${i}] should be specified and it's alphanumeric characters and underscores.`,
-				),
-			);
+				);
+				if (plugin === metadata.name)
+					errors.push(
+						`Plugin.optionalDependencies[${i}] should not match the plugin name.`,
+					);
+			});
 		}
 	}
 
@@ -85,13 +93,18 @@ export async function VerifyMetaData(metadata: PluginMetaData) {
 				`Plugin.loadBefore should be an array of plugin names (array of strings).`,
 			);
 		} else {
-			metadata.loadBefore.forEach((plugin, i) =>
+			metadata.loadBefore.forEach((plugin, i) => {
 				VerifyName(
 					plugin,
 					errors,
 					`Plugin.loadBefore[${i}] should be specified and it's alphanumeric characters and underscores.`,
-				),
-			);
+				);
+
+				if (plugin === metadata.name)
+					errors.push(
+						`Plugin.loadBefore[${i}] should not match the plugin name.`,
+					);
+			});
 		}
 	}
 
@@ -110,11 +123,15 @@ export async function VerifyMetaData(metadata: PluginMetaData) {
 		}
 	}
 
-	if (errors.length) throw `- ${metadata.name}\n\t- ${errors.join('\n\t- ')}`;
+	if (errors.length) {
+		throw `- ${metadata.name}\n\t- ${errors.join('\n\t- ')}`;
+	}
 }
 
 function VerifyName(name: string, errors: string[], error: string) {
-	if (typeof name !== 'string' || !/^\w+$/.test(name)) errors.push(error);
+	if (typeof name !== 'string' || !/^\w+$/.test(name)) {
+		errors.push(error);
+	}
 }
 
 export function VerifyDependencies(plugin: Plugin, client: Client<boolean>) {
@@ -123,14 +140,15 @@ export function VerifyDependencies(plugin: Plugin, client: Client<boolean>) {
 		for (const name of plugin.metadata.dependencies) {
 			const p = client.plugins.get(name);
 
-			if (p) {
+			if (!p) {
 				errors.push(
-					`'${plugin.metadata.name}' plugin requires '${name}' plugin and it's not installed`,
+					`'${plugin.metadata.name}' plugin requires '${name}' plugin and it's not installed.`,
 				);
 			}
 		}
 
-		if (errors.length)
+		if (errors.length) {
 			throw `- ${plugin.metadata.name}\n\t- ${errors.join('\n\t- ')}`;
+		}
 	}
 }

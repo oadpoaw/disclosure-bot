@@ -1,19 +1,22 @@
 import { exec } from 'child_process';
 import type { ClientEvents, Interaction } from 'discord.js';
-import type { Client } from '../Internals';
+import type { Client } from '../classes/client';
 import { promisify } from 'util';
+import yaml from 'yaml';
+import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent';
+import DisclosureError from '../classes/DisclosureError';
+import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor';
+import Command, {
+	BuilderFunction,
+	ExecuteFunction,
+} from '../classes/plugin/Command';
 import {
 	existsDirectory,
 	existsFile,
 	mkdir,
 	readFile,
 	writeFile,
-} from './FileSystem';
-import yaml from 'yaml';
-import Command, { BuilderFunction, ExecuteFunction } from '../classes/Command';
-import DiscordEvent, { Listener } from '../classes/DiscordEvent';
-import DisclosureError from '../classes/DisclosureError';
-import { Inhibitor, InhibitorFunction } from '../Dispatcher';
+} from '../functions/FileSystem';
 
 const execute = promisify(exec);
 
@@ -102,12 +105,12 @@ export interface PluginMetaData {
 
 export default interface Plugin {
 	/**
-	 * - Called when this plugin is loaded
+	 * - Called when this plugin is loaded.
 	 */
 	onLoad(): void | Promise<void>;
 
 	/**
-	 * - Called when this plugin is reloaded
+	 * - Called when this plugin is reloaded.
 	 */
 	onReload(): void | Promise<void>;
 
@@ -117,7 +120,7 @@ export default interface Plugin {
 	onCommand(interaction: Interaction, command: Command): void | Promise<void>;
 
 	/**
-	 * - Called when some of this plugin's command throws an error.
+	 * - Called when some of this plugin's commands throws an error.
 	 */
 	onCommandError(
 		interaction: Interaction,
@@ -162,6 +165,12 @@ export default abstract class Plugin implements Partial<Plugin> {
 	 * @param args
 	 */
 	protected addCommand(builder: BuilderFunction, exec: ExecuteFunction) {
+		const command = new Command(this, builder, exec);
+
+		if (this._commands.some((x) => x.name === command.name)) {
+			throw `- ${this.metadata.name}\n\t- Command '${command.name}' is already added to the plugin. Is this a duplicate?`;
+		}
+
 		this._commands.push(new Command(this, builder, exec));
 	}
 
@@ -187,10 +196,11 @@ export default abstract class Plugin implements Partial<Plugin> {
 			} catch (err) {
 				this.client.logger
 					.error(
-						`[plugin:${this.metadata.name}] Error occured. Contact ${this.metadata.author} for help - Ignoring inhibitor`,
+						`[plugin:${this.metadata.name}] Error occured - Breaking the inhibitor chain...`,
 					)
 					.error(err);
-				return false;
+
+				return true;
 			}
 		};
 		this._inhibitors.push(new Inhibitor(this.client, this, wrapped));
@@ -233,7 +243,11 @@ export default abstract class Plugin implements Partial<Plugin> {
 		this.getConfig();
 
 		await this.install();
-		if (typeof this.onLoad === 'function') await this.onLoad();
+
+		if (typeof this.onLoad === 'function') {
+			await this.onLoad();
+		}
+
 		this._initialized = true;
 	}
 
@@ -271,7 +285,8 @@ export default abstract class Plugin implements Partial<Plugin> {
 	}
 
 	/**
-	 * I- nstall the plugin's dependencies
+	 * - Install the plugin's NPM dependencies
+	 * - This does not saves the NPM dependencies to package.json
 	 */
 	public async install() {
 		if (
@@ -284,7 +299,9 @@ export default abstract class Plugin implements Partial<Plugin> {
 				)}`,
 			);
 
-			if (stderr) throw new Error(stderr);
+			if (stderr) {
+				throw new Error(stderr);
+			}
 		}
 	}
 
@@ -296,6 +313,8 @@ export default abstract class Plugin implements Partial<Plugin> {
 		this.getConfig(true);
 		await this.install();
 
-		if (typeof this.onReload === 'function') await this.onReload();
+		if (typeof this.onReload === 'function') {
+			await this.onReload();
+		}
 	}
 }
