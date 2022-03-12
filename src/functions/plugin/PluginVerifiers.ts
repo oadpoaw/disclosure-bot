@@ -142,7 +142,7 @@ export function VerifyDependencies(plugin: Plugin, client: Client<boolean>) {
 
 			if (!p) {
 				errors.push(
-					`'${plugin.metadata.name}' plugin requires '${name}' plugin and it's not installed.`,
+					`'${plugin.metadata.name}' plugin depends on '${name}' plugin and it's not installed or the plugin failed to load.`,
 				);
 			}
 		}
