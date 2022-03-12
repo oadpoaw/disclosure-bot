@@ -15,7 +15,7 @@ function fixNodeFetch() {
 }
 
 function fixSemverPackage() {
-	const filePath = path.join(process.cwd(), 'dist', 'src', 'loaders', 'PluginVerifiers.js');
+	const filePath = path.join(process.cwd(), 'dist', 'src', 'functions', 'plugin', 'PluginVerifiers.js');
 	const file = fs.readFileSync(filePath);
 	fs.writeFileSync(
 		filePath,
@@ -27,3 +27,4 @@ function fixSemverPackage() {
 fixNodeFetch();
 fixSemverPackage();
 rimraf(path.join(process.cwd(), 'dist', 'plugins'), log);
+rimraf(path.join(process.cwd(), 'dist', 'tsconfig.tsbuildinfo'), log);
