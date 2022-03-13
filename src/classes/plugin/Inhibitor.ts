@@ -1,9 +1,9 @@
 import type Plugin from '#disclosure/Plugin';
 import type Command from './Command.js';
-import type { Client, Interaction } from 'discord.js';
+import type { CacheType, Client, CommandInteraction } from 'discord.js';
 
 export type InhibitorFunction = (
-	i: Interaction,
+	i: CommandInteraction<CacheType>,
 	c: Command,
 ) => boolean | Promise<boolean>;
 
