@@ -1,130 +1,150 @@
-import type Plugin from '@disclosure/Plugin';
-import type { PluginMetaData } from '@disclosure/Plugin';
+import type Plugin from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
 import packageNameRegex from 'package-name-regex';
+import semverRegex from 'semver-regex';
 
-export async function VerifyMetaData(metadata: PluginMetaData) {
+export async function VerifyMetaData(plugin: Plugin) {
 	const errors: string[] = [];
 
-	const semverRegex = (await import('semver-regex')).default();
-
-	const { name, description, version } = metadata;
+	const { name, description, version } = plugin.metadata;
 
 	VerifyName(
 		name,
 		errors,
-		`Plugin.name should be specified and it's alphanumeric characters and underscores.`,
+		`Plugin.name should be specified and it should be alphanumeric characters and underscores.`,
 	);
+
+	if (typeof name === 'string') {
+		const pluginFileName = plugin.fileName.substring(
+			0,
+			plugin.fileName.lastIndexOf('.'),
+		);
+
+		if (pluginFileName !== name) {
+			errors.push(
+				`Plugin.name should be the same as the plugin's filename without the file extension.`,
+			);
+		}
+	}
 
 	if (typeof description !== 'string' || description.length === 0) {
 		errors.push(`Plugin.description should be specified and not empty`);
 	}
 
-	if (typeof version !== 'string' || !semverRegex.test(version)) {
+	if (typeof version !== 'string' || !semverRegex().test(version)) {
 		errors.push(
 			`Plugin.version should be specified and it should match the Semver format https://semver.org/`,
 		);
 	}
 
-	if (Array.isArray(metadata.author) && typeof metadata.author !== 'string') {
-		if (metadata.author.length === 0)
+	if (
+		Array.isArray(plugin.metadata.author) &&
+		typeof plugin.metadata.author !== 'string'
+	) {
+		if (plugin.metadata.author.length === 0) {
 			errors.push(
 				'Plugin.author should be a valid string or an array of none empty strings.',
 			);
-		else
-			metadata.author.forEach((author, i) => {
-				if (typeof author !== 'string' || author.length === 0)
+		} else {
+			plugin.metadata.author.forEach((author, i) => {
+				if (typeof author !== 'string' || author.length === 0) {
 					errors.push(
 						`Plugin.author[${i}] should not be empty and must be specified.`,
 					);
+				}
 			});
+		}
 	} else if (
-		typeof metadata.author === 'string' &&
-		metadata.author.length === 0
+		typeof plugin.metadata.author === 'string' &&
+		plugin.metadata.author.length === 0
 	) {
 		errors.push(
 			`Plugin.author should be a valid none empty string or an array of none empty strings.`,
 		);
 	}
 
-	if (Boolean(metadata.dependencies)) {
-		if (!Array.isArray(metadata.dependencies)) {
+	if (Boolean(plugin.metadata.dependencies)) {
+		if (!Array.isArray(plugin.metadata.dependencies)) {
 			errors.push(
 				`Plugin.dependencies should be an array of plugin names (array of strings).`,
 			);
 		} else {
-			metadata.dependencies.forEach((plugin, i) => {
+			plugin.metadata.dependencies.forEach((pl, i) => {
 				VerifyName(
-					plugin,
+					pl,
 					errors,
 					`Plugin.dependencies[${i}] should be specified and it's alphanumeric characters and underscores/`,
 				);
-				if (plugin === metadata.name)
+				if (pl === plugin.metadata.name) {
 					errors.push(
 						`Plugin.dependencies[${i}] should not match the plugin name.`,
 					);
+				}
 			});
 		}
 	}
 
-	if (Boolean(metadata.optionalDependencies)) {
-		if (!Array.isArray(metadata.optionalDependencies)) {
+	if (Boolean(plugin.metadata.optionalDependencies)) {
+		if (!Array.isArray(plugin.metadata.optionalDependencies)) {
 			errors.push(
 				`Plugin.optionalDependencies should be an array of plugin names (array of strings).`,
 			);
 		} else {
-			metadata.optionalDependencies.forEach((plugin, i) => {
+			plugin.metadata.optionalDependencies.forEach((pl, i) => {
 				VerifyName(
-					plugin,
+					pl,
 					errors,
 					`Plugin.optionalDependencies[${i}] should be specified and it's alphanumeric characters and underscores.`,
 				);
-				if (plugin === metadata.name)
+				if (pl === plugin.metadata.name) {
 					errors.push(
 						`Plugin.optionalDependencies[${i}] should not match the plugin name.`,
 					);
+				}
 			});
 		}
 	}
 
-	if (Boolean(metadata.loadBefore)) {
-		if (!Array.isArray(metadata.loadBefore)) {
+	if (Boolean(plugin.metadata.loadBefore)) {
+		if (!Array.isArray(plugin.metadata.loadBefore)) {
 			errors.push(
 				`Plugin.loadBefore should be an array of plugin names (array of strings).`,
 			);
 		} else {
-			metadata.loadBefore.forEach((plugin, i) => {
+			plugin.metadata.loadBefore.forEach((pl, i) => {
 				VerifyName(
-					plugin,
+					pl,
 					errors,
 					`Plugin.loadBefore[${i}] should be specified and it's alphanumeric characters and underscores.`,
 				);
 
-				if (plugin === metadata.name)
+				if (pl === plugin.metadata.name) {
 					errors.push(
 						`Plugin.loadBefore[${i}] should not match the plugin name.`,
 					);
+				}
 			});
 		}
 	}
 
-	if (Boolean(metadata.npmDependencies)) {
-		if (!Array.isArray(metadata.npmDependencies)) {
+	if (Boolean(plugin.metadata.npmDependencies)) {
+		if (!Array.isArray(plugin.metadata.npmDependencies)) {
 			errors.push(
 				`Plugin.npmDependencies should be an array of NPM package names (array of strings).`,
 			);
 		} else {
-			metadata.npmDependencies.forEach((pkg, i) => {
-				if (typeof pkg !== 'string' || packageNameRegex.test(pkg))
+			plugin.metadata.npmDependencies.forEach((pkg, i) => {
+				if (typeof pkg !== 'string' || !packageNameRegex.test(pkg)) {
 					errors.push(
 						`Plugin.npmDependencies[${i}] should be specified and it's alphanumeric characters and underscores.`,
 					);
+				}
 			});
 		}
 	}
 
 	if (errors.length) {
-		throw `- ${metadata.name}\n\t- ${errors.join('\n\t- ')}`;
+		throw `- ${plugin.metadata.name}\n\t- ${errors.join('\n\t- ')}`;
 	}
 }
 

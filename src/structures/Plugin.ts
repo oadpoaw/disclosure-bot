@@ -1,22 +1,22 @@
 import { exec } from 'child_process';
 import type { ClientEvents, Interaction } from 'discord.js';
-import type { Client } from '../classes/client';
+import type { Client } from '../classes/client/index.js';
 import { promisify } from 'util';
 import yaml from 'yaml';
-import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent';
-import DisclosureError from '../classes/DisclosureError';
-import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor';
+import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent.js';
+import DisclosureError from '../classes/DisclosureError.js';
+import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor.js';
 import Command, {
 	BuilderFunction,
 	ExecuteFunction,
-} from '../classes/plugin/Command';
+} from '../classes/plugin/Command.js';
 import {
 	existsDirectory,
 	existsFile,
 	mkdir,
 	readFile,
 	writeFile,
-} from '../functions/FileSystem';
+} from '../functions/FileSystem.js';
 
 const execute = promisify(exec);
 
@@ -136,10 +136,18 @@ export default abstract class Plugin implements Partial<Plugin> {
 	private _inhibitors: Inhibitor[];
 	private _initialized: boolean;
 
+	/**
+	 * - The Discord.js Client who instantiated this plugin.
+	 */
 	protected readonly client: Client;
+	/**
+	 * - The file name which where the plugin was loaded.
+	 */
+	public readonly fileName: string;
 
-	public constructor(client: Client) {
+	public constructor(client: Client, fileName: string) {
 		this.client = client;
+		this.fileName = fileName;
 		this._cfg = null;
 		this._commands = [];
 		this._events = [];
@@ -153,8 +161,8 @@ export default abstract class Plugin implements Partial<Plugin> {
 	abstract readonly metadata: PluginMetaData;
 
 	/**
-	 * Get the plugin's default configuration for plugins/[plugin-name]/config.yml
-	 * - Can be override
+	 * Get the plugin's default configuration for plugin's config.yml
+	 * - Can be overrided
 	 */
 	public getDefaultConfig(): any {
 		return '';
@@ -252,7 +260,7 @@ export default abstract class Plugin implements Partial<Plugin> {
 	}
 
 	/**
-	 * S- et config for plugins/[plugin-name]/config.yml
+	 * - Set the config for plugin's config.yml
 	 * @param cfg
 	 */
 	public setConfig(cfg: any) {
@@ -265,8 +273,8 @@ export default abstract class Plugin implements Partial<Plugin> {
 	}
 
 	/**
-	 * - Get the config for plugins/[plugin-name]/config.yml
-	 * @param force Forcefully get the config from plugins/[plugin-name]/config.yml and ignoring cache.
+	 * - Get the config for plugin's config.yml
+	 * @param force Forcefully get the config from plugin's config.yml and ignoring cache.
 	 * @returns
 	 */
 	public getConfig(force = false): any {
