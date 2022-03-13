@@ -3,5 +3,5 @@ export default function PlaceHolder(
 	placeholder: string,
 	replaceWith: string,
 ) {
-	return message.replaceAll(`%{${placeholder}%`, replaceWith);
+	return message.replaceAll(`%${placeholder}%`, replaceWith);
 }
