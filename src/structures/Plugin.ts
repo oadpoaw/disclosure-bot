@@ -19,7 +19,7 @@ import {
 } from '../functions/FileSystem.js';
 import { merge } from '@oadpoaw/utils';
 
-export { default as PlaceHolder } from '../functions/PlaceHolder';
+export { default as PlaceHolder } from '../functions/PlaceHolder.js';
 
 const execute = promisify(exec);
 
