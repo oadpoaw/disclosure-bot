@@ -1,30 +1,35 @@
-const fs = require('fs');
-const path = require('path');
-const rimraf = require('rimraf');
+import { join } from 'path';
+import rimraf from 'rimraf';
+import fs from 'fs';
+import path from 'path';
 
 const log = (err) => err && console.error(err);
 
-function fixNodeFetch() {
-	const filePath = path.join(process.cwd(), 'dist', 'src', 'utils', 'node-fetch.js');
-	const file = fs.readFileSync(filePath);
-	fs.writeFileSync(
-		filePath,
-		file.toString()
-			.replace(`__importStar(require('node-fetch'))`, `import('node-fetch')`)
-	);
-}
+const postBuildStrategy = function (src, dest) {
+	const exists = fs.existsSync(src);
+	const stats = exists && fs.statSync(src);
+	const isDirectory = exists && stats.isDirectory();
 
-function fixSemverPackage() {
-	const filePath = path.join(process.cwd(), 'dist', 'src', 'functions', 'plugin', 'PluginVerifiers.js');
-	const file = fs.readFileSync(filePath);
-	fs.writeFileSync(
-		filePath,
-		file.toString()
-			.replace(`tslib_1.__importStar(require('semver-regex'))`, `import('semver-regex')`)
-	);
-}
+	if (isDirectory) {
+		fs.mkdirSync(dest);
 
-fixNodeFetch();
-fixSemverPackage();
-rimraf(path.join(process.cwd(), 'dist', 'plugins'), log);
-rimraf(path.join(process.cwd(), 'dist', 'tsconfig.tsbuildinfo'), log);
+		for (const child of fs.readdirSync(src)) {
+			postBuildStrategy(path.join(src, child),
+				path.join(dest, child));
+		}
+	} else {
+		fs.copyFileSync(src, dest);
+
+		if (dest.endsWith('.js')) {
+			fs.writeFileSync(
+				dest,
+				fs.readFileSync(dest)
+					.toString()
+					.replaceAll(`.json';`, `.json' assert { type: 'json' };`)
+			);
+		}
+	}
+};
+
+postBuildStrategy('./build/src', './dist');
+rimraf(join(process.cwd(), 'build'), log);
