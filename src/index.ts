@@ -1,8 +1,7 @@
-import 'module-alias/register';
 import { processor } from '@oadpoaw/utils';
-import BotConfig from './loaders/BotConfig';
-import Updater from './functions/Updater';
-import Logger from './utils/Logger';
+import BotConfig from './loaders/BotConfig.js';
+import Updater from './functions/Updater.js';
+import Logger from './utils/Logger.js';
 
 processor(Logger);
 
@@ -16,9 +15,9 @@ processor(Logger);
 	const config = BotConfig();
 
 	if (config.bot.sharding) {
-		return import('./DisclosureSharding');
+		return import('./DisclosureSharding.js');
 	} else {
-		return import('./Disclosure');
+		return import('./Disclosure.js');
 	}
 })().catch((err) => {
 	Logger.error(err);

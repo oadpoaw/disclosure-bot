@@ -1,11 +1,10 @@
 const before = Date.now();
-import 'module-alias/register';
-import Config from './functions/config';
-import { Client } from './classes/client';
-import PluginLoader from './loaders/plugin/PluginLoader';
+import { Client } from './classes/client/index.js';
+import PluginLoader from './loaders/plugin/PluginLoader.js';
 import ms from 'ms';
+import { clientOptions } from '../config.js';
 
-const client = new Client(Config().clientOptions);
+const client = new Client(clientOptions);
 
 client.once('ready', async () => {
 	await client.dispatcher.register();

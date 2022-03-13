@@ -1,12 +1,12 @@
-import { version } from '../../package.json';
+import packageJSON from '../../package.json';
 import Config from '../Config.json';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import path from 'path';
 import sha256File from 'sha256-file';
 import { exec } from 'child_process';
-import Logger from '../utils/Logger';
-import fetch from '../utils/node-fetch';
+import Logger from '../utils/Logger.js';
+import fetch from 'node-fetch';
 
 const execute = promisify(exec);
 
@@ -16,7 +16,7 @@ const execute = promisify(exec);
 	);
 	const json = (await response.json()) as { tag_name: string };
 
-	if (`v${version}` === json.tag_name) {
+	if (`v${packageJSON.version}` === json.tag_name) {
 		throw new Error(`Everything is up-to-date.`);
 	}
 

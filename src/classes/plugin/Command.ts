@@ -1,6 +1,6 @@
 import type { CommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import type Plugin from '@disclosure/Plugin';
+import type Plugin from '#disclosure/Plugin';
 
 export type BuilderFunction = (
 	command: SlashCommandBuilder,

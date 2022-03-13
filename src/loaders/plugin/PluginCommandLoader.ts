@@ -1,6 +1,6 @@
-import type Plugin from '@disclosure/Plugin';
+import type Plugin from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
-import type { Graph } from '../../classes/util/Graph';
+import type { Graph } from '../../classes/util/Graph.js';
 
 export function PluginCommandLoader(
 	DependencyGraph: Graph,

@@ -1,10 +1,10 @@
 import { ShardingManager } from 'discord.js';
-import Logger from './utils/Logger';
-import Config from './functions/config';
-import BotConfig from './loaders/BotConfig';
+import Logger from './utils/Logger.js';
+import BotConfig from './loaders/BotConfig.js';
+import { shardOptions } from '../config.js';
 
-const manager = new ShardingManager('./dist/src/Disclosure.js', {
-	...Config().shardOptions,
+const manager = new ShardingManager('./dist/Disclosure.js', {
+	...shardOptions,
 	token: BotConfig().bot.token,
 });
 

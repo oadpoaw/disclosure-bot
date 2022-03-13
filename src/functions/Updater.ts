@@ -1,8 +1,8 @@
-import fetch from '../utils/node-fetch';
-import Logger from '../utils/Logger';
-import { version } from '../../package.json';
+import fetch from 'node-fetch';
+import Logger from '../utils/Logger.js';
+import packageJSON from '../../package.json';
 import Config from '../Config.json';
-import BotConfig from '../loaders/BotConfig';
+import BotConfig from '../loaders/BotConfig.js';
 
 async function checkUpdates() {
 	const response = await fetch(
@@ -12,7 +12,7 @@ async function checkUpdates() {
 
 	const newVersion = json.tag_name;
 
-	if (`v${version}` !== newVersion) {
+	if (`v${packageJSON.version}` !== newVersion) {
 		return newVersion;
 	}
 
@@ -33,7 +33,7 @@ export default async function Updater() {
 			Logger.info(
 				`[core] Please re-run the program when the software update installation is finished.`,
 			);
-			void import('../scripts/update');
+			void import('../scripts/update.js');
 
 			return true;
 		} else {

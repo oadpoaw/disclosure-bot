@@ -1,5 +1,5 @@
-import type Plugin from '@disclosure/Plugin';
-import type Command from './Command';
+import type Plugin from '#disclosure/Plugin';
+import type Command from './Command.js';
 import type { Client, Interaction } from 'discord.js';
 
 export type InhibitorFunction = (
