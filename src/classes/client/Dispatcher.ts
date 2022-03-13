@@ -1,4 +1,4 @@
-import type Command from '../plugin/Command';
+import type Command from '../plugin/Command.js';
 import {
 	ApplicationCommand,
 	ApplicationCommandDataResolvable,
@@ -7,8 +7,8 @@ import {
 	GuildResolvable,
 	Interaction,
 } from 'discord.js';
-import DisclosureError from '../DisclosureError';
-import type { Inhibitor } from '../plugin/Inhibitor';
+import DisclosureError from '../DisclosureError.js';
+import type { Inhibitor } from '../plugin/Inhibitor.js';
 
 export default class Dispatcher {
 	public readonly awaiting: Set<string>;
