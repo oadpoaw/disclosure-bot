@@ -3,10 +3,11 @@ import type Command from '../plugin/Command.js';
 import {
 	ApplicationCommand,
 	ApplicationCommandDataResolvable,
+	CacheType,
 	Client,
 	Collection,
+	CommandInteraction,
 	GuildResolvable,
-	Interaction,
 } from 'discord.js';
 import type { Inhibitor } from '../plugin/Inhibitor.js';
 
@@ -22,7 +23,10 @@ export default class Dispatcher {
 		this.registered = false;
 	}
 
-	private async inihibit(interaction: Interaction, command: Command) {
+	private async inihibit(
+		interaction: CommandInteraction<CacheType>,
+		command: Command,
+	) {
 		for (const inhibitor of this.inhibitors) {
 			let status = inhibitor.inhibitor(interaction, command);
 
@@ -125,6 +129,10 @@ export default class Dispatcher {
 		}
 	}
 
+	private exitStrategy(user_id: string) {
+		this.awaiting.delete(user_id);
+	}
+
 	public async register() {
 		if (this.registered)
 			throw new DisclosureError(`Dispatcher already registered.`);
@@ -142,22 +150,23 @@ export default class Dispatcher {
 				return;
 			}
 
-			this.awaiting.add(interaction.user.id);
-
 			const command = this.client.commands.get(interaction.commandName);
 
 			if (!command) {
 				return;
 			}
 
+			this.awaiting.add(interaction.user.id);
+
 			if (await this.inihibit(interaction, command)) {
-				return;
+				return this.exitStrategy(interaction.user.id);
 			}
+
 			try {
 				await command.exec(interaction);
 
 				if (typeof command.plugin.onCommand === 'function') {
-					command.plugin.onCommand(interaction, command);
+					await command.plugin.onCommand(interaction, command);
 				}
 			} catch (err) {
 				this.client.logger
@@ -170,7 +179,7 @@ export default class Dispatcher {
 					command.plugin.onCommandError(interaction, command, err);
 				}
 			} finally {
-				this.awaiting.delete(interaction.user.id);
+				this.exitStrategy(interaction.user.id);
 			}
 		});
 	}
