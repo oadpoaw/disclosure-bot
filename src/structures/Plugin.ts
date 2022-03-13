@@ -17,6 +17,9 @@ import {
 	readFile,
 	writeFile,
 } from '../functions/FileSystem.js';
+import { merge } from '@oadpoaw/utils';
+
+export { default as PlaceHolder } from '../functions/PlaceHolder';
 
 const execute = promisify(exec);
 
@@ -69,6 +72,7 @@ export interface PluginMetaData {
 	author: string | string[];
 	/**
 	 * - A list of plugins that your plugin requires to load.
+	 * - And plugins that will be loaded **before** your plugin.
 	 * - If any plugin listed here is not found your plugin will fail to load.
 	 *
 	 * This should be a valid plugin name and it's CaSe-SeNsItIvE
@@ -80,12 +84,17 @@ export interface PluginMetaData {
 	 */
 	dependencies?: string[];
 	/**
-	 * - A list of plugins that are required for your plugin to have full functionality
-	 * - Your plugin will load after any plugins listed here.
+	 * - A list of plugins that are optional for your plugin to have full functionality.
+	 * - And plugins that will be loaded **before** your plugin.
 	 */
 	optionalDependencies?: string[];
 	/**
-	 * - A list of plugins that should be loaded **after** your plugin.
+	 * - A list of plugins that are incompatible with your plugin.
+	 * - If any plugin listed here is found your plugin will fail to load.
+	 */
+	incompatibleDependencies?: string[];
+	/**
+	 * - A list of plugins that should be loaded **before** your plugin.
 	 * - Treated as if the listed plugins are optional dependencies.
 	 * - Circular optional dependencies are loaded arbitrarily.
 	 */
@@ -161,16 +170,110 @@ export default abstract class Plugin implements Partial<Plugin> {
 	abstract readonly metadata: PluginMetaData;
 
 	/**
-	 * Get the plugin's default configuration for plugin's config.yml
-	 * - Can be overrided
+	 * - Initialize the plugin.
+	 * - Called internally by the plugin loader.
 	 */
-	public getDefaultConfig(): any {
-		return '';
+	public async init() {
+		if (this._initialized)
+			throw new DisclosureError(
+				`Plugin '${this.metadata.name}' is already initialized.`,
+			);
+
+		const pluginFolder = ['plugins', this.metadata.name];
+
+		if (!existsDirectory(pluginFolder)) mkdir(pluginFolder);
+
+		this.getConfig();
+
+		await this.install();
+
+		if (typeof this.onLoad === 'function') {
+			await this.onLoad();
+		}
+
+		this._initialized = true;
+	}
+
+	/**
+	 * Get the plugin's default configuration for plugin's config.yml
+	 * - Can be overrided.
+	 */
+	public getDefaultConfig(): Record<any, any> {
+		return {};
+	}
+
+	/**
+	 * - Set the config for plugin's config.yml
+	 */
+	public setConfig(cfg: Record<any, any>): Record<any, any> {
+		const merged = merge(this.getDefaultConfig(), cfg);
+
+		writeFile(
+			['plugins', this.metadata.name, 'config.yml'],
+			yaml.stringify(merged),
+		);
+
+		return (this._cfg = merged);
+	}
+
+	/**
+	 * - Get the config for plugin's config.yml
+	 * @param force Forcefully get the config from plugin's config.yml and ignoring cache.
+	 */
+	public getConfig(force = false): Record<any, any> {
+		if (this._cfg && !force) {
+			return this._cfg;
+		}
+
+		const filePath = ['plugins', this.metadata.name, 'config.yml'];
+
+		if (!existsFile(filePath)) {
+			return this.setConfig(this.getDefaultConfig());
+		} else {
+			const buffer = readFile(filePath);
+			return (this._cfg = merge(
+				this.getDefaultConfig(),
+				yaml.parse(buffer.toString()),
+			));
+		}
+	}
+
+	/**
+	 * - Install the plugin's NPM dependencies
+	 * - This does not saves the NPM dependencies to package.json
+	 */
+	public async install() {
+		if (
+			this.metadata.npmDependencies &&
+			this.metadata.npmDependencies.length
+		) {
+			const { stderr } = await execute(
+				`npm install --no-save ${this.metadata.npmDependencies.join(
+					' ',
+				)}`,
+			);
+
+			if (stderr) {
+				throw new Error(stderr);
+			}
+		}
+	}
+
+	/**
+	 * - Reload plugin's configuration from it's config.yml
+	 * - Reinstalls the npmDependencies of the plugin.
+	 */
+	public async reload() {
+		this.getConfig(true);
+		await this.install();
+
+		if (typeof this.onReload === 'function') {
+			await this.onReload();
+		}
 	}
 
 	/**
 	 * - Create and Add a command that is with the plugin.
-	 * @param args
 	 */
 	protected addCommand(builder: BuilderFunction, exec: ExecuteFunction) {
 		const command = new Command(this, builder, exec);
@@ -179,7 +282,7 @@ export default abstract class Plugin implements Partial<Plugin> {
 			throw `- ${this.metadata.name}\n\t- Command '${command.name}' is already added to the plugin. Is this a duplicate?`;
 		}
 
-		this._commands.push(new Command(this, builder, exec));
+		this._commands.push(command);
 	}
 
 	/**
@@ -233,96 +336,5 @@ export default abstract class Plugin implements Partial<Plugin> {
 	 */
 	public get inhibitors() {
 		return this._inhibitors;
-	}
-
-	/**
-	 * - Initialize the plugin
-	 */
-	public async init() {
-		if (this._initialized)
-			throw new DisclosureError(
-				`Plugin '${this.metadata.name}' is already initialized.`,
-			);
-
-		const pluginFolder = ['plugins', this.metadata.name];
-
-		if (!existsDirectory(pluginFolder)) mkdir(pluginFolder);
-
-		this.getConfig();
-
-		await this.install();
-
-		if (typeof this.onLoad === 'function') {
-			await this.onLoad();
-		}
-
-		this._initialized = true;
-	}
-
-	/**
-	 * - Set the config for plugin's config.yml
-	 * @param cfg
-	 */
-	public setConfig(cfg: any) {
-		const str = yaml.stringify(cfg);
-
-		writeFile(['plugins', this.metadata.name, 'config.yml'], str);
-		this._cfg = cfg;
-
-		return cfg;
-	}
-
-	/**
-	 * - Get the config for plugin's config.yml
-	 * @param force Forcefully get the config from plugin's config.yml and ignoring cache.
-	 * @returns
-	 */
-	public getConfig(force = false): any {
-		if (this._cfg && !force) return this._cfg;
-
-		const filePath = ['plugins', this.metadata.name, 'config.yml'];
-
-		if (!existsFile(filePath)) {
-			return this.setConfig(this.getDefaultConfig());
-		} else {
-			const buffer = readFile(filePath);
-			const b = yaml.parse(buffer.toString());
-			this._cfg = b;
-			return b;
-		}
-	}
-
-	/**
-	 * - Install the plugin's NPM dependencies
-	 * - This does not saves the NPM dependencies to package.json
-	 */
-	public async install() {
-		if (
-			this.metadata.npmDependencies &&
-			this.metadata.npmDependencies.length
-		) {
-			const { stderr } = await execute(
-				`npm install --no-save ${this.metadata.npmDependencies.join(
-					' ',
-				)}`,
-			);
-
-			if (stderr) {
-				throw new Error(stderr);
-			}
-		}
-	}
-
-	/**
-	 * - Reload plugin's configuration from it's config.yml
-	 * - includes reinstalling dependencies listed in the config.yml
-	 */
-	public async reload() {
-		this.getConfig(true);
-		await this.install();
-
-		if (typeof this.onReload === 'function') {
-			await this.onReload();
-		}
 	}
 }

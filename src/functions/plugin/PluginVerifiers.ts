@@ -155,8 +155,9 @@ function VerifyName(name: string, errors: string[], error: string) {
 }
 
 export function VerifyDependencies(plugin: Plugin, client: Client<boolean>) {
+	const errors: string[] = [];
+
 	if (plugin.metadata.dependencies && plugin.metadata.dependencies.length) {
-		const errors: string[] = [];
 		for (const name of plugin.metadata.dependencies) {
 			const p = client.plugins.get(name);
 
@@ -166,9 +167,24 @@ export function VerifyDependencies(plugin: Plugin, client: Client<boolean>) {
 				);
 			}
 		}
+	}
 
-		if (errors.length) {
-			throw `- ${plugin.metadata.name}\n\t- ${errors.join('\n\t- ')}`;
+	if (
+		plugin.metadata.incompatibleDependencies &&
+		plugin.metadata.incompatibleDependencies.length
+	) {
+		for (const name of plugin.metadata.incompatibleDependencies) {
+			const p = client.plugins.get(name);
+
+			if (p) {
+				errors.push(
+					`'${plugin.metadata.name}' plugin is incompatible with '${name}' plugin and it's installed. `,
+				);
+			}
 		}
+	}
+
+	if (errors.length) {
+		throw `- ${plugin.metadata.name}\n\t- ${errors.join('\n\t- ')}`;
 	}
 }
