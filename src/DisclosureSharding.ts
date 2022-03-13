@@ -1,6 +1,6 @@
-import { ShardingManager } from 'discord.js';
-import Logger from './utils/Logger.js';
 import BotConfig from './loaders/BotConfig.js';
+import Logger from './utils/Logger.js';
+import { ShardingManager } from 'discord.js';
 import { shardOptions } from '../config.js';
 
 const manager = new ShardingManager('./dist/Disclosure.js', {

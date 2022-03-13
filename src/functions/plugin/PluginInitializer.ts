@@ -1,6 +1,6 @@
+import { VerifyDependencies, VerifyMetaData } from './PluginVerifiers.js';
 import type Plugin from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
-import { VerifyMetaData, VerifyDependencies } from './PluginVerifiers.js';
 import type { Graph } from '../../classes/util/Graph.js';
 
 export async function PluginInitializer(

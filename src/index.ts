@@ -1,7 +1,7 @@
-import { processor } from '@oadpoaw/utils';
 import BotConfig from './loaders/BotConfig.js';
-import Updater from './functions/Updater.js';
 import Logger from './utils/Logger.js';
+import Updater from './functions/Updater.js';
+import { processor } from '@oadpoaw/utils';
 
 processor(Logger);
 

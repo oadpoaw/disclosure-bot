@@ -1,12 +1,12 @@
-import packageJSON from '../../package.json';
 import Config from '../Config.json';
-import { promisify } from 'util';
-import { promises as fs } from 'fs';
+import fetch from 'node-fetch';
+import Logger from '../utils/Logger.js';
+import packageJSON from '../../package.json';
 import path from 'path';
 import sha256File from 'sha256-file';
 import { exec } from 'child_process';
-import Logger from '../utils/Logger.js';
-import fetch from 'node-fetch';
+import { promises as fs } from 'fs';
+import { promisify } from 'util';
 
 const execute = promisify(exec);
 

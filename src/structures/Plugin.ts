@@ -1,11 +1,11 @@
+import DisclosureError from '../classes/DisclosureError.js';
+import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent.js';
+import yaml from 'yaml';
 import { exec } from 'child_process';
+import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor.js';
+import { promisify } from 'util';
 import type { ClientEvents, Interaction } from 'discord.js';
 import type { Client } from '../classes/client/index.js';
-import { promisify } from 'util';
-import yaml from 'yaml';
-import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent.js';
-import DisclosureError from '../classes/DisclosureError.js';
-import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor.js';
 import Command, {
 	BuilderFunction,
 	ExecuteFunction,

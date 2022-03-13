@@ -1,10 +1,10 @@
-import type Command from '../plugin/Command.js';
-import Logger from '../../utils/Logger.js';
 import BotConfig from '../../loaders/BotConfig.js';
-import type Plugin from '../../structures/Plugin.js';
-import { Client as DiscordClient, Collection, ClientOptions } from 'discord.js';
-import type { Graph } from '../util/Graph.js';
 import Dispatcher from './Dispatcher.js';
+import Logger from '../../utils/Logger.js';
+import { Client as DiscordClient, ClientOptions, Collection } from 'discord.js';
+import type Command from '../plugin/Command.js';
+import type Plugin from '../../structures/Plugin.js';
+import type { Graph } from '../util/Graph.js';
 
 export class Client extends DiscordClient {
 	public constructor(options: ClientOptions) {

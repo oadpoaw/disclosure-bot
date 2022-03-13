@@ -1,3 +1,4 @@
+import DisclosureError from '../DisclosureError.js';
 import type Command from '../plugin/Command.js';
 import {
 	ApplicationCommand,
@@ -7,7 +8,6 @@ import {
 	GuildResolvable,
 	Interaction,
 } from 'discord.js';
-import DisclosureError from '../DisclosureError.js';
 import type { Inhibitor } from '../plugin/Inhibitor.js';
 
 export default class Dispatcher {

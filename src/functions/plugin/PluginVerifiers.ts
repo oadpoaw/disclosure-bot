@@ -1,7 +1,7 @@
-import type Plugin from '#disclosure/Plugin';
-import type { Client } from 'discord.js';
 import packageNameRegex from 'package-name-regex';
 import semverRegex from 'semver-regex';
+import type Plugin from '#disclosure/Plugin';
+import type { Client } from 'discord.js';
 
 export async function VerifyMetaData(plugin: Plugin) {
 	const errors: string[] = [];
