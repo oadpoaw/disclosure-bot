@@ -73,7 +73,7 @@ export async function VerifyMetaData(plugin: Plugin) {
 				VerifyName(
 					pl,
 					errors,
-					`Plugin.dependencies[${i}] should be specified and it's alphanumeric characters and underscores/`,
+					`Plugin.dependencies[${i}] should be specified and it should alphanumeric characters and underscores.`,
 				);
 				if (pl === plugin.metadata.name) {
 					errors.push(
@@ -94,7 +94,7 @@ export async function VerifyMetaData(plugin: Plugin) {
 				VerifyName(
 					pl,
 					errors,
-					`Plugin.optionalDependencies[${i}] should be specified and it's alphanumeric characters and underscores.`,
+					`Plugin.optionalDependencies[${i}] should be specified and it should be alphanumeric characters and underscores.`,
 				);
 				if (pl === plugin.metadata.name) {
 					errors.push(
@@ -115,7 +115,7 @@ export async function VerifyMetaData(plugin: Plugin) {
 				VerifyName(
 					pl,
 					errors,
-					`Plugin.loadBefore[${i}] should be specified and it's alphanumeric characters and underscores.`,
+					`Plugin.loadBefore[${i}] should be specified and it should be alphanumeric characters and underscores.`,
 				);
 
 				if (pl === plugin.metadata.name) {
@@ -136,7 +136,7 @@ export async function VerifyMetaData(plugin: Plugin) {
 			plugin.metadata.npmDependencies.forEach((pkg, i) => {
 				if (typeof pkg !== 'string' || !packageNameRegex.test(pkg)) {
 					errors.push(
-						`Plugin.npmDependencies[${i}] should be specified and it's alphanumeric characters and underscores.`,
+						`Plugin.npmDependencies[${i}] should be specified and it should be alphanumeric characters and underscores.`,
 					);
 				}
 			});
