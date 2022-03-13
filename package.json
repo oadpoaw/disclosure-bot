@@ -3,18 +3,19 @@
 	"name": "disclosure-bot",
 	"version": "1.0.0",
 	"private": true,
-	"main": "./dist/src/index.js",
+	"main": "./dist/index.js",
+	"type": "module",
 	"scripts": {
-		"start": "node .",
+		"start": "node --no-warnings .",
 		"predev": "npm run clean",
 		"dev": "concurrent \"tsc -w\" \"nodemon .\"",
 		"postdev": "npm run clean",
-		"upgrade": "node dist/src/scripts/update.js",
-		"env": "node dist/src/scripts/env.js",
+		"upgrade": "node dist/scripts/update.js",
+		"env": "node dist/scripts/env.js",
 		"prebuild": "npm run clean",
 		"build": "tsc --build",
 		"postbuild": "node scripts/postbuild.js",
-		"clean": "rimraf dist",
+		"clean": "rimraf dist && rimraf build",
 		"lint": "prettier --check \"src/**/*.ts\"",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"prebuild:plugins": "node scripts/prebuild-plugins.js",
@@ -31,7 +32,6 @@
 		"discord-api-types": "^0.29.0",
 		"discord.js": "^13.6.0",
 		"inquirer": "^8.2.1",
-		"module-alias": "^2.2.2",
 		"ms": "^2.1.3",
 		"node-fetch": "^3.2.2",
 		"package-name-regex": "^2.0.6",
@@ -43,7 +43,6 @@
 		"yaml": "^1.10.2"
 	},
 	"devDependencies": {
-		"@sapphire/ts-config": "^3.3.2",
 		"@types/inquirer": "^8.2.0",
 		"@types/keyv": "^3.1.3",
 		"@types/module-alias": "^2.0.1",
@@ -58,10 +57,10 @@
 		"rimraf": "^3.0.2",
 		"typescript": "^4.6.2"
 	},
-	"engines": {
-		"node": ">=v16.0.0",
-		"npm": ">=7.0.0"
-	},
+    "engines": {
+        "node": ">=v17.0.0",
+        "npm": ">=8.0.0"
+    },
 	"prettier": {
 		"singleQuote": true,
 		"trailingComma": "all",
@@ -70,7 +69,7 @@
 		"endOfLine": "auto",
 		"useTabs": true
 	},
-	"_moduleAliases": {
-		"@disclosure": "./dist/src/structures"
+	"imports": {
+		"#disclosure/*": "./dist/structures/*.js"
 	}
 }
