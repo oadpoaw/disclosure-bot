@@ -8,7 +8,6 @@ interface Config {
 		token: string;
 		guild: string;
 		sharding: boolean;
-		owner: string | string[];
 	};
 }
 

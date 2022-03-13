@@ -37,7 +37,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 			token: '',
 			guild: '',
 			sharding: false,
-			owner: [],
 		},
 	};
 
@@ -84,7 +83,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 				token: config.token,
 				guild: config.guild,
 				sharding: config.sharding,
-				owner: [],
 			},
 		};
 		writeFile(['config.yml'], yaml.stringify(cf));
