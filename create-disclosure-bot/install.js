@@ -12,24 +12,18 @@ const { promises: fs, mkdirSync } = require('fs');
 const { promisify } = require('util');
 const { join } = require('path');
 
-const executePromise = promisify(exec);
+const execute = promisify(exec);
 
 const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? folderName = process.argv.slice(2)[0] : "disclosure-bot");
 
 mkdirSync(folderPath);
 process.chdir(folderPath);
 
-async function shell(command) {
-	const { stdout, stderr } = await executePromise(command);
-	if (stderr) throw new Error(stderr);
-	console.log(stdout);
-}
-
 (async function () {
-	await shell(
+	await execute(
 		`curl -Lo ${packageJSON.name}.tar.gz https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/${packageJSON.name}.tar.gz`,
 	);
-	const { stdout } = await shell(
+	const { stdout } = await execute(
 		`curl -L https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/checksum.txt`,
 	);
 
@@ -42,12 +36,12 @@ async function shell(command) {
 		);
 	}
 
-	await shell(`tar -xzvf ${packageJSON.name}.tar.gz`);
+	await execute(`tar -xzvf ${packageJSON.name}.tar.gz`);
 	await fs.unlink(archive);
 
-	await shell(`npm install --production`);
-	await shell('npm run env');
-	await shell('npm run plugins:init');
+	await execute(`npm install --production`);
+	await execute('npm run env');
+	await execute('npm run plugins:init');
 
 	console.log(`DisclosureBot Installation Done!`);
 })().catch((err) => {
