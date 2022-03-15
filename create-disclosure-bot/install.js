@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import packageJSON from '../package.json' assert { type: 'json' };
 
 //@ts-check
