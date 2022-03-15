@@ -5,7 +5,7 @@ if (Number(process.versions.node.split('.')[0]) < 17) {
 import setTerminalTitle from './functions/setTerminalTitle.js';
 import BotConfig from './loaders/BotConfig.js';
 import Logger from './utils/Logger.js';
-import Updater from './functions/Updater.js';
+import checkUpdates from './functions/checkUpdates.js';
 import { processor } from '@oadpoaw/utils';
 
 setTerminalTitle('Disclosure Bot');
@@ -15,9 +15,7 @@ processor(Logger);
 (async function Start() {
 	Logger.info(`Loading libraries...`);
 
-	if (await Updater()) {
-		return process.exit(0);
-	}
+	await checkUpdates();
 
 	const config = BotConfig();
 

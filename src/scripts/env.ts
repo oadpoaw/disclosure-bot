@@ -33,7 +33,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 
 	const cfg: BotConfiguration = {
 		environment: 'development',
-		autoUpdates: true,
 		bot: {
 			token: '',
 			guild: '',
@@ -49,12 +48,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 				name: 'environment',
 				choices: ['development', 'production'],
 				default: cfg.environment,
-			},
-			{
-				type: 'confirm',
-				message: 'Enable auto updates',
-				name: 'autoUpdates',
-				default: cfg.autoUpdates,
 			},
 			{
 				type: 'password',
@@ -79,7 +72,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 
 		const cf: BotConfiguration = {
 			environment: config.environment,
-			autoUpdates: config.autoUpdates,
 			bot: {
 				token: config.token,
 				guild: config.guild,

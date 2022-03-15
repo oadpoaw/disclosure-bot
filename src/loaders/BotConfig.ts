@@ -3,7 +3,6 @@ import { readFile } from '../functions/FileSystem.js';
 
 interface Config {
 	environment: 'development' | 'production';
-	autoUpdates: boolean;
 	bot: {
 		token: string;
 		guild: string;
