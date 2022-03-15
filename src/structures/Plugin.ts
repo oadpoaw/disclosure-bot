@@ -1,8 +1,11 @@
 import DisclosureError from '../classes/DisclosureError.js';
 import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent.js';
+import setTerminalTitle from '../functions/setTerminalTitle.js';
 import yaml from 'yaml';
+import z from 'zod';
 import { exec } from 'child_process';
 import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor.js';
+import { merge } from '@oadpoaw/utils';
 import { promisify } from 'util';
 import type { ClientEvents, Interaction } from 'discord.js';
 import type { Client } from '../classes/client/index.js';
@@ -17,7 +20,6 @@ import {
 	readFile,
 	writeFile,
 } from '../functions/FileSystem.js';
-import { merge } from '@oadpoaw/utils';
 
 export { default as PlaceHolder } from '../functions/PlaceHolder.js';
 
@@ -112,6 +114,19 @@ export interface PluginMetaData {
 	npmDependencies?: string[];
 }
 
+type PluginValidation = z.ZodObject<any, 'strip', z.ZodTypeAny, {}, {}>;
+
+export interface PluginConfiguration<
+	T extends PluginValidation = PluginValidation,
+> {
+	config: z.infer<T>;
+	validation: T;
+}
+
+export type InferConfiguration<C extends Plugin> = z.infer<
+	ReturnType<C['getDefaultConfig']>['validation']
+>;
+
 export default interface Plugin {
 	/**
 	 * - Called when this plugin is loaded.
@@ -138,8 +153,11 @@ export default interface Plugin {
 	): void | Promise<void>;
 }
 
-export default abstract class Plugin implements Partial<Plugin> {
-	private _cfg: any | null;
+export default abstract class Plugin<
+	T extends PluginConfiguration<PluginValidation> = PluginConfiguration<PluginValidation>,
+> implements Partial<Plugin>
+{
+	private _cfg: PluginConfiguration['config'] | null;
 	private _commands: Command[];
 	private _events: DiscordEvent<any>[];
 	private _inhibitors: Inhibitor[];
@@ -198,15 +216,25 @@ export default abstract class Plugin implements Partial<Plugin> {
 	 * Get the plugin's default configuration for plugin's config.yml
 	 * - Can be overrided.
 	 */
-	public getDefaultConfig(): Record<any, any> {
-		return {};
+	public getDefaultConfig(): PluginConfiguration<PluginValidation> {
+		return {
+			config: {},
+			validation: z.object({}),
+		};
 	}
 
 	/**
 	 * - Set the config for plugin's config.yml
+	 * - Internal use only.
+	 * 
+	 * @todo Make this public and put in types
 	 */
-	public setConfig(cfg: Record<any, any>): Record<any, any> {
-		const merged = merge(this.getDefaultConfig(), cfg);
+	private setConfig(cfg: T['config']): T['config'] {
+		const { config, validation } = this.getDefaultConfig();
+
+		const merged = merge(config, cfg);
+
+		validation.parse(merge);
 
 		writeFile(
 			['plugins', this.metadata.name, 'config.yml'],
@@ -220,7 +248,7 @@ export default abstract class Plugin implements Partial<Plugin> {
 	 * - Get the config for plugin's config.yml
 	 * @param force Forcefully get the config from plugin's config.yml and ignoring cache.
 	 */
-	public getConfig(force = false): Record<any, any> {
+	public getConfig(force = false): T['config'] {
 		if (this._cfg && !force) {
 			return this._cfg;
 		}
@@ -228,34 +256,43 @@ export default abstract class Plugin implements Partial<Plugin> {
 		const filePath = ['plugins', this.metadata.name, 'config.yml'];
 
 		if (!existsFile(filePath)) {
-			return this.setConfig(this.getDefaultConfig());
+			return this.setConfig(this.getDefaultConfig().config);
 		} else {
 			const buffer = readFile(filePath);
-			return (this._cfg = merge(
-				this.getDefaultConfig(),
+			const merged = merge(
+				this.getDefaultConfig().config,
 				yaml.parse(buffer.toString()),
-			));
+			);
+
+			this.getDefaultConfig().validation.parse(merged);
+
+			return (this._cfg = merged);
 		}
 	}
 
 	/**
 	 * - Install the plugin's NPM dependencies
-	 * - This does not saves the NPM dependencies to package.json
+	 * - This does not saves the NPM dependencies to package.json but in plugins/package.json
 	 */
 	public async install() {
 		if (
 			this.metadata.npmDependencies &&
 			this.metadata.npmDependencies.length
 		) {
-			const { stderr } = await execute(
-				`npm install --no-save ${this.metadata.npmDependencies.join(
-					' ',
-				)}`,
-			);
+			for (const dep of this.metadata.npmDependencies) {
+				try {
+					await import(dep);
+				} catch (err) {
+					const { stderr } = await execute(
+						`npm --prefix plugins install ${dep}`,
+					);
 
-			if (stderr) {
-				throw new Error(stderr);
+					if (stderr) {
+						throw new Error(stderr);
+					}
+				}
 			}
+			setTerminalTitle('Disclosure Bot');
 		}
 	}
 

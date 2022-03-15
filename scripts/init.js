@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { symlinkSync, writeFileSync } from "fs";
 import { join } from "path";
 
 const json = {
@@ -6,7 +6,11 @@ const json = {
 	"private": true,
 	"type": "module",
 	"dependencies": {},
-	"devDependencies": {}
+	"devDependencies": {},
+	"imports": {
+		"#disclosure/*": "./dist/structures/*.js"
+	}
 };
 
 writeFileSync(join(process.cwd(), 'plugins', 'package.json'), JSON.stringify(json, null, 4));
+symlinkSync(join(process.cwd(), 'dist'), join(process.cwd(), 'plugins', 'dist'));

@@ -5,7 +5,7 @@
 		"declarationMap": false,
 		"outDir": "plugins",
 		"sourceMap": false,
-		"baseUrl": "../dist",
+		"baseUrl": "./dist",
 		"paths": {
 			"#disclosure/*": [
 				"structures/*"

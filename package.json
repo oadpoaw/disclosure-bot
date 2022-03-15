@@ -44,7 +44,8 @@
 		"ts-node": "^10.7.0",
 		"winston": "^3.6.0",
 		"winston-daily-rotate-file": "^4.6.1",
-		"yaml": "^1.10.2"
+		"yaml": "^1.10.2",
+		"zod": "^3.13.4"
 	},
 	"devDependencies": {
 		"@types/inquirer": "^8.2.0",
@@ -75,5 +76,11 @@
 	},
 	"imports": {
 		"#disclosure/*": "./dist/structures/*.js"
+	},
+	"exports": {
+		"#disclosure/*": "./dist/structures/*.js"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
