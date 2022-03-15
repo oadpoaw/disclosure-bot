@@ -3,7 +3,7 @@ if (Number(process.versions.node.split('.')[0]) < 17) {
 	throw new Error(`DisclosureBot only supports Node.js 17 and above`);
 }
 
-import { name as _name, author } from './package.json' assert { type: 'json' };
+import packagageJSON from './package.json' assert { type: 'json' };
 
 import sha256File from 'sha256-file';
 import { exec } from 'child_process';
@@ -13,12 +13,12 @@ import { join } from 'path';
 
 const shell = promisify(exec);
 
-const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? folderName = process.argv.slice(2)[0] : "disclosure-bot");
+const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? process.argv.slice(2)[0] : "disclosure-bot");
 
 mkdirSync(folderPath);
 process.chdir(folderPath);
 
-const name = _name.slice(7);
+const name = packagageJSON.name.slice(7);
 
 const fileName = `${name}.tar.gz`;
 
@@ -26,14 +26,14 @@ const fileName = `${name}.tar.gz`;
 	console.log('Starting installation.');
 
 	console.time('download');
-	const fileUrl = `curl -Lo ${name}.tar.gz https://github.com/${author}/${name}/releases/latest/download/${fileName}`;
+	const fileUrl = `curl -Lo ${name}.tar.gz https://github.com/${packagageJSON.author}/${name}/releases/latest/download/${fileName}`;
 	console.log(`Downloading ${fileName} from ${fileUrl.split(' ')[3]}`);
 	await shell(fileUrl);
 	console.timeEnd('download');
 
 	console.log(`Verifying ${fileName} SHA256 Checksum...`);
 	const { stdout } = await shell(
-		`curl -L https://github.com/${author}/${name}/releases/latest/download/checksum.txt`,
+		`curl -L https://github.com/${packagageJSON.author}/${name}/releases/latest/download/checksum.txt`,
 	);
 
 	const checksum = sha256File(fileName);
