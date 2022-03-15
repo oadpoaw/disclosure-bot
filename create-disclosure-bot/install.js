@@ -20,15 +20,23 @@ process.chdir(folderPath);
 
 const name = _name.slice(7);
 
+const fileName = `${name}.tar.gz`;
+
 (async function () {
-	await shell(
-		`curl -Lo ${name}.tar.gz https://github.com/${author}/${name}/releases/latest/download/${name}.tar.gz`,
-	);
+	console.log('Starting installation.');
+
+	console.time('download');
+	const fileUrl = `curl -Lo ${name}.tar.gz https://github.com/${author}/${name}/releases/latest/download/${fileName}`;
+	console.log(`Downloading ${fileName} from ${fileUrl.split(' ')[3]}`);
+	await shell(fileUrl);
+	console.timeEnd('download');
+
+	console.log(`Verifying ${fileName} SHA256 Checksum...`);
 	const { stdout } = await shell(
 		`curl -L https://github.com/${author}/${name}/releases/latest/download/checksum.txt`,
 	);
 
-	const checksum = sha256File(`${name}.tar.gz`);
+	const checksum = sha256File(fileName);
 	const shasum = stdout.split(' ')[0];
 
 	if (shasum !== checksum) {
@@ -37,10 +45,20 @@ const name = _name.slice(7);
 		);
 	}
 
-	await shell(`tar -xzvf ${name}.tar.gz`);
-	await fs.unlink(`${name}.tar.gz`);
+	console.log(`${fileName} checksum verified!`);
 
+	console.time('unpack');
+	console.log(`Unpacking ${fileName}...`);
+	const { stdout: o } = await shell(`tar -xzvf ${name}.tar.gz`);
+	await fs.unlink(fileName);
+	console.log(o);
+	console.timeEnd('unpack');
+
+	console.time('deps');
+	console.log(`Installing Dependencies...`);
 	await shell(`npm install --production`);
+	console.timeEnd('deps');
+
 	await shell('npm run env');
 	await shell('npm run plugins:init');
 
