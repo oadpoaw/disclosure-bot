@@ -1,5 +1,7 @@
 import DisclosureError from '../classes/DisclosureError.js';
 import DiscordEvent, { Listener } from '../classes/plugin/DiscordEvent.js';
+import packageNameRegex from 'package-name-regex';
+import semverRegex from 'semver-regex';
 import setTerminalTitle from '../functions/setTerminalTitle.js';
 import yaml from 'yaml';
 import z from 'zod';
@@ -25,7 +27,37 @@ export { default as PlaceHolder } from '../functions/PlaceHolder.js';
 
 const execute = promisify(exec);
 
-export interface PluginMetaData {
+const PluginName = z
+	.string()
+	.min(3)
+	.max(16)
+	.refine((arg) => /^\w+$/.test(arg), {
+		message: 'Plugin Name should be alphanumeric and no spaces',
+	});
+
+const PluginAuthor = z.string().min(3);
+const PluginDeps = PluginName.array().optional();
+
+export const PluginMetaDataValidator = z.object({
+	name: PluginName,
+	description: z.string().min(3).max(128),
+	version: z.string().refine((arg) => semverRegex().test(arg), {
+		message: 'Version should match semver format. https://semver.org/',
+	}),
+	author: PluginAuthor.or(PluginAuthor.array().nonempty()),
+	dependencies: PluginDeps,
+	optionalDependencies: PluginDeps,
+	incompatibleDependencies: PluginDeps,
+	loadBefore: PluginDeps,
+	npmDependencies: z
+		.string()
+		.refine((arg) => packageNameRegex.test(arg))
+		.array()
+		.optional(),
+});
+
+export interface PluginMetaData
+	extends z.infer<typeof PluginMetaDataValidator> {
 	/**
 	 * - This attribute is the name of your plugin.
 	 * - Alphanumeric characters and underscores (a-z,A-Z,0-9, _)
@@ -37,6 +69,7 @@ export interface PluginMetaData {
 	/**
 	 * - The human friendly description of the plugin.
 	 * - The description can have multiple lines.
+	 * - Must not exceed 128 characters.
 	 */
 	description: string;
 	/**
@@ -52,7 +85,7 @@ export interface PluginMetaData {
 	 */
 	version: string;
 	/**
-	 * - Author(s) of the plugin
+	 * - Author(s) of the plugin.
 	 * - Uniquely identifies who developed this plugin.
 	 * - Used in some server error messages to provide helpful feedback on who to contact when an error occurs.
 	 *
@@ -71,7 +104,7 @@ export interface PluginMetaData {
 	 * author: ['oadpoaw <oadpoaw@gmail.com>']
 	 * ```
 	 */
-	author: string | string[];
+	author: string | [string];
 	/**
 	 * - A list of plugins that your plugin requires to load.
 	 * - And plugins that will be loaded **before** your plugin.

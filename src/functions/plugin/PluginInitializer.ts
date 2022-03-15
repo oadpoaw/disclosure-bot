@@ -1,4 +1,4 @@
-import { VerifyDependencies, VerifyMetaData } from './PluginVerifiers.js';
+import PluginVerifier from './PluginVerifier.js';
 import type Plugin from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
 import type { Graph } from '../../classes/util/Graph.js';
@@ -13,8 +13,7 @@ export async function PluginInitializer(
 
 	for (const plugin of plugins) {
 		try {
-			await VerifyMetaData(plugin);
-			VerifyDependencies(plugin, client);
+			PluginVerifier(client, plugin);
 
 			await plugin.init();
 		} catch (err) {
