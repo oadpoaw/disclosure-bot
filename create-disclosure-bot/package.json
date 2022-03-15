@@ -1,10 +1,11 @@
 {
 	"$schema": "http://json.schemastore.org/package",
 	"name": "create-disclosure-bot",
-	"version": "1.1.46",
+	"version": "1.1.47",
 	"bin": "./install.js",
 	"license": "MIT",
 	"author": "oadpoaw",
+	"type": "module",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/oadpoaw/disclosure-bot.git"

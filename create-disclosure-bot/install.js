@@ -3,14 +3,13 @@ if (Number(process.versions.node.split('.')[0]) < 17) {
 	throw new Error(`DisclosureBot only supports Node.js 17 and above`);
 }
 
-const packageJSON = require('./package.json');
+import { name as _name, author } from './package.json' assert { type: 'json' };
 
-//@ts-check
-const sha256File = require('sha256-file');
-const { exec } = require('child_process');
-const { promises: fs, mkdirSync } = require('fs');
-const { promisify } = require('util');
-const { join } = require('path');
+import sha256File from 'sha256-file';
+import { exec } from 'child_process';
+import { promises as fs, mkdirSync } from 'fs';
+import { promisify } from 'util';
+import { join } from 'path';
 
 const shell = promisify(exec);
 
@@ -19,14 +18,14 @@ const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? folder
 mkdirSync(folderPath);
 process.chdir(folderPath);
 
-const name = packageJSON.name.slice(7);
+const name = _name.slice(7);
 
 (async function () {
 	await shell(
-		`curl -Lo ${name}.tar.gz https://github.com/${packageJSON.author}/${name}/releases/latest/download/${name}.tar.gz`,
+		`curl -Lo ${name}.tar.gz https://github.com/${author}/${name}/releases/latest/download/${name}.tar.gz`,
 	);
 	const { stdout } = await shell(
-		`curl -L https://github.com/${packageJSON.author}/${name}/releases/latest/download/checksum.txt`,
+		`curl -L https://github.com/${author}/${name}/releases/latest/download/checksum.txt`,
 	);
 
 	const checksum = sha256File(`${name}.tar.gz`);
