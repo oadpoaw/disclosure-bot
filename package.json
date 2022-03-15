@@ -77,9 +77,6 @@
 	"imports": {
 		"#disclosure/*": "./dist/structures/*.js"
 	},
-	"exports": {
-		"#disclosure/*": "./dist/structures/*.js"
-	},
 	"publishConfig": {
 		"access": "public"
 	}

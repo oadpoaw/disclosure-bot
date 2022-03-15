@@ -39,3 +39,31 @@ jobs:
           files: |
             disclosure-bot.tar.gz
             checksum.txt
+
+  npm-release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 17
+          registry-url: https://registry.npmjs.org/
+
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            ~/.npm
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        run: npm ci
+
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
