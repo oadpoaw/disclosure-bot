@@ -6,3 +6,4 @@ plugins/
 SECURITY.md
 .github/
 .vscode/
+dist/
