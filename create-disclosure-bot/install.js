@@ -39,7 +39,7 @@ const name = packageJSON.name.slice(7);
 	}
 
 	await shell(`tar -xzvf ${name}.tar.gz`);
-	await fs.unlink(archive);
+	await fs.unlink(`${name}.tar.gz`);
 
 	await shell(`npm install --production`);
 	await shell('npm run env');
