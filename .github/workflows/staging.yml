@@ -10,6 +10,7 @@ on:
       - "*.md"
       - LICENSE
       - ecosystem.config.js
+      - create-disclosure-bot/**
 
 jobs:
   pre_ci:

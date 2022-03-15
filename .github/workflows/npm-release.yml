@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     paths:
-      - create-disclosure-bot/*
+      - create-disclosure-bot/**
 
 jobs:
   npm-release:
