@@ -12,16 +12,12 @@ const { promises: fs, mkdirSync } = require('fs');
 const { promisify } = require('util');
 const { join } = require('path');
 
-const executePromise = promisify(exec);
+const shell = promisify(exec);
 
 const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? folderName = process.argv.slice(2)[0] : "disclosure-bot");
 
 mkdirSync(folderPath);
 process.chdir(folderPath);
-
-async function shell(command) {
-	await executePromise(command);
-}
 
 const name = packageJSON.name.slice(7);
 
