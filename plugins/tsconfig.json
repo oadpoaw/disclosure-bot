@@ -1,0 +1,20 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"declaration": false,
+		"declarationMap": false,
+		"outDir": "plugins",
+		"sourceMap": false,
+		"baseUrl": "../dist",
+		"paths": {
+			"#disclosure/*": [
+				"structures/*"
+			]
+		}
+	},
+	"exclude": [],
+	"extends": "../tsconfig.json",
+	"include": [
+		"."
+	]
+}

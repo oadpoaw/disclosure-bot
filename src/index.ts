@@ -1,3 +1,7 @@
+if (Number(process.versions.node.split('.')[0]) < 17) {
+	throw new Error(`DisclosureBot only supports Node.js 17 and above`);
+}
+
 import BotConfig from './loaders/BotConfig.js';
 import Logger from './utils/Logger.js';
 import Updater from './functions/Updater.js';

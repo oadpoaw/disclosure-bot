@@ -1,12 +1,11 @@
 import BotConfig from '../loaders/BotConfig.js';
-import Config from '../Config.json';
 import fetch from 'node-fetch';
 import Logger from '../utils/Logger.js';
 import packageJSON from '../../package.json';
 
 async function checkUpdates() {
 	const response = await fetch(
-		`https://api.github.com/repos/${Config.owner}/${Config.repository}/releases/latest`,
+		`https://api.github.com/repos/${packageJSON.author}/${packageJSON.name}/releases/latest`,
 	);
 	const json = (await response.json()) as { tag_name: string };
 

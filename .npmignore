@@ -1,0 +1,8 @@
+.npmrc
+*.log
+docs
+src/
+plugins/
+SECURITY.md
+.github/
+.vscode/

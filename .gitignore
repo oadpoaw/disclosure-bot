@@ -107,5 +107,6 @@ dist
 /.config.yml
 /plugins/**
 !/plugins/*.ts
+!/plugins/tsconfig.json
 
 build/

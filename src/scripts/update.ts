@@ -1,4 +1,3 @@
-import Config from '../Config.json';
 import fetch from 'node-fetch';
 import Logger from '../utils/Logger.js';
 import packageJSON from '../../package.json';
@@ -12,7 +11,7 @@ const execute = promisify(exec);
 
 (async function () {
 	const response = await fetch(
-		`https://api.github.com/repos/${Config.owner}/${Config.repository}/releases/latest`,
+		`https://api.github.com/repos/${packageJSON.author}/${packageJSON.name}/releases/latest`,
 	);
 	const json = (await response.json()) as { tag_name: string };
 
@@ -22,13 +21,13 @@ const execute = promisify(exec);
 
 	await fs.unlink(path.join(process.cwd(), 'dist')).catch(() => {});
 
-	const archive = path.join(process.cwd(), Config.filename);
+	const archive = path.join(process.cwd(), `${packageJSON.name}.tar.gz`);
 
 	await execute(
-		`curl -Lo ${Config.filename} https://github.com/${Config.owner}/${Config.repository}/releases/latest/download/${Config.filename}`,
+		`curl -Lo ${packageJSON.name}.tar.gz https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/${packageJSON.name}.tar.gz`,
 	);
 	const { stdout } = await execute(
-		`curl -L https://github.com/${Config.owner}/${Config.repository}/releases/latest/download/checksum.txt`,
+		`curl -L https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/checksum.txt`,
 	);
 
 	const checksum = sha256File(archive);
@@ -40,7 +39,7 @@ const execute = promisify(exec);
 		);
 	}
 
-	await execute(`tar -xzvf ${Config.filename}`);
+	await execute(`tar -xzvf ${packageJSON.name}.tar.gz`);
 	await fs.unlink(archive);
 
 	await execute(`npm install --production`);

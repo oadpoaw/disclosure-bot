@@ -2,6 +2,7 @@ import yaml from 'yaml';
 import { existsFile, writeFile } from '../functions/FileSystem.js';
 import { prompt } from 'inquirer';
 import type BotConfig from '../loaders/BotConfig.js';
+import { execSync } from 'child_process';
 
 type BotConfiguration = ReturnType<typeof BotConfig>;
 
@@ -89,6 +90,8 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 	} else {
 		writeFile(['config.yml'], yaml.stringify(cfg));
 	}
+
+	execSync('npm run plugins:init');
 
 	console.log('Done!');
 })();
