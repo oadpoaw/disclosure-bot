@@ -9,7 +9,6 @@ on:
 
 jobs:
   npm-release:
-    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

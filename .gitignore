@@ -110,3 +110,4 @@ dist
 !/plugins/tsconfig.json
 
 build/
+create-disclosure-bot/package-lock.json
