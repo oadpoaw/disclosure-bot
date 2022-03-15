@@ -1,7 +1,9 @@
-name: Release
+name: NPM Release
 
 on:
   push:
+    branches:
+      - main
     paths:
       - create-disclosure-bot/**
 
