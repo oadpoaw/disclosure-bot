@@ -1,11 +1,16 @@
 #!/usr/bin/env node
-import packageJSON from './package.json' assert { type: 'json' };
+if (Number(process.versions.node.split('.')[0]) < 17) {
+	throw new Error(`DisclosureBot only supports Node.js 17 and above`);
+}
+
+const packageJSON = require('./package.json');
 
 //@ts-check
-import sha256File from 'sha256-file';
-import { exec } from 'child_process';
-import { promises as fs, mkdirSync } from 'fs';
-import { promisify } from 'util';
+const sha256File = require('sha256-file');
+const { exec } = require('child_process');
+const { promises: fs, mkdirSync } = require('fs');
+const { promisify } = require('util');
+const { join } = require('path');
 
 const executePromise = promisify(exec);
 
