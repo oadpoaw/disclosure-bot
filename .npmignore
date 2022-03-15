@@ -7,3 +7,5 @@ SECURITY.md
 .github/
 .vscode/
 dist/
+config.js
+tsconfig.json
