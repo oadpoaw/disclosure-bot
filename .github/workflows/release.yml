@@ -24,7 +24,7 @@ jobs:
           mkdir plugins
 
       - name: Create release archive
-        run: tar -cvzf disclosure-bot.tar.gz package.json dist LICENSE plugins config.js
+        run: tar -cvzf disclosure-bot.tar.gz package.json dist LICENSE plugins config.js scripts
 
       - name: Create checksum.txt
         run: |
