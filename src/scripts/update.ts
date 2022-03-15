@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import Logger from '../utils/Logger.js';
 import packageJSON from '../../package.json';
 import path from 'path';
 import sha256File from 'sha256-file';
@@ -44,8 +43,8 @@ const execute = promisify(exec);
 
 	await execute(`npm install --production`);
 
-	Logger.info('Updated.');
+	console.log('Updated.');
 })().catch((err) => {
-	Logger.error(err);
+	console.error(err);
 	process.exit(1);
 });

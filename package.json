@@ -14,8 +14,8 @@
 	"private": true,
 	"scripts": {
 		"start": "node --no-warnings .",
-		"upgrade": "node dist/scripts/update.js",
-		"env": "node dist/scripts/env.js",
+		"upgrade": "node --no-warnings dist/scripts/update.js",
+		"env": "dist/scripts/env.js",
 		"prebuild": "npm run clean",
 		"build": "tsc --build",
 		"postbuild": "node scripts/postbuild.js",
