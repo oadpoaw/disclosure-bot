@@ -1,9 +1,9 @@
-const before = Date.now();
 import { Client } from './classes/client/index.js';
 import PluginLoader from './loaders/plugin/PluginLoader.js';
 import ms from 'ms';
 import { clientOptions } from '../config.js';
 
+const before = Date.now();
 const client = new Client(clientOptions);
 
 client.once('ready', async () => {
