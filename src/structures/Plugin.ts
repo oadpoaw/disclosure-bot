@@ -226,7 +226,7 @@ export default abstract class Plugin<
 	/**
 	 * - Set the config for plugin's config.yml
 	 * - Internal use only.
-	 * 
+	 *
 	 * @todo Make this public and put in types
 	 */
 	private setConfig(cfg: T['config']): T['config'] {
