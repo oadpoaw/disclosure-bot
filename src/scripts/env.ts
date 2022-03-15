@@ -1,13 +1,13 @@
 import yaml from 'yaml';
 import { existsFile, writeFile } from '../functions/FileSystem.js';
-import { prompt } from 'inquirer';
+import inquirer from 'inquirer';
 import type BotConfig from '../loaders/BotConfig.js';
 
 type BotConfiguration = ReturnType<typeof BotConfig>;
 
 (async function env() {
 	if (existsFile(['config.yml'])) {
-		const { confirmed } = await prompt([
+		const { confirmed } = await inquirer.prompt([
 			{
 				type: 'confirm',
 				message:
@@ -20,7 +20,7 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 		if (!confirmed) process.exit(1);
 	}
 
-	const { confirmed } = await prompt([
+	const { confirmed } = await inquirer.prompt([
 		{
 			type: 'confirm',
 			message:
@@ -41,7 +41,7 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 	};
 
 	if (confirmed) {
-		const config = (await prompt([
+		const config = (await inquirer.prompt([
 			{
 				type: 'list',
 				message: 'Select environment',
