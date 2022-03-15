@@ -13,7 +13,8 @@ import { join } from 'path';
 
 const shell = promisify(exec);
 
-const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? process.argv.slice(2)[0] : "disclosure-bot");
+const folderName = process.argv.slice(2).length > 0 ? process.argv.slice(2)[0] : "disclosure-bot";
+const folderPath = join(process.cwd(), folderName);
 
 mkdirSync(folderPath);
 process.chdir(folderPath);
@@ -59,7 +60,7 @@ const fileName = `${name}.tar.gz`;
 	await shell(`npm install --production`);
 	console.timeEnd('deps');
 
-	console.log(`DisclosureBot Installation Done! Now run \`npm run env\` to initialize the bot project and follow prompts along.`);
+	console.log(`DisclosureBot Installation Done! Now run \`cd ${folderName}\` then \`npm run env\` to initialize the bot project and follow prompts along.`);
 })().catch((err) => {
 	console.error(`DisclosureBot Installation failed:`);
 	console.error(err);
