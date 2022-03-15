@@ -26,9 +26,9 @@
 		"clean": "rimraf dist && rimraf build",
 		"lint": "prettier --check \"src/**/*.ts\"",
 		"format": "prettier --write \"src/**/*.ts\"",
-		"v:patch": "npm version patch -m \"chore(release): %s\" -s",
-		"v:minor": "npm version minor -m \"chore(release): %s\" -s",
-		"v:major": "npm version major -m \"chore(release): %s\" -s"
+		"v:patch": "npm version patch -m \"chore(release): %s\" --sign-git-tag",
+		"v:minor": "npm version minor -m \"chore(release): %s\" --sign-git-tag",
+		"v:major": "npm version major -m \"chore(release): %s\" --sign-git-tag"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^0.12.0",
