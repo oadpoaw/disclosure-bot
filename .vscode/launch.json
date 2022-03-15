@@ -5,8 +5,8 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"command": "npm start",
-			"name": "Run",
+			"command": "node --no-warnings .",
+			"name": "Launch Program",
 			"request": "launch",
 			"type": "node-terminal"
 		},
