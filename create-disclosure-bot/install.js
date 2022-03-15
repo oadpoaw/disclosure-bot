@@ -20,9 +20,7 @@ mkdirSync(folderPath);
 process.chdir(folderPath);
 
 async function shell(command) {
-	const { stdout, stderr } = await executePromise(command);
-	if (stderr) throw new Error(stderr);
-	console.log(stdout);
+	await executePromise(command);
 }
 
 const name = packageJSON.name.slice(7);
