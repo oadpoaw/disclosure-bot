@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import packageJSON from '../package.json' assert { type: 'json' };
+import packageJSON from './package.json' assert { type: 'json' };
 
 //@ts-check
 import sha256File from 'sha256-file';
