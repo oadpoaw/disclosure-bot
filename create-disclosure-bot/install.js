@@ -12,19 +12,27 @@ const { promises: fs, mkdirSync } = require('fs');
 const { promisify } = require('util');
 const { join } = require('path');
 
-const execute = promisify(exec);
+const executePromise = promisify(exec);
 
 const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? folderName = process.argv.slice(2)[0] : "disclosure-bot");
 
 mkdirSync(folderPath);
 process.chdir(folderPath);
 
+async function shell(command) {
+	const { stdout, stderr } = await executePromise(command);
+	if (stderr) throw new Error(stderr);
+	console.log(stdout);
+}
+
+const name = packageJSON.name.slice(7);
+
 (async function () {
-	await execute(
-		`curl -Lo ${packageJSON.name}.tar.gz https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/${packageJSON.name}.tar.gz`,
+	await shell(
+		`curl -Lo ${name}.tar.gz https://github.com/${packageJSON.author}/${name}/releases/latest/download/${name}.tar.gz`,
 	);
-	const { stdout } = await execute(
-		`curl -L https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/checksum.txt`,
+	const { stdout } = await shell(
+		`curl -L https://github.com/${packageJSON.author}/${name}/releases/latest/download/checksum.txt`,
 	);
 
 	const checksum = sha256File(archive);
@@ -36,12 +44,12 @@ process.chdir(folderPath);
 		);
 	}
 
-	await execute(`tar -xzvf ${packageJSON.name}.tar.gz`);
+	await shell(`tar -xzvf ${name}.tar.gz`);
 	await fs.unlink(archive);
 
-	await execute(`npm install --production`);
-	await execute('npm run env');
-	await execute('npm run plugins:init');
+	await shell(`npm install --production`);
+	await shell('npm run env');
+	await shell('npm run plugins:init');
 
 	console.log(`DisclosureBot Installation Done!`);
 })().catch((err) => {
