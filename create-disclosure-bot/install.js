@@ -4,13 +4,14 @@ import packageJSON from '../package.json' assert { type: 'json' };
 //@ts-check
 import sha256File from 'sha256-file';
 import { exec } from 'child_process';
-import { promises as fs } from 'fs';
+import { promises as fs, mkdirSync } from 'fs';
 import { promisify } from 'util';
 
 const executePromise = promisify(exec);
 
 const folderPath = join(process.cwd(), process.argv.slice(2).length > 0 ? folderName = process.argv.slice(2)[0] : "disclosure-bot");
 
+mkdirSync(folderPath);
 process.chdir(folderPath);
 
 async function shell(command) {
