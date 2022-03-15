@@ -29,7 +29,7 @@ const name = packageJSON.name.slice(7);
 		`curl -L https://github.com/${packageJSON.author}/${name}/releases/latest/download/checksum.txt`,
 	);
 
-	const checksum = sha256File(archive);
+	const checksum = sha256File(`${name}.tar.gz`);
 	const shasum = stdout.split(' ')[0];
 
 	if (shasum !== checksum) {
