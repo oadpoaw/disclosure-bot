@@ -4,7 +4,6 @@
 	"version": "1.1.10",
 	"main": "./dist/index.js",
 	"type": "module",
-	"bin": "./scripts/install.js",
 	"license": "MIT",
 	"author": "oadpoaw",
 	"repository": {
@@ -15,7 +14,7 @@
 	"scripts": {
 		"start": "node --no-warnings .",
 		"upgrade": "node --no-warnings dist/scripts/update.js",
-		"env": "dist/scripts/env.js",
+		"env": "node --no-warnings dist/scripts/env.js",
 		"prebuild": "npm run clean",
 		"build": "tsc --build",
 		"postbuild": "node scripts/postbuild.js",
