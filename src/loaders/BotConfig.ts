@@ -1,3 +1,4 @@
+import Logger from '../utils/Logger.js';
 import yaml from 'yaml';
 import z from 'zod';
 import { readFile } from '../functions/FileSystem.js';
@@ -17,8 +18,12 @@ let config: Config;
 
 export default function BotConfig(): Config {
 	if (config) return config;
+	Logger.info(`[core] Loading config.yml`);
+
 	const buffer = readFile(['config.yml']);
 	config = yaml.parse(buffer.toString());
+
 	Validator.parse(config);
+
 	return config;
 }

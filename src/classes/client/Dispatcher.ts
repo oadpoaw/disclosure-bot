@@ -15,12 +15,12 @@ export default class Dispatcher {
 	public readonly awaiting: Set<string>;
 	public readonly inhibitors: Inhibitor[];
 
-	private registered: boolean;
+	private loaded: boolean;
 
 	public constructor(private client: Client) {
 		this.awaiting = new Set();
 		this.inhibitors = [];
-		this.registered = false;
+		this.loaded = false;
 	}
 
 	private async inihibit(
@@ -41,13 +41,15 @@ export default class Dispatcher {
 		return false;
 	}
 
-	private async updateSlashCommands() {
+	private async sync() {
 		const client = this.client;
 
 		if (
 			(client.shard?.ids.includes(0) || !client.config.bot.sharding) &&
 			client.commands.size
 		) {
+			this.client.logger.info(`[dispatcher] Syncing slash commands...`);
+
 			const commands = client.commands.map(
 				(c) =>
 					({
@@ -77,8 +79,10 @@ export default class Dispatcher {
 					!currentCommands.some((c) => c.name === command.name),
 			);
 
-			for (const newCommand of newCommands)
+			for (const newCommand of newCommands) {
+				client.logger.info(`Adding slash command: ${newCommand.name}`);
 				await client.application?.commands.create(newCommand, guildID);
+			}
 
 			const deletedCommands = currentCommands
 				.filter(
@@ -86,8 +90,12 @@ export default class Dispatcher {
 				)
 				.toJSON();
 
-			for (const deletedCommand of deletedCommands)
+			for (const deletedCommand of deletedCommands) {
+				client.logger.info(
+					`Deleting slash command: ${deletedCommand.name}`,
+				);
 				await deletedCommand.delete();
+			}
 
 			const updatedCommands = commands.filter((command) =>
 				currentCommands.some((c) => c.name === command.name),
@@ -122,10 +130,15 @@ export default class Dispatcher {
 					}
 
 					if (modified) {
+						client.logger.info(
+							`Updating slash command: ${updatedCommand.name}`,
+						);
 						await previousCommand.edit(updatedCommand);
 					}
 				}
 			}
+
+			this.client.logger.info(`[dispatcher] Slash commands synced!`);
 		}
 	}
 
@@ -133,14 +146,16 @@ export default class Dispatcher {
 		this.awaiting.delete(user_id);
 	}
 
-	public async register() {
-		if (this.registered)
-			throw new DisclosureError(`Dispatcher already registered.`);
+	public async load() {
+		if (this.loaded)
+			throw new DisclosureError(`Dispatcher already loaded.`);
 
-		this.registered = true;
+		this.client.logger.info(`[dispatcher] loading...`);
+		this.loaded = true;
 
-		await this.updateSlashCommands();
+		await this.sync();
 
+		this.client.logger.info(`[dispatcher] listening to events...`);
 		this.client.on('interactionCreate', async (interaction) => {
 			if (
 				interaction.user.bot ||
@@ -182,5 +197,7 @@ export default class Dispatcher {
 				this.exitStrategy(interaction.user.id);
 			}
 		});
+
+		this.client.logger.info(`[dispatcher] loaded`);
 	}
 }
