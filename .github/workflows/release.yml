@@ -16,6 +16,9 @@ jobs:
           node-version: 17
 
       - run: npm ci
+
+      - run: node ./scripts/ci-build.js
+
       - run: npm run build
 
       - name: Exclude plugin folder then recreate it
