@@ -3,6 +3,8 @@ import Logger from './utils/Logger.js';
 import { ShardingManager } from 'discord.js';
 import { shardOptions } from '../config.js';
 
+Logger.info(`[core] Sharding enabled.`);
+
 const manager = new ShardingManager('./dist/Disclosure.js', {
 	...shardOptions,
 	token: BotConfig().bot.token,

@@ -13,6 +13,7 @@ export async function PluginInitializer(
 
 	for (const plugin of plugins) {
 		try {
+			client.logger.info(`- ${plugin.metadata.name}`);
 			PluginVerifier(client, plugin);
 
 			await plugin.init();

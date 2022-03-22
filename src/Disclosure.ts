@@ -7,9 +7,16 @@ const before = Date.now();
 const client = new Client(clientOptions);
 
 client.once('ready', async () => {
-	await client.dispatcher.register();
+	client.logger.info(`Authenticated.`);
+	await client.dispatcher.load();
 
-	if (!client.shard) client.logger.info(`Done! ${ms(Date.now() - before)}`);
+	if (!client.shard) {
+		client.logger.info(`Done! ${ms(Date.now() - before)}`);
+	}
 });
 
-PluginLoader(client).then(() => client.login(client.config.bot.token));
+PluginLoader(client).then(() => {
+	client.logger.info(`Authenticating...`);
+
+	client.login(client.config.bot.token);
+});

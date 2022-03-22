@@ -60,7 +60,7 @@ const fileName = `${name}.tar.gz`;
 	await shell(`npm install --production`);
 	console.timeEnd('deps');
 
-	console.log(`DisclosureBot Installation Done! Now run \`cd ${folderName}\` then \`npm run env\` to initialize the bot project and follow prompts along.`);
+	console.log(`DisclosureBot Installation Done! Now run \`cd ${folderName}\` then \`npm run env\` to initialize the bot project and follow the prompts along.`);
 })().catch((err) => {
 	console.error(`DisclosureBot Installation failed:`);
 	console.error(err);
