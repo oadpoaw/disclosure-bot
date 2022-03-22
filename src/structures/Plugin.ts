@@ -267,7 +267,7 @@ export default abstract class Plugin<
 
 		const merged = merge(config, cfg);
 
-		validation.parse(merge);
+		validation.parse(merged);
 
 		writeFile(
 			['plugins', this.metadata.name, 'config.yml'],
