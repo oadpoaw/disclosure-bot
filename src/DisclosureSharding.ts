@@ -35,4 +35,5 @@ manager.on('shardCreate', (shard) => {
 	Logger.info(`[shard][...][${shard.id}] created`);
 });
 
+Logger.info(`[shard] Spawning shards...`);
 manager.spawn();
