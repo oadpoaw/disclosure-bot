@@ -111,3 +111,4 @@ dist
 
 build/
 create-disclosure-bot/package-lock.json
+config.js
