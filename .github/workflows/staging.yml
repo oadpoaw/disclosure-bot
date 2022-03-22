@@ -76,5 +76,8 @@ jobs:
       - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
         run: npm ci
 
+      - name: Create config.js
+        run: node ./scripts/ci-build.js
+
       - name: Build
         run: npm run build
