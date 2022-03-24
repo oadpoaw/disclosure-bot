@@ -8,6 +8,7 @@ const Validator = z.object({
 		token: z.string().nonempty(),
 		guild: z.string().nonempty(),
 		sharding: z.boolean(),
+		singleGuild: z.boolean().optional(),
 	}),
 });
 

@@ -61,7 +61,8 @@ export default class Dispatcher {
 			);
 
 			const guildID =
-				client.config.environment === 'development'
+				client.config.environment === 'development' ||
+				client.config.bot.singleGuild
 					? client.config.bot.guild
 					: undefined;
 
