@@ -1,4 +1,4 @@
-[discord]: https://discord.gg/qHE7YPdyfV
+[discord]: https://discord.gg/fYAW7BT5FD
 
 # Contributor Covenant Code of Conduct
 
