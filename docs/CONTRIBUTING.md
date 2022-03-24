@@ -25,7 +25,7 @@ There are a number of guidelines considered when reviewing Pull Requests to be m
 -   Everything should be shard compliant. If code you put in a pull request would break when sharding, break other things from supporting sharding, or is incompatible with sharding; then you will need to think of a way to make it work with sharding in mind before the pull request will be accepted and merged.
 
 
-[discord server]: https://discord.gg/qHE7YPdyfV
+[discord server]: https://discord.gg/fYAW7BT5FD
 [here]: https://github.com/oadpoaw/disclosure-bot/pulls
 [node.js]: https://nodejs.org/en/download/
 [yarn]: https://yarnpkg.com/getting-started/install
