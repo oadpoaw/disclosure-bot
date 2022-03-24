@@ -44,7 +44,7 @@ declare module 'discord.js' {
 		/**
 		 * - Logger singleton.
 		 *
-		 * - We recommend using this logger instead of console.log to leverage the logging feature
+		 * - We recommend using this logger instead of console.log to leverage and facilitate  the logging feature
 		 */
 		logger: typeof Logger;
 		config: ReturnType<typeof BotConfig>;

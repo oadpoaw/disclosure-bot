@@ -9,7 +9,7 @@ import { exec } from 'child_process';
 import { Inhibitor, InhibitorFunction } from '../classes/plugin/Inhibitor.js';
 import { merge } from '@oadpoaw/utils';
 import { promisify } from 'util';
-import type { ClientEvents, Interaction } from 'discord.js';
+import type { ClientEvents, CommandInteraction } from 'discord.js';
 import type { Client } from '../classes/client/index.js';
 import Command, {
 	BuilderFunction,
@@ -67,7 +67,7 @@ export interface PluginMetaData
 	 */
 	name: string;
 	/**
-	 * - The human friendly description of the plugin.
+	 * - The human-friendly description of the plugin.
 	 * - The description can have multiple lines.
 	 * - Must not exceed 128 characters.
 	 */
@@ -110,7 +110,7 @@ export interface PluginMetaData
 	 * - And plugins that will be loaded **before** your plugin.
 	 * - If any plugin listed here is not found your plugin will fail to load.
 	 *
-	 * This should be a valid plugin name and it's CaSe-SeNsItIvE
+	 * This should be a valid plugin name and its CaSe-SeNsItIvE
 	 *
 	 * Example:
 	 * ```js
@@ -135,14 +135,14 @@ export interface PluginMetaData
 	 */
 	loadBefore?: string[];
 	/**
-	 * - A list of packages that your plugin needs which can be loaded from NPM.
+	 * - A list of packages that your plugin needs that can be loaded from NPM.
 	 *
 	 * Example:
 	 * ```js
 	 * dependencies: ['is-plain-object', 'lodash']
 	 * ```
 	 *
-	 * Note: The dependencies listed won't be save to package.json
+	 * Note: The dependencies listed won't be saved to package.json
 	 */
 	npmDependencies?: string[];
 }
@@ -174,13 +174,16 @@ export default interface Plugin {
 	/**
 	 * - Called when some of this plugin's command is done executing.
 	 */
-	onCommand(interaction: Interaction, command: Command): void | Promise<void>;
+	onCommand(
+		interaction: CommandInteraction,
+		command: Command,
+	): void | Promise<void>;
 
 	/**
-	 * - Called when some of this plugin's commands throws an error.
+	 * - Called when some of this plugin's commands throw an error.
 	 */
 	onCommandError(
-		interaction: Interaction,
+		interaction: CommandInteraction,
 		command: Command,
 		error: any,
 	): void | Promise<void>;
@@ -201,7 +204,7 @@ export default abstract class Plugin<
 	 */
 	protected readonly client: Client;
 	/**
-	 * - The file name which where the plugin was loaded.
+	 * - The filename where the plugin was loaded.
 	 */
 	public readonly fileName: string;
 
@@ -216,7 +219,7 @@ export default abstract class Plugin<
 	}
 
 	/**
-	 * Get the plugin's metadata
+	 * Plugin's metadata
 	 */
 	abstract readonly metadata: PluginMetaData;
 
@@ -246,8 +249,8 @@ export default abstract class Plugin<
 	}
 
 	/**
-	 * Get the plugin's default configuration for plugin's config.yml
-	 * - Can be overrided.
+	 * Get the plugin's default configuration for the plugin's config.yml
+	 * - Can be overridden.
 	 */
 	public getDefaultConfig(): PluginConfiguration<PluginValidation> {
 		return {
@@ -278,8 +281,8 @@ export default abstract class Plugin<
 	}
 
 	/**
-	 * - Get the config for plugin's config.yml
-	 * @param force Forcefully get the config from plugin's config.yml and ignoring cache.
+	 * - Get the config for the plugin's config.yml
+	 * @param force Forcefully get the config from plugin's config.yml and ignore the cache.
 	 */
 	public getConfig(force = false): T['config'] {
 		if (this._cfg && !force) {
@@ -304,8 +307,8 @@ export default abstract class Plugin<
 	}
 
 	/**
-	 * - Install the plugin's NPM dependencies
-	 * - This does not saves the NPM dependencies to package.json but in plugins/package.json
+	 * - Install the plugin's NPM dependencies (Does not reinstall if the package is already installed)
+	 * - This does not save the NPM dependencies to package.json but in plugins/package.json
 	 */
 	public async install() {
 		if (
@@ -332,6 +335,7 @@ export default abstract class Plugin<
 	/**
 	 * - Reload plugin's configuration from it's config.yml
 	 * - Reinstalls the npmDependencies of the plugin.
+	 * - Then calls `onReload` function if it exists.
 	 */
 	public async reload() {
 		this.getConfig(true);

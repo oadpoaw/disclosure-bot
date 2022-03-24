@@ -22,6 +22,7 @@
 		"plugins": "tsc --project plugins/tsconfig.json",
 		"postplugins": "node scripts/postbuild-plugins.js",
 		"plugins:init": "node scripts/init.js",
+		"plugins:deps": "npm --prefix plugins install",
 		"clean": "rimraf dist && rimraf build",
 		"lint": "prettier --check \"src/**/*.ts\"",
 		"format": "prettier --write \"src/**/*.ts\"",
