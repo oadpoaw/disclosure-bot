@@ -39,7 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          generate_release_notes: true
+          body: |
+            Full Changelog: ['CHANGELOG.md'](https://github.com/oadpoaw/disclosure-bot/blob/main/CHANGELOG.md)
           files: |
             disclosure-bot.tar.gz
             checksum.txt
