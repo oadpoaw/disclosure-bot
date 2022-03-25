@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.1.28](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.27...v1.1.28)
+## [v1.1.29](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.28...v1.1.29)
+
+### Commits
+
+- feat: release body [`3bf63b9`](https://github.com/oadpoaw/disclosure-bot/commit/3bf63b986ee59676756bb03e9831507f28cca70a)
+
+## [v1.1.28](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.27...v1.1.28) - 2022-03-25
 
 ### Commits
 
 - refactor: use changelog instead [`091ef2f`](https://github.com/oadpoaw/disclosure-bot/commit/091ef2f7a66450af781f27c40b847715b7441586)
+- chore(release): 1.1.28 [`584540d`](https://github.com/oadpoaw/disclosure-bot/commit/584540dfe09df370085a6e1b4134ea29c14ed5d7)
 
 ## [v1.1.27](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.26...v1.1.27) - 2022-03-25
 
