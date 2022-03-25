@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.1.25](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.25...v1.1.25)
+## [v1.1.26](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.25...v1.1.26)
 
 ### Commits
 
+- refactor: use HISTORY instead of CHANGELOG [`066a39d`](https://github.com/oadpoaw/disclosure-bot/commit/066a39d15af8100eab3a2644685f5edb5c401dc9)
 - fixed typo [`2da9a9c`](https://github.com/oadpoaw/disclosure-bot/commit/2da9a9c1818556f65be4fada6af340a56736df4a)
 
 ## [v1.1.25](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.24...v1.1.25) - 2022-03-25
