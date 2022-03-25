@@ -39,6 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          generate_release_notes: true
           files: |
             disclosure-bot.tar.gz
             checksum.txt
