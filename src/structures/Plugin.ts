@@ -170,7 +170,7 @@ export default interface Plugin {
 	onReload(): void | Promise<void>;
 
 	/**
-	 * - Called when all plugins has been loaded.
+	 * - Called when all plugins have been loaded.
 	 */
 	onPluginsLoad(): void | Promise<void>;
 
