@@ -29,7 +29,7 @@
 		"v:patch": "npm version patch -m \"chore(release): %s\" --sign-git-tag",
 		"v:minor": "npm version minor -m \"chore(release): %s\" --sign-git-tag",
 		"v:major": "npm version major -m \"chore(release): %s\" --sign-git-tag",
-		"version": "auto-changelog -p && git add CHANGELOG.md"
+		"version": "auto-changelog -p && git add HISTORY.md"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^0.12.0",
@@ -60,6 +60,9 @@
 		"rimraf": "^3.0.2",
 		"typescript": "^4.6.2"
 	},
+	"imports": {
+		"#disclosure/*": "./dist/structures/*.js"
+	},
 	"engines": {
 		"node": ">=v17.0.0",
 		"npm": ">=8.0.0"
@@ -72,7 +75,10 @@
 		"endOfLine": "auto",
 		"useTabs": true
 	},
-	"imports": {
-		"#disclosure/*": "./dist/structures/*.js"
+	"auto-changelog": {
+		"output": "HISTORY.md",
+		"hideCredit": true,
+		"template": "keepachangelog",
+		"commitLimit": false
 	}
 }
