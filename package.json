@@ -29,7 +29,7 @@
 		"v:patch": "npm version patch -m \"chore(release): %s\" --sign-git-tag",
 		"v:minor": "npm version minor -m \"chore(release): %s\" --sign-git-tag",
 		"v:major": "npm version major -m \"chore(release): %s\" --sign-git-tag",
-		"version": "auto-changelog -p && git add HISTORY.md"
+		"version": "auto-changelog -p && git add CHANGELOG.md"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^0.12.0",
@@ -76,7 +76,6 @@
 		"useTabs": true
 	},
 	"auto-changelog": {
-		"output": "HISTORY.md",
 		"hideCredit": true,
 		"template": "keepachangelog",
 		"commitLimit": false
