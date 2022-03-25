@@ -28,4 +28,20 @@ export async function PluginInitializer(
 			DependencyGraph.removeNode(plugin.metadata.name);
 		}
 	}
+
+	for (const plugin of DependencyGraph.topologicalSort()
+		.map((name) => client.plugins.get(name))
+		.filter((plugin) => plugin) as Plugin[]) {
+		if (typeof plugin.onPluginsLoad === 'function') {
+			try {
+				await plugin.onPluginsLoad();
+			} catch (err) {
+				client.logger
+					.error(
+						`[plugin] error calling 'onPluginsLoad()' in '${plugin.metadata.name}' plugin`,
+					)
+					.error(err);
+			}
+		}
+	}
 }

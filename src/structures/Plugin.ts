@@ -149,9 +149,7 @@ export interface PluginMetaData
 
 type PluginValidation = z.ZodObject<any, 'strip', z.ZodTypeAny, {}, {}>;
 
-export interface PluginConfiguration<
-	T extends PluginValidation = PluginValidation,
-> {
+interface PluginConfiguration<T extends PluginValidation = PluginValidation> {
 	config: z.infer<T>;
 	validation: T;
 }
@@ -172,6 +170,11 @@ export default interface Plugin {
 	onReload(): void | Promise<void>;
 
 	/**
+	 * - Called when all plugins has been loaded.
+	 */
+	onPluginsLoad(): void | Promise<void>;
+
+	/**
 	 * - Called when some of this plugin's command is done executing.
 	 */
 	onCommand(
@@ -189,11 +192,8 @@ export default interface Plugin {
 	): void | Promise<void>;
 }
 
-export default abstract class Plugin<
-	T extends PluginConfiguration<PluginValidation> = PluginConfiguration<PluginValidation>,
-> implements Partial<Plugin>
-{
-	private _cfg: PluginConfiguration['config'] | null;
+export default abstract class Plugin implements Partial<Plugin> {
+	private _cfg: any | null;
 	private _commands: Command[];
 	private _events: DiscordEvent<any>[];
 	private _inhibitors: Inhibitor[];
@@ -265,7 +265,7 @@ export default abstract class Plugin<
 	 *
 	 * @todo Make this public and put in types
 	 */
-	private setConfig(cfg: T['config']): T['config'] {
+	private setConfig(cfg: any): any {
 		const { config, validation } = this.getDefaultConfig();
 
 		const merged = merge(config, cfg);
@@ -284,7 +284,7 @@ export default abstract class Plugin<
 	 * - Get the config for the plugin's config.yml
 	 * @param force Forcefully get the config from plugin's config.yml and ignore the cache.
 	 */
-	public getConfig(force = false): T['config'] {
+	public getConfig(force = false): any {
 		if (this._cfg && !force) {
 			return this._cfg;
 		}
