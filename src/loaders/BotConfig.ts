@@ -3,13 +3,7 @@ import z from 'zod';
 import { readFile } from '../functions/FileSystem.js';
 
 const Validator = z.object({
-	environment: z.enum(['development', 'production']),
-	bot: z.object({
-		token: z.string().nonempty(),
-		guild: z.string().nonempty(),
-		sharding: z.boolean(),
-		singleGuild: z.boolean().optional(),
-	}),
+	token: z.string().nonempty(),
 });
 
 type Config = z.infer<typeof Validator>;
