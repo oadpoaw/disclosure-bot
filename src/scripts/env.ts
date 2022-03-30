@@ -31,52 +31,20 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 		},
 	]);
 
-	const cfg: BotConfiguration = {
-		environment: 'development',
-		bot: {
-			token: '',
-			guild: '',
-			sharding: false,
-		},
-	};
+	const cfg: BotConfiguration = { token: '' };
 
 	if (confirmed) {
-		const config = (await inquirer.prompt([
-			{
-				type: 'list',
-				message: 'Select environment',
-				name: 'environment',
-				choices: ['development', 'production'],
-				default: cfg.environment,
-			},
+		const config = await inquirer.prompt([
 			{
 				type: 'password',
 				message: `Enter Bot Token`,
 				name: 'token',
-				default: cfg.bot.token,
+				default: cfg.token,
 			},
-			{
-				type: 'input',
-				message: 'Enter default Guild ID',
-				name: 'guild',
-				default: cfg.bot.guild,
-			},
-			{
-				type: 'confirm',
-				message: 'Enable bot sharding',
-				name: 'sharding',
-				default: cfg.bot.sharding,
-			},
-		])) as unknown as Omit<BotConfiguration, 'bot'> &
-			BotConfiguration['bot'];
+		]);
 
 		const cf: BotConfiguration = {
-			environment: config.environment,
-			bot: {
-				token: config.token,
-				guild: config.guild,
-				sharding: config.sharding,
-			},
+			token: config.token,
 		};
 		writeFile(['config.yml'], yaml.stringify(cf));
 	} else {
@@ -96,13 +64,7 @@ export const clientOptions = {
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 };
 
-/**
- * @type {import('discord.js').ShardingManagerOptions}
- */
-export const shardOptions = {
-	totalShards: 'auto',
-	respawn: true,
-};`,
+`,
 	);
 
 	execSync('npm run plugins:init');
