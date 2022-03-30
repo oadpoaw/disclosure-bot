@@ -6,7 +6,7 @@
 
 ## Contributing
 
-- See [Code of conduct](docs/CODE_OF_CONDUCT.md) first before [contributing](docs/CONTRIBUTING.md)
+- See [Code of conduct](CODE_OF_CONDUCT.md) first before [contributing](CONTRIBUTING.md)
 
 ## License
 [See here](LICENSE)
