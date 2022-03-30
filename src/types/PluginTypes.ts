@@ -7,7 +7,7 @@ import type {
 import type z from 'zod';
 import type { SlashCommandBuilder } from '@discordjs/builders';
 import type { PluginMetaData } from '../functions/validators/PluginMetaData.js';
-import type Plugin from '../structures/Plugin';
+import type { Plugin } from '../structures/Plugin';
 
 export type InhibitorFunction = (
 	interaction: CommandInteraction,

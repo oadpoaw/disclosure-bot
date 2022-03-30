@@ -2,7 +2,7 @@ import BotConfig from '../../loaders/BotConfig.js';
 import Dispatcher from './Dispatcher.js';
 import Logger from '../../utils/Logger.js';
 import { Client as DiscordClient, Collection } from 'discord.js';
-import type Plugin from '../../structures/Plugin.js';
+import type { Plugin } from '../../structures/Plugin.js';
 import type { Graph } from '../util/Graph.js';
 import type { Command } from '../../types/PluginTypes.js';
 

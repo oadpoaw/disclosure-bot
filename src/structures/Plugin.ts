@@ -17,7 +17,7 @@ import type {
 import type { z } from 'zod';
 import Logger from '../utils/Logger.js';
 
-export default class Plugin<
+export class Plugin<
 	Config extends PluginParam['configuration'] = PluginParam['configuration'],
 > extends EventEmitter {
 	private _initialized: boolean = false;
@@ -235,7 +235,7 @@ export default class Plugin<
 	}
 }
 
-export default interface Plugin {
+export interface Plugin {
 	on<K extends keyof PluginEvents>(event: K, listener: Listener<K>): this;
 	on(event: string, listener: () => void | Promise<void>): this;
 	emit<K extends keyof PluginEvents>(

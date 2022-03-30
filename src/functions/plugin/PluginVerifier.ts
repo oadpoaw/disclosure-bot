@@ -1,4 +1,4 @@
-import type Plugin from '#disclosure/Plugin';
+import type { Plugin } from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
 import { PluginMetaDataValidator } from '../validators/PluginMetaData';
 

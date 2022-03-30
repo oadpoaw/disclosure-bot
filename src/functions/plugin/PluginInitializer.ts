@@ -1,5 +1,5 @@
 import PluginVerifier from './PluginVerifier.js';
-import type Plugin from '#disclosure/Plugin';
+import type { Plugin } from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
 import type { Graph } from '../../classes/util/Graph.js';
 import { existsDirectory, mkdir } from '../FileSystem.js';
