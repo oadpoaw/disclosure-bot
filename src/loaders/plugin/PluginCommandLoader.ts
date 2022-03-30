@@ -11,16 +11,16 @@ export function PluginCommandLoader(
 		.filter((plugin) => plugin) as Plugin[];
 
 	for (const plugin of plugins) {
-		for (const instance of plugin.commands) {
-			const ex = client.commands.get(instance.name);
+		for (const command of plugin.commands) {
+			const ex = client.commands.get(command.slash.name);
 
 			if (ex) {
 				client.logger.warn(
-					`Command '${ex.name}' from '${ex.plugin.metadata.name}' plugin will be override by '${plugin.metadata.name}' plugin`,
+					`Command '${ex.slash.name}' from '${ex.plugin.metadata.name}' plugin will be override by '${plugin.metadata.name}' plugin`,
 				);
 			}
 
-			client.commands.set(instance.name, instance);
+			client.commands.set(command.slash.name, command);
 		}
 	}
 }

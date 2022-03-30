@@ -1,52 +1,49 @@
 import BotConfig from '../../loaders/BotConfig.js';
 import Dispatcher from './Dispatcher.js';
 import Logger from '../../utils/Logger.js';
-import { Client as DiscordClient, ClientOptions, Collection } from 'discord.js';
-import type Command from '../plugin/Command.js';
+import { Client as DiscordClient, Collection } from 'discord.js';
 import type Plugin from '../../structures/Plugin.js';
 import type { Graph } from '../util/Graph.js';
+import type { Command } from '../../types/PluginTypes.js';
 
 export class Client extends DiscordClient {
-	public constructor(options: ClientOptions) {
-		super(options);
+	public readonly commands: Collection<string, Command> = new Collection();
 
-		//@ts-ignore
-		this.commands = new Collection();
-		//@ts-ignore
-		this.plugins = new Collection();
-		this.logger = Logger;
-		this.config = BotConfig();
-		//@ts-ignore
-		this.dispatcher = new Dispatcher(this);
-	}
+	public readonly plugins: Collection<string, Plugin> = new Collection();
+
+	public readonly logger: typeof Logger = Logger;
+
+	public readonly config = BotConfig();
+
+	public readonly dispatcher: Dispatcher = new Dispatcher(this);
 }
 
 declare module 'discord.js' {
 	export interface Client {
 		/**
-		 * - Collection of slash commands
+		 * - Collection of slash commands.
 		 */
 		readonly commands: Collection<string, Command>;
 		/**
-		 * - Collection of Plugins
+		 * - Collection of Plugins.
 		 */
 		readonly plugins: Collection<string, Plugin>;
 
 		/**
-		 * - The dependency graph of the loaded plugins
+		 * - The dependency graph of the loaded plugins.
 		 */
 		readonly dependencyGraph: Graph;
 
 		/**
-		 * - The Slash Command Dispatcher
+		 * - The Slash Command Dispatcher.
 		 */
 		readonly dispatcher: Dispatcher;
 		/**
 		 * - Logger singleton.
 		 *
-		 * - We recommend using this logger instead of console.log to leverage and facilitate  the logging feature
+		 * - We recommend using this logger instead of console.log to leverage and facilitate the logging feature.
 		 */
-		logger: typeof Logger;
-		config: ReturnType<typeof BotConfig>;
+		readonly logger: typeof Logger;
+		readonly config: ReturnType<typeof BotConfig>;
 	}
 }

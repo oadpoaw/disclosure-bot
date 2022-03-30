@@ -1,14 +1,14 @@
 import type Plugin from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
-import { PluginMetaDataValidator } from '#disclosure/Plugin';
+import { PluginMetaDataValidator } from '../validators/PluginMetaData';
 
 export default function PluginVerifier(
 	client: Client<boolean>,
 	plugin: Plugin,
 ) {
-	const pluginFileName = plugin.fileName.substring(
+	const pluginFileName = plugin.pluginPath.substring(
 		0,
-		plugin.fileName.lastIndexOf('.'),
+		plugin.pluginPath.lastIndexOf('.'),
 	);
 
 	PluginMetaDataValidator.refine(({ name }) => name === pluginFileName, {

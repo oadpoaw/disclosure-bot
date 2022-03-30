@@ -2,6 +2,12 @@ import PluginVerifier from './PluginVerifier.js';
 import type Plugin from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
 import type { Graph } from '../../classes/util/Graph.js';
+import { existsDirectory, mkdir } from '../FileSystem.js';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import setTerminalTitle from 'functions/setTerminalTitle.js';
+
+const execute = promisify(exec);
 
 export async function PluginInitializer(
 	DependencyGraph: Graph,
@@ -16,7 +22,39 @@ export async function PluginInitializer(
 			client.logger.info(`- ${plugin.metadata.name}`);
 			PluginVerifier(client, plugin);
 
-			await plugin.init();
+			const pluginFolder = ['plugins', plugin.metadata.name];
+
+			if (!existsDirectory(pluginFolder)) {
+				mkdir(pluginFolder);
+				plugin.emit('init', client);
+			}
+
+			for (const key in plugin.defaultConfigs) {
+				plugin.getConfig(key, true);
+			}
+
+			if (plugin.metadata.npmDependencies) {
+				for (const dep of plugin.metadata.npmDependencies) {
+					try {
+						await import(dep);
+					} catch (err) {
+						const { stderr } = await execute(
+							`npm --prefix plugins install ${dep}`,
+						);
+
+						if (stderr) {
+							throw new Error(stderr);
+						}
+					}
+
+					setTerminalTitle('Disclosure Bot');
+				}
+			}
+
+			plugin.emit('load', client);
+
+			//@ts-ignore
+			plugin._initialized = true;
 		} catch (err) {
 			client.logger
 				.error(
@@ -29,19 +67,7 @@ export async function PluginInitializer(
 		}
 	}
 
-	for (const plugin of DependencyGraph.topologicalSort()
-		.map((name) => client.plugins.get(name))
-		.filter((plugin) => plugin) as Plugin[]) {
-		if (typeof plugin.onPluginsLoad === 'function') {
-			try {
-				await plugin.onPluginsLoad();
-			} catch (err) {
-				client.logger
-					.error(
-						`[plugin] error calling 'onPluginsLoad()' in '${plugin.metadata.name}' plugin`,
-					)
-					.error(err);
-			}
-		}
+	for (const plugin of plugins) {
+		plugin.emit('plugins', client, plugins);
 	}
 }

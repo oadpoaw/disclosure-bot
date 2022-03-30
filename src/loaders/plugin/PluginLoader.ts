@@ -14,11 +14,10 @@ export default async function PluginLoader(client: Client) {
 		const pluginPath = `../../../plugins/${file}`;
 
 		try {
-			const p = (await import(pluginPath)).default as typeof Plugin;
+			const instance = (await import(pluginPath)).default as Plugin;
 
-			if (p.prototype instanceof Plugin) {
-				//@ts-ignore
-				const instance = new p(client, file);
+			if (instance instanceof Plugin) {
+				instance.pluginPath = pluginPath;
 
 				client.plugins.set(instance.metadata.name, instance);
 			}
@@ -29,12 +28,11 @@ export default async function PluginLoader(client: Client) {
 		}
 	}
 
-	if (!client.config.bot.sharding)
-		client.logger.info(
-			`[plugin] Loading ${client.plugins.size} plugin${
-				client.plugins.size > 1 ? 's' : ''
-			}.`,
-		);
+	client.logger.info(
+		`[plugin] Loading ${client.plugins.size} plugin${
+			client.plugins.size > 1 ? 's' : ''
+		}.`,
+	);
 
 	const DependencyGraph = CreateDependencyGraph(client);
 
@@ -43,12 +41,11 @@ export default async function PluginLoader(client: Client) {
 	PluginEventLoader(client);
 	PluginInhibitorLoader(DependencyGraph, client);
 
-	if (!client.config.bot.sharding)
-		client.logger.info(
-			`[plugin] ${client.plugins.size} plugin${
-				client.plugins.size > 1 ? 's' : ''
-			} loaded.`,
-		);
+	client.logger.info(
+		`[plugin] ${client.plugins.size} plugin${
+			client.plugins.size > 1 ? 's' : ''
+		} loaded.`,
+	);
 
 	//@ts-ignore
 	client.dependencyGraph = DependencyGraph;
