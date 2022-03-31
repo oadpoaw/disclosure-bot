@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.1.0](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.10...v2.1.0)
+## [v2.1.1](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.0...v2.1.1)
+
+### Commits
+
+- feat: expose PluginMetaData [`95ad462`](https://github.com/oadpoaw/disclosure-bot/commit/95ad462ca012bbed28fb3a688f7af3439a581c83)
+
+## [v2.1.0](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.10...v2.1.0) - 2022-03-31
+
+### Commits
+
+- chore(release): 2.1.0 [`b61de84`](https://github.com/oadpoaw/disclosure-bot/commit/b61de84c0674a543266812e05f3a244a07983cab)
 
 ## [v2.0.10](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.9...v2.0.10) - 2022-03-31
 
