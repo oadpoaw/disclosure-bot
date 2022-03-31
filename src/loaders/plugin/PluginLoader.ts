@@ -37,6 +37,11 @@ export default async function PluginLoader(client: Client) {
 	const DependencyGraph = CreateDependencyGraph(client);
 
 	await PluginInitializer(DependencyGraph, client);
+
+	for (const [, plugin] of client.plugins) {
+		plugin.emit('plugins', client, client.plugins.toJSON());
+	}
+
 	PluginCommandLoader(DependencyGraph, client);
 	PluginEventLoader(client);
 	PluginInhibitorLoader(DependencyGraph, client);

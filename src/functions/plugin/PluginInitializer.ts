@@ -5,7 +5,6 @@ import type { Graph } from '../../classes/util/Graph.js';
 import { existsDirectory, mkdir } from '../FileSystem.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import setTerminalTitle from '../setTerminalTitle.js';
 
 const execute = promisify(exec);
 
@@ -49,8 +48,6 @@ export async function PluginInitializer(
 							throw new Error(stderr);
 						}
 					}
-
-					setTerminalTitle('Disclosure Bot');
 				}
 			}
 
@@ -65,9 +62,5 @@ export async function PluginInitializer(
 			client.plugins.delete(plugin.metadata.name);
 			DependencyGraph.removeNode(plugin.metadata.name);
 		}
-	}
-
-	for (const plugin of plugins) {
-		plugin.emit('plugins', client, plugins);
 	}
 }
