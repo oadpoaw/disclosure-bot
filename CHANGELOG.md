@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.0.3](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.2...v2.0.3)
+## [v2.0.4](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.3...v2.0.4)
 
 ### Commits
 
+- fix: missing -r flag [`558b7cb`](https://github.com/oadpoaw/disclosure-bot/commit/558b7cb39cd7a3f82323836cca9125e253f3e307)
+
+## [v2.0.3](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.2...v2.0.3) - 2022-03-31
+
+### Commits
+
+- chore(release): 2.0.3 [`ae9711f`](https://github.com/oadpoaw/disclosure-bot/commit/ae9711f667cc0a667da51d3a1275934157e26543)
 - fix: doc gen [`7ba9a92`](https://github.com/oadpoaw/disclosure-bot/commit/7ba9a92d2ca6c736c1fbf75bd0cfd2fffff96665)
 
 ## [v2.0.2](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.1...v2.0.2) - 2022-03-31
