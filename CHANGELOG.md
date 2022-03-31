@@ -5,11 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.0.9](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.8...v2.0.9)
+## [v2.0.10](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.9...v2.0.10)
+
+### Commits
+
+- refactor!: fix race conditions [`a7199a5`](https://github.com/oadpoaw/disclosure-bot/commit/a7199a5d2009ad01feea826e719e9385ec98b675)
+- refactor: move all classes to parent folder [`f17c7a5`](https://github.com/oadpoaw/disclosure-bot/commit/f17c7a5f7931b18c2025c576184ed822ca32a643)
+- chore: proper vscode tasks [`a7dd6aa`](https://github.com/oadpoaw/disclosure-bot/commit/a7dd6aa37e9d82764cab56608293030242b06ffe)
+- refactor: new paradigm [`6eb78ae`](https://github.com/oadpoaw/disclosure-bot/commit/6eb78ae7d092ce6722e70bb965c4299527c6247c)
+- refactor: move FileSystem to src/utils [`d9c51fb`](https://github.com/oadpoaw/disclosure-bot/commit/d9c51fb4103c9ee65de5b9252a3152f1f67034e7)
+
+## [v2.0.9](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.8...v2.0.9) - 2022-03-31
 
 ### Commits
 
 - fix: race condition [`eee13c2`](https://github.com/oadpoaw/disclosure-bot/commit/eee13c2e5a4f4d6c7b676d090375e32b72ed8c93)
+- chore(release): 2.0.9 [`6873f9d`](https://github.com/oadpoaw/disclosure-bot/commit/6873f9d61e08c81d946b3160976c0754856f3664)
 
 ## [v2.0.8](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.7...v2.0.8) - 2022-03-31
 
