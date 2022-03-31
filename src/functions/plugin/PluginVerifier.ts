@@ -1,19 +1,17 @@
-import type Plugin from '#disclosure/Plugin';
+import type { Plugin } from '#disclosure/Plugin';
 import type { Client } from 'discord.js';
-import { PluginMetaDataValidator } from '#disclosure/Plugin';
+import { PluginMetaDataValidator } from '../validators/PluginMetaData.js';
 
 export default function PluginVerifier(
 	client: Client<boolean>,
 	plugin: Plugin,
 ) {
-	const pluginFileName = plugin.fileName.substring(
-		0,
-		plugin.fileName.lastIndexOf('.'),
-	);
-
-	PluginMetaDataValidator.refine(({ name }) => name === pluginFileName, {
-		message: "Plugin name should match as the plugin's file name",
-	}).parse(plugin.metadata);
+	PluginMetaDataValidator.refine(
+		({ name }) => plugin.pluginPath.endsWith(`${name}.js`),
+		{
+			message: "Plugin name should match as the plugin's file name",
+		},
+	).parse(plugin.metadata);
 
 	const errors: string[] = [];
 

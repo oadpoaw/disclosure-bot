@@ -41,9 +41,12 @@ const execute = promisify(exec);
 	await execute(`tar -xzvf ${packageJSON.name}.tar.gz`);
 	await fs.unlink(archive);
 
-	await execute(`npm install --production`);
+	await execute(`npm install`);
 
 	console.log('Updated.');
+	console.log(
+		'For changelogs, see: https://github.com/oadpoaw/disclosure-bot/blob/main/CHANGELOG.md',
+	);
 })().catch((err) => {
 	console.error(err);
 	process.exit(1);

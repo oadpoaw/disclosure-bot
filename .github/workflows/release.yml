@@ -44,3 +44,32 @@ jobs:
           files: |
             disclosure-bot.tar.gz
             checksum.txt
+
+  docs:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - run: npm ci
+      - run: npm run docs
+      - run: rm -rf src package.json package-lock.json .github tsconfig.json
+
+      - run: |
+          cp CNAME docs/
+          cp .nojekyll docs/
+          cp README.md docs/
+          cp LICENSE docs/
+
+      - run: rm -rf assets CNAME .nojekyll README.md LICENSE
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "docs"
+          git push origin HEAD:gh-pages --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

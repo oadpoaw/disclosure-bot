@@ -1,18 +1,25 @@
-import Plugin, { PluginMetaData } from '#disclosure/Plugin';
+import { Plugin } from '#disclosure/Plugin';
 
-export default class extends Plugin {
-	public metadata: PluginMetaData = {
+const Ping = new Plugin({
+	metadata: {
 		name: 'Ping',
-		description: 'Ping plugin for the ping command',
-		author: ['oadpoaw'],
-		version: `1.0.0`,
-		loadBefore: ['Cooldowns'],
-	};
+		description: 'Simple Ping command.',
+		version: '1.0.1',
+		author: ['oadpoaw <github/oadpoaw>'],
+	},
+	configuration: {},
+});
 
-	public override onLoad(): void | Promise<void> {
-		this.addCommand(
-			(builder) => builder.setName('ping').setDescription('Pong!'),
-			(interaction) => interaction.reply('Pong!'),
-		);
-	}
-}
+Ping.on('load', () => {
+	Ping.addCommand(
+		{
+			name: 'ping',
+			description: 'Simple Ping command.',
+		},
+		(interaction) => {
+			interaction.reply(`Pong!`);
+		},
+	);
+});
+
+export default Ping;

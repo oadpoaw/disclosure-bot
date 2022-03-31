@@ -57,7 +57,7 @@ const fileName = `${name}.tar.gz`;
 
 	console.time('deps');
 	console.log(`Installing Dependencies...`);
-	await shell(`npm install --production`);
+	await shell(`npm install`);
 	console.timeEnd('deps');
 
 	console.log(`DisclosureBot Installation Done! Now run \`cd ${folderName}\` then \`npm run env\` to initialize the bot project and follow the prompts along.`);

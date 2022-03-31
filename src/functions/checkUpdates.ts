@@ -16,7 +16,12 @@ export default async function checkUpdates() {
 		Logger.info(
 			`[core] You can now run the command 'npm run upgrade' to update the bot to get the latest features and bug fixes!`,
 		);
+		Logger.info(
+			`Changelogs: https://github.com/oadpoaw/disclosure-bot/blob/main/CHANGELOG.md`,
+		);
 	} else {
 		Logger.info(`[core] No software updates found.`);
 	}
+
+	Logger.info(`[core] Running on v${packageJSON.version}`);
 }
