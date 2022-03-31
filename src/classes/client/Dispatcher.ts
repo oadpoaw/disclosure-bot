@@ -27,13 +27,7 @@ export default class Dispatcher {
 		command: Command,
 	) {
 		for (const inhibitor of this.inhibitors) {
-			let status = inhibitor(interaction, command);
-
-			if (status.constructor.name === 'Promise') {
-				status = await status;
-			}
-
-			if (!status) {
+			if (!(await Promise.resolve(inhibitor(interaction, command)))) {
 				return true;
 			}
 		}
