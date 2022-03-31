@@ -5,7 +5,7 @@ import type { Graph } from '../../classes/util/Graph.js';
 import { existsDirectory, mkdir } from '../FileSystem.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import setTerminalTitle from 'functions/setTerminalTitle.js';
+import setTerminalTitle from '../setTerminalTitle.js';
 
 const execute = promisify(exec);
 
@@ -28,6 +28,9 @@ export async function PluginInitializer(
 				mkdir(pluginFolder);
 				plugin.emit('init', client);
 			}
+
+			//@ts-ignore
+			plugin._initialized = true;
 
 			for (const key in plugin.defaultConfigs) {
 				plugin.getConfig(key, true);
@@ -52,9 +55,6 @@ export async function PluginInitializer(
 			}
 
 			plugin.emit('load', client);
-
-			//@ts-ignore
-			plugin._initialized = true;
 		} catch (err) {
 			client.logger
 				.error(
