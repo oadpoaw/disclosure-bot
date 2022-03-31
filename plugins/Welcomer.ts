@@ -44,7 +44,7 @@ const Welcomer = new Plugin({
 	},
 });
 
-Welcomer.on('load', (client) => {
+Welcomer.onLoad = (client) => {
 	const config = Welcomer.getConfig('config');
 
 	if (config.welcome.enabled && config.welcome.channel.length) {
@@ -146,6 +146,6 @@ Welcomer.on('load', (client) => {
 			},
 		);
 	}
-});
+};
 
 export default Welcomer;

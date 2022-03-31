@@ -10,7 +10,7 @@ const Ping = new Plugin({
 	configuration: {},
 });
 
-Ping.on('load', () => {
+Ping.onLoad = () => {
 	Ping.addCommand(
 		{
 			name: 'ping',
@@ -20,6 +20,6 @@ Ping.on('load', () => {
 			interaction.reply(`Pong!`);
 		},
 	);
-});
+};
 
 export default Ping;
