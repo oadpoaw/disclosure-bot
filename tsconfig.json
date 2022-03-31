@@ -20,8 +20,7 @@
 		"entryPoints": [
 			"src/classes/Client.ts",
 			"src/structures/Plugin.ts",
-			"src/structures/PluginMetaData.ts",
-			"src/types/PluginTypes.ts"
+			"src/structures/PluginMetaData.ts"
 		],
 		"excludeExternals": true,
 		"excludeInternal": false,
