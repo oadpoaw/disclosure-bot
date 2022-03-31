@@ -59,7 +59,7 @@ jobs:
       - run: npm run docs
       - run: rm -rf src package.json package-lock.json .github tsconfig.json create-disclosure-bot plugins scripts .vscode SECURITY.md CHANGELOG.md tsconfig.base.json
 
-      - run: cp -r docs/ ./
+      - run: cp -r docs/ ../
 
       - run: |
           git config user.name 'github-actions[bot]'
