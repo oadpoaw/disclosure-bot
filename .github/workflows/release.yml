@@ -57,14 +57,10 @@ jobs:
       - run: npm ci
       - run: node ./scripts/ci-build.js
       - run: npm run docs
-      - run: rm -rf src package.json package-lock.json .github tsconfig.json
+      - run: rm -rf src package.json package-lock.json .github tsconfig.json create-disclosure-bot plugins scripts .vscode SECURITY.md CHANGELOG.md tsconfig.base.json
 
-      - run: |
-          cp .nojekyll docs/
-          cp README.md docs/
-          cp LICENSE docs/
+      - run: cp docs/** /
 
-      - run: rm -rf assets CNAME .nojekyll README.md LICENSE
       - run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
