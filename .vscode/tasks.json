@@ -6,10 +6,21 @@
 			"script": "build",
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": false
 			},
 			"problemMatcher": [],
 			"label": "npm: build",
+			"detail": "tsc --build"
+		},
+		{
+			"type": "npm",
+			"script": "plugins",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"label": "npm: plugins",
 			"detail": "tsc --build"
 		},
 	]
