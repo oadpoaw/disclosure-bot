@@ -5,10 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.1.29](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.28...v1.1.29)
+## [v2.0.0](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.29...v2.0.0)
 
 ### Commits
 
+- chore(deps-dev): bump @types/inquirer from 8.2.0 to 8.2.1 [`1762ac2`](https://github.com/oadpoaw/disclosure-bot/commit/1762ac2b10edeb75c79e3469661cf419faf0f886)
+- feat: v2 [`2950c4d`](https://github.com/oadpoaw/disclosure-bot/commit/2950c4dea1912575f362afea4cdcfb493d99cf72)
+- feat: new plugin system [`dec9d3b`](https://github.com/oadpoaw/disclosure-bot/commit/dec9d3b4cd8ee866da69290eba246fb494df3d2e)
+- feat: add typedoc [`911623f`](https://github.com/oadpoaw/disclosure-bot/commit/911623f95e710509b93913108f0e6dda79d46c69)
+- feat: add slash command permission support [`c9f9791`](https://github.com/oadpoaw/disclosure-bot/commit/c9f979127a1092952d244446e6106a6a20ac8c92)
+- feat: add sample plugins [`582084b`](https://github.com/oadpoaw/disclosure-bot/commit/582084b82152a9f5f5a38fabf7868e003d8a27a4)
+- wip: gonna refactor these [`7af7026`](https://github.com/oadpoaw/disclosure-bot/commit/7af702658e8acb809bd40e2be2563eea52f8b511)
+- feat(sharding): drop support for sharding [`5fbefd7`](https://github.com/oadpoaw/disclosure-bot/commit/5fbefd774db4ef314b2e7683809d83f2d7180a93)
+- feat(sharding): drop support for sharding [`80d04ec`](https://github.com/oadpoaw/disclosure-bot/commit/80d04ecd38322291cfe5c2348483aed5fd8a1991)
+- fix: plugin system [`ce1dad2`](https://github.com/oadpoaw/disclosure-bot/commit/ce1dad2543bced14628c3a0bcf0e8b574d6029b9)
+- refactor: structures/Plugin no default export [`8a0c97c`](https://github.com/oadpoaw/disclosure-bot/commit/8a0c97ce1dbedfc4931dfdaac16e7d37bf25a31d)
+- chore(deps-dev): bump @types/inquirer from 8.2.0 to 8.2.1 [`7e9d210`](https://github.com/oadpoaw/disclosure-bot/commit/7e9d2100220654bb134208e42e6e17de975f9edf)
+- chore(deps): bump zod from 3.14.2 to 3.14.3 [`af4d8a3`](https://github.com/oadpoaw/disclosure-bot/commit/af4d8a391c508d811b8cfea5e866e2c432ebb38d)
+- chore(deps-dev): bump prettier from 2.6.0 to 2.6.1 [`5fa1681`](https://github.com/oadpoaw/disclosure-bot/commit/5fa168100e855cbaa450cf08c8b5beabfa97bbb6)
+- chore(deps-dev): bump typescript from 4.6.2 to 4.6.3 [`a9c8b15`](https://github.com/oadpoaw/disclosure-bot/commit/a9c8b155e14b466e7d3a58edcbad12622e252173)
+- chore(deps): bump inquirer from 8.2.1 to 8.2.2 [`d3e5e8b`](https://github.com/oadpoaw/disclosure-bot/commit/d3e5e8be83a2379a33808e9ac20a9cefa7317311)
+- Bump discord-api-types from 0.29.0 to 0.30.0 [`1fbeea8`](https://github.com/oadpoaw/disclosure-bot/commit/1fbeea8c8a714fd5e8eca79175ed6be0dadc2c19)
+- feat(sharding): drop support for sharding [`f56df17`](https://github.com/oadpoaw/disclosure-bot/commit/f56df17f0b9aa5b8a088e86a9aaf7e54b5213c97)
+- feat: pull request template [skip ci] [`178d671`](https://github.com/oadpoaw/disclosure-bot/commit/178d67166eca38fe41cc96cd7e47ec11dd6dc358)
+- feat: terminal title styling [`ad8db97`](https://github.com/oadpoaw/disclosure-bot/commit/ad8db97d2b69ee826869b6c032a157326583249e)
+- refactor: use Promise.resolve [`97c5a87`](https://github.com/oadpoaw/disclosure-bot/commit/97c5a87275ae7e092a05686bfe737f8110d74006)
+- refactor: launch.json [`005ac00`](https://github.com/oadpoaw/disclosure-bot/commit/005ac00ea8a9fb46b3e65f6ea1cecf54c75c7a60)
+- feat: add changelogs link [`8fe28b5`](https://github.com/oadpoaw/disclosure-bot/commit/8fe28b5aad003fee7a1e32966ae1a8437cdf6d8a)
+- refactor: remove --production flag [`be75ad0`](https://github.com/oadpoaw/disclosure-bot/commit/be75ad09b6c9f4a308f6e1a69705f6f91658fef5)
+- chore: move *.md to root [`f1bb943`](https://github.com/oadpoaw/disclosure-bot/commit/f1bb94381078bf1afb2102a40a04a1afaeae03d2)
+- chore(deps): bump zod from 3.14.2 to 3.14.3 [`908465f`](https://github.com/oadpoaw/disclosure-bot/commit/908465f1067564a6db1b55d3da6d96865d641bcd)
+- chore(deps-dev): bump prettier from 2.6.0 to 2.6.1 [`4bb36bf`](https://github.com/oadpoaw/disclosure-bot/commit/4bb36bf1551b651f3eb51c42b6078764d4510b0d)
+- chore(deps-dev): bump typescript from 4.6.2 to 4.6.3 [`7a71c81`](https://github.com/oadpoaw/disclosure-bot/commit/7a71c8120ddc695219ae166dd3eb2c4a1d0f48ba)
+- chore(deps): bump inquirer from 8.2.1 to 8.2.2 [`45ca270`](https://github.com/oadpoaw/disclosure-bot/commit/45ca2707b6b1012ab2c4fb960f586f38f1e1a18a)
+- Bump discord-api-types from 0.29.0 to 0.30.0 [`1006d27`](https://github.com/oadpoaw/disclosure-bot/commit/1006d27291df4600384629dc0e42c81d0bb9a151)
+
+## [v1.1.29](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.28...v1.1.29) - 2022-03-25
+
+### Commits
+
+- chore(release): 1.1.29 [`799b756`](https://github.com/oadpoaw/disclosure-bot/commit/799b7563c5f8b5d3743306bdba7629fbd49f6982)
 - feat: release body [`3bf63b9`](https://github.com/oadpoaw/disclosure-bot/commit/3bf63b986ee59676756bb03e9831507f28cca70a)
 
 ## [v1.1.28](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.27...v1.1.28) - 2022-03-25
