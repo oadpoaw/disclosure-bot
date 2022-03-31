@@ -55,6 +55,7 @@ jobs:
           node-version: 14.x
 
       - run: npm ci
+      - run: node ./scripts/ci-build.js
       - run: npm run docs
       - run: rm -rf src package.json package-lock.json .github tsconfig.json
 
