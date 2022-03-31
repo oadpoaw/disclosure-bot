@@ -7,7 +7,6 @@ export interface PluginMetaData
 	 * - This attribute is the name of your plugin.
 	 * - Alphanumeric characters and underscores (a-z,A-Z,0-9, _)
 	 * - Used to determine the name of the plugin's data folder.
-	 * - It is good practice to name your `.js` the same as this (eg: MyPlugin.js)
 	 *
 	 */
 	name: string;
@@ -32,14 +31,14 @@ export interface PluginMetaData
 	/**
 	 * - Author(s) of the plugin.
 	 * - Uniquely identifies who developed this plugin.
-	 * - Used in some server error messages to provide helpful feedback on who to contact when an error occurs.
+	 * - Used in some error messages to provide helpful feedback on who to contact when an error occurs.
 	 *
 	 * Examples:
 	 * ```js
 	 * author: 'oadpoaw'
 	 * ```
 	 * ```js
-	 * author: ['oadpoaw', 'ZeroSync']
+	 * author: ['oadpoaw', 'ZeroSync', 'Dragonizedpizza']
 	 * ```
 	 * With emails:
 	 * ```js
