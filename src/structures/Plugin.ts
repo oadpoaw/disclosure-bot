@@ -12,8 +12,7 @@ import type {
 	Command,
 } from '../types/PluginTypes';
 import type z from 'zod';
-
-import type { PluginMetaData } from '../functions/PluginInitializer';
+import type { PluginMetaData } from './PluginMetaData';
 
 export class Plugin<
 	Config extends PluginParam['configuration'] = PluginParam['configuration'],
