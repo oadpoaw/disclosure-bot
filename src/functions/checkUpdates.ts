@@ -4,9 +4,11 @@ import packageJSON from '../../package.json';
 
 export default async function checkUpdates() {
 	Logger.info('[core] Checking for software updates...');
+
 	const response = await fetch(
 		`https://api.github.com/repos/${packageJSON.author}/${packageJSON.name}/releases/latest`,
 	);
+
 	const json = (await response.json()) as { tag_name: string };
 
 	const newVersion = json.tag_name;

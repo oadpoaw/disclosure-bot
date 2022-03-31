@@ -1,8 +1,8 @@
-import yaml from 'yaml';
-import { existsFile, writeFile } from '../functions/FileSystem.js';
 import inquirer from 'inquirer';
-import type BotConfig from '../loaders/BotConfig.js';
+import yaml from 'yaml';
 import { execSync } from 'child_process';
+import { existsFile, writeFile } from '../utils/FileSystem.js';
+import type BotConfig from '../loaders/BotConfig.js';
 
 type BotConfiguration = ReturnType<typeof BotConfig>;
 
@@ -55,7 +55,6 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 		['config.js'],
 		`// @ts-check
 
-import { Intents } from 'discord.js';
 
 /**
  * @type {import('discord.js').ClientOptions}

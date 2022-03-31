@@ -1,6 +1,12 @@
 import packageNameRegex from 'package-name-regex';
 import semverRegex from 'semver-regex';
-import { z } from 'zod';
+import z from 'zod';
+import { exec } from 'child_process';
+import { existsDirectory, mkdir } from '../utils/FileSystem.js';
+import { promisify } from 'util';
+import type { Plugin } from '#disclosure/Plugin';
+import type { Client } from 'discord.js';
+import type { Graph } from '../classes/Graph';
 
 const PluginName = z
 	.string()
@@ -120,4 +126,105 @@ export interface PluginMetaData
 	 * Note: The dependencies listed won't be saved to package.json
 	 */
 	npmDependencies?: string[];
+}
+
+const execute = promisify(exec);
+
+export async function PluginInitializer(
+	DependencyGraph: Graph,
+	client: Client<boolean>,
+) {
+	const plugins = DependencyGraph.topologicalSort()
+		.map((name) => client.plugins.get(name))
+		.filter((plugin) => plugin) as Plugin[];
+
+	for (const plugin of plugins) {
+		try {
+			client.logger.info(`- ${plugin.metadata.name}`);
+			PluginMetaDataValidator.refine(
+				({ name }) => plugin.pluginPath.endsWith(`${name}.js`),
+				{
+					message:
+						"Plugin name should match as the plugin's file name",
+				},
+			).parse(plugin.metadata);
+
+			const errors: string[] = [];
+
+			if (
+				plugin.metadata.dependencies &&
+				plugin.metadata.dependencies.length
+			) {
+				for (const name of plugin.metadata.dependencies) {
+					const p = client.plugins.get(name);
+
+					if (!p) {
+						errors.push(
+							`'${plugin.metadata.name}' plugin depends on '${name}' plugin and it's not installed or the plugin failed to load.`,
+						);
+					}
+				}
+			}
+
+			if (
+				plugin.metadata.incompatibleDependencies &&
+				plugin.metadata.incompatibleDependencies.length
+			) {
+				for (const name of plugin.metadata.incompatibleDependencies) {
+					const p = client.plugins.get(name);
+
+					if (p) {
+						errors.push(
+							`'${plugin.metadata.name}' plugin is incompatible with '${name}' plugin and it's installed. `,
+						);
+					}
+				}
+			}
+
+			if (errors.length) {
+				throw `- ${plugin.metadata.name}\n\t- ${errors.join('\n\t- ')}`;
+			}
+
+			const pluginFolder = ['plugins', plugin.metadata.name];
+
+			if (!existsDirectory(pluginFolder)) {
+				mkdir(pluginFolder);
+				plugin.onInitialize(client);
+			}
+
+			//@ts-ignore
+			plugin._initialized = true;
+
+			for (const key in plugin.defaultConfigs) {
+				plugin.getConfig(key, true);
+			}
+
+			if (plugin.metadata.npmDependencies) {
+				for (const dep of plugin.metadata.npmDependencies) {
+					try {
+						await import(dep);
+					} catch (err) {
+						const { stderr } = await execute(
+							`npm --prefix plugins install ${dep}`,
+						);
+
+						if (stderr) {
+							throw new Error(stderr);
+						}
+					}
+				}
+			}
+
+			plugin.onLoad(client);
+		} catch (err) {
+			client.logger
+				.error(
+					`[plugin] could not load '${plugin.metadata.name}' plugin`,
+				)
+				.error(err);
+
+			client.plugins.delete(plugin.metadata.name);
+			DependencyGraph.removeNode(plugin.metadata.name);
+		}
+	}
 }

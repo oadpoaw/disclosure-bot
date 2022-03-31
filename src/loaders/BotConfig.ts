@@ -1,12 +1,12 @@
 import yaml from 'yaml';
 import z from 'zod';
-import { readFile } from '../functions/FileSystem.js';
+import { readFile } from '../utils/FileSystem.js';
 
 const Validator = z.object({
 	token: z.string().nonempty(),
 });
 
-type Config = z.infer<typeof Validator>;
+export type Config = z.infer<typeof Validator>;
 
 let config: Config;
 

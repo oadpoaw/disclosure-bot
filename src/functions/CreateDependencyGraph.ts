@@ -1,4 +1,4 @@
-import { Graph } from '../classes/util/Graph.js';
+import { Graph } from '../classes/Graph.js';
 import type { Client } from 'discord.js';
 
 export function CreateDependencyGraph(client: Client<boolean>) {

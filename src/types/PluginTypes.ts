@@ -1,13 +1,12 @@
 import type {
 	ApplicationCommandPermissionData,
-	Client,
 	ClientEvents,
 	CommandInteraction,
 } from 'discord.js';
 import type z from 'zod';
 import type { SlashCommandBuilder } from '@discordjs/builders';
-import type { PluginMetaData } from '../functions/validators/PluginMetaData.js';
 import type { Plugin } from '../structures/Plugin';
+import type { PluginMetaData } from '../functions/PluginInitializer';
 
 export type InhibitorFunction = (
 	interaction: CommandInteraction,
@@ -39,17 +38,6 @@ export interface PluginParam<
 	metadata: PluginMetaData;
 	configuration: C;
 }
-
-export interface PluginEvents {
-	init: [Client];
-	load: [Client];
-	plugins: [Client, Plugin[]];
-	error: [any];
-}
-
-export type Listener<K extends keyof PluginEvents> = (
-	...args: PluginEvents[K]
-) => void | Promise<void>;
 
 interface CommandOptions {
 	name: string;

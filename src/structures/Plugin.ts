@@ -1,25 +1,23 @@
-import type { ClientEvents } from 'discord.js';
-import { EventEmitter } from 'events';
-import { existsFile, readFile, writeFile } from '../functions/FileSystem.js';
+import Logger from '../utils/Logger.js';
 import yaml from 'yaml';
+import { existsFile, readFile, writeFile } from '../utils/FileSystem.js';
 import { merge } from '@oadpoaw/utils';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import type { PluginMetaData } from '../functions/validators/PluginMetaData.js';
+import type { Client, ClientEvents } from 'discord.js';
 import type {
 	PluginParam,
 	ExecuteFunction,
 	EventListener,
-	PluginEvents,
-	Listener,
 	InhibitorFunction,
 	Command,
-} from '../types/PluginTypes.js';
-import type { z } from 'zod';
-import Logger from '../utils/Logger.js';
+} from '../types/PluginTypes';
+import type z from 'zod';
+
+import type { PluginMetaData } from '../functions/PluginInitializer';
 
 export class Plugin<
 	Config extends PluginParam['configuration'] = PluginParam['configuration'],
-> extends EventEmitter {
+> {
 	private _initialized: boolean = false;
 	private _commands: Omit<Command, 'plugin'>[] = [];
 	private _events: [keyof ClientEvents, EventListener<any>][] = [];
@@ -41,11 +39,29 @@ export class Plugin<
 	public pluginPath!: string;
 
 	public constructor(param: PluginParam<Config>) {
-		super();
-
 		this.metadata = param.metadata;
 		this.defaultConfigs = param.configuration;
 	}
+
+	/**
+	 * - Called when it's the first time this plugin is loaded.
+	 */
+	public onInitialize(_client: Client) {}
+
+	/**
+	 * - Called when this plugin is loaded.
+	 */
+	public onLoad(_client: Client) {}
+
+	/**
+	 * - Called when all plugins has been loaded.
+	 */
+	public onPluginsLoad(_client: Client, _plugins: Plugin[]) {}
+
+	/**
+	 * - Called when this plugin encounters an error.
+	 */
+	public onError(_error: any) {}
 
 	/**
 	 * - An array of commands of the plugin.
@@ -99,7 +115,8 @@ export class Plugin<
 					Logger.error(
 						`[plugin:${this.metadata.name}] Error occured - Command '${interaction.commandName}'`,
 					).error(err);
-					this.emit('error', err);
+
+					this.onError(err);
 				}
 			},
 			options,
@@ -128,7 +145,8 @@ export class Plugin<
 					Logger.error(
 						`[events:plugin:${this.metadata.name}] ${eventName} - ${this.metadata.author}`,
 					).error(error);
-					this.emit('error', error);
+
+					this.onError(error);
 				}
 			},
 		]);
@@ -153,7 +171,8 @@ export class Plugin<
 				Logger.error(
 					`[plugin:${this.metadata.name}] Inhibitor Error occured - Breaking the inhibitor chain...`,
 				).error(err);
-				this.emit('error', err);
+				this.onError(err);
+
 				return true;
 			}
 		});
@@ -233,13 +252,4 @@ export class Plugin<
 
 		this.setConfigForce(name, data);
 	}
-}
-
-export interface Plugin {
-	on<K extends keyof PluginEvents>(event: K, listener: Listener<K>): this;
-	on(event: string, listener: () => void | Promise<void>): this;
-	emit<K extends keyof PluginEvents>(
-		event: K,
-		...args: Parameters<Listener<K>>
-	): boolean;
 }
