@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.0.0](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.29...v2.0.0)
+## [v2.0.1](https://github.com/oadpoaw/disclosure-bot/compare/v2.0.0...v2.0.1)
 
 ### Commits
 
+- fix: release workflow missing step [`82b4e63`](https://github.com/oadpoaw/disclosure-bot/commit/82b4e6367d764d18ed53a1a3d76999129d0838aa)
+
+## [v2.0.0](https://github.com/oadpoaw/disclosure-bot/compare/v1.1.29...v2.0.0) - 2022-03-31
+
+### Commits
+
+- chore(release): 2.0.0 [`5b3f8d6`](https://github.com/oadpoaw/disclosure-bot/commit/5b3f8d67a167616f23b4cf7389c53b8b61b9f61b)
 - chore(deps-dev): bump @types/inquirer from 8.2.0 to 8.2.1 [`1762ac2`](https://github.com/oadpoaw/disclosure-bot/commit/1762ac2b10edeb75c79e3469661cf419faf0f886)
 - feat: v2 [`2950c4d`](https://github.com/oadpoaw/disclosure-bot/commit/2950c4dea1912575f362afea4cdcfb493d99cf72)
 - feat: new plugin system [`dec9d3b`](https://github.com/oadpoaw/disclosure-bot/commit/dec9d3b4cd8ee866da69290eba246fb494df3d2e)
