@@ -1,10 +1,9 @@
-import BotConfig from '../../loaders/BotConfig.js';
+import BotConfig from '../loaders/BotConfig.js';
 import Dispatcher from './Dispatcher.js';
-import Logger from '../../utils/Logger.js';
+import Logger from '../utils/Logger.js';
 import { Client as DiscordClient, Collection } from 'discord.js';
-import type { Plugin } from '../../structures/Plugin.js';
-import type { Graph } from '../util/Graph.js';
-import type { Command } from '../../types/PluginTypes.js';
+import type { Plugin } from '../structures/Plugin';
+import type { Command } from '../types/PluginTypes';
 
 export class Client extends DiscordClient {
 	public readonly commands: Collection<string, Command> = new Collection();
@@ -28,11 +27,6 @@ declare module 'discord.js' {
 		 * - Collection of Plugins.
 		 */
 		readonly plugins: Collection<string, Plugin>;
-
-		/**
-		 * - The dependency graph of the loaded plugins.
-		 */
-		readonly dependencyGraph: Graph;
 
 		/**
 		 * - The Slash Command Dispatcher.

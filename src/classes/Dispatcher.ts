@@ -8,7 +8,7 @@ import {
 	Guild,
 	GuildResolvable,
 } from 'discord.js';
-import type { Command, InhibitorFunction } from '../../types/PluginTypes.js';
+import type { Command, InhibitorFunction } from '../types/PluginTypes';
 
 export default class Dispatcher {
 	public readonly awaiting: Set<string>;

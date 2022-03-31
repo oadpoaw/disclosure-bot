@@ -18,7 +18,7 @@
 		"readme": "./README.md",
 		"name": "disclosure-bot",
 		"entryPoints": [
-			"src/classes/client/index.ts",
+			"src/classes/Client.ts",
 			"src/structures/Plugin.ts",
 			"src/types/PluginTypes.ts"
 		],
