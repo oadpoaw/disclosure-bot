@@ -83,24 +83,31 @@ export class PluginManager {
 
 		// # Create Plugin Dependency Graph
 		for (const [, plugin] of this.plugins) {
-			this.client.logger.info(`- ${plugin.metadata.name}`);
-
 			this.graph.addNode(plugin.metadata.name);
 
-			for (const dependency of plugin.metadata.dependencies || [])
-				this.graph.addEdge(plugin.metadata.name, dependency);
-
-			for (const dependency of plugin.metadata.optionalDependencies ||
-				[]) {
-				if (this.has(dependency)) {
+			if (plugin.metadata.dependencies) {
+				for (const dependency of plugin.metadata.dependencies) {
 					this.graph.addEdge(plugin.metadata.name, dependency);
 				}
 			}
 
-			for (const dependency of plugin.metadata.loadBefore || []) {
-				if (!this.graph.hasEdge(plugin.metadata.name, dependency)) {
+			if (plugin.metadata.optionalDependencies) {
+				for (const dependency of plugin.metadata.optionalDependencies) {
 					if (this.has(dependency)) {
 						this.graph.addEdge(plugin.metadata.name, dependency);
+					}
+				}
+			}
+
+			if (plugin.metadata.loadBefore) {
+				for (const dependency of plugin.metadata.loadBefore) {
+					if (!this.graph.hasEdge(plugin.metadata.name, dependency)) {
+						if (this.has(dependency)) {
+							this.graph.addEdge(
+								plugin.metadata.name,
+								dependency,
+							);
+						}
 					}
 				}
 			}
@@ -108,6 +115,8 @@ export class PluginManager {
 
 		// # Preload plugins
 		for (const plugin of this.getPlugins()) {
+			this.client.logger.info(`- ${plugin.metadata.name}`);
+
 			try {
 				const errors: string[] = [];
 
