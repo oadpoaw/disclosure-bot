@@ -5,11 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.1.3](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.2...v2.1.3)
+## [v2.2.0](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.3...v2.2.0)
+
+### Commits
+
+- fix: a bug since v0.x.x [`40c924e`](https://github.com/oadpoaw/disclosure-bot/commit/40c924e1fb5354c15e30ae98de60886693d11b1b)
+- feat: show no. of loaded stuffs [`1e931c3`](https://github.com/oadpoaw/disclosure-bot/commit/1e931c3326460a3b66a4afbbdad5a83784ae55f9)
+
+## [v2.1.3](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.2...v2.1.3) - 2022-04-01
 
 ### Commits
 
 - chore: use packages and fixes [`482b7cc`](https://github.com/oadpoaw/disclosure-bot/commit/482b7cc97a0b818726a9deec0b7847c6e8b9f411)
+- chore(release): 2.1.3 [`ab8b6b2`](https://github.com/oadpoaw/disclosure-bot/commit/ab8b6b2db11b26cd8c0a74900a171d569d237d33)
 
 ## [v2.1.2](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.1...v2.1.2) - 2022-03-31
 
