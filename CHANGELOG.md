@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.2.0](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.3...v2.2.0)
+## [v2.3.0](https://github.com/oadpoaw/disclosure-bot/compare/v2.2.0...v2.3.0)
+
+### Commits
+
+- fix: race condition of using asynchronous function [`e31cd3f`](https://github.com/oadpoaw/disclosure-bot/commit/e31cd3fbb7a8b8ebf3ad5fd0b06184c3449c3dbc)
+
+## [v2.2.0](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.3...v2.2.0) - 2022-04-01
 
 ### Commits
 
 - fix: a bug since v0.x.x [`40c924e`](https://github.com/oadpoaw/disclosure-bot/commit/40c924e1fb5354c15e30ae98de60886693d11b1b)
+- chore(release): 2.2.0 [`7fccfe2`](https://github.com/oadpoaw/disclosure-bot/commit/7fccfe2035e62cfc1a7d676fb8ab9d8a124c674c)
 - feat: show no. of loaded stuffs [`1e931c3`](https://github.com/oadpoaw/disclosure-bot/commit/1e931c3326460a3b66a4afbbdad5a83784ae55f9)
 
 ## [v2.1.3](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.2...v2.1.3) - 2022-04-01
