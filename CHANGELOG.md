@@ -138,7 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat(sharding): drop support for sharding [`5fbefd7`](https://github.com/oadpoaw/disclosure-bot/commit/5fbefd774db4ef314b2e7683809d83f2d7180a93)
 - feat(sharding): drop support for sharding [`80d04ec`](https://github.com/oadpoaw/disclosure-bot/commit/80d04ecd38322291cfe5c2348483aed5fd8a1991)
 - fix: plugin system [`ce1dad2`](https://github.com/oadpoaw/disclosure-bot/commit/ce1dad2543bced14628c3a0bcf0e8b574d6029b9)
-- refactor: structures/Plugin no default export [`8a0c97c`](https://github.com/oadpoaw/disclosure-bot/commit/8a0c97ce1dbedfc4931dfdaac16e7d37bf25a31d)
+- refactor: public/Plugin no default export [`8a0c97c`](https://github.com/oadpoaw/disclosure-bot/commit/8a0c97ce1dbedfc4931dfdaac16e7d37bf25a31d)
 - chore(deps-dev): bump @types/inquirer from 8.2.0 to 8.2.1 [`7e9d210`](https://github.com/oadpoaw/disclosure-bot/commit/7e9d2100220654bb134208e42e6e17de975f9edf)
 - chore(deps): bump zod from 3.14.2 to 3.14.3 [`af4d8a3`](https://github.com/oadpoaw/disclosure-bot/commit/af4d8a391c508d811b8cfea5e866e2c432ebb38d)
 - chore(deps-dev): bump prettier from 2.6.0 to 2.6.1 [`5fa1681`](https://github.com/oadpoaw/disclosure-bot/commit/5fa168100e855cbaa450cf08c8b5beabfa97bbb6)

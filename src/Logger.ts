@@ -1,6 +1,7 @@
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 import { createLogger } from '@oadpoaw/utils/createLogger';
+import { processor } from '@oadpoaw/utils';
 
 const Logger = createLogger([
 	new DailyRotateFile({
@@ -23,5 +24,7 @@ const Logger = createLogger([
 		symlinkName: 'latest.log',
 	}),
 ]);
+
+processor(Logger);
 
 export default Logger;

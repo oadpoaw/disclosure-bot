@@ -7,49 +7,52 @@ const settings = z.object({
 	channel: z.string(),
 });
 
-const Welcomer = new Plugin({
-	metadata: {
-		name: 'Welcomer',
-		description: 'Simple Welcome/Farewell messages',
-		version: '1.0.2',
-		author: ['oadpoaw <github/oadpoaw>'],
-	},
-	configuration: {
+const configuration = {
+	config: {
 		config: {
-			config: {
-				welcome: {
-					enabled: true,
-					message: '%user% has joined the server',
-					channel: '958901656186159106',
-				},
-				farewell: {
-					enabled: true,
-					message: '%user% has left the server',
-					channel: '958901656186159106',
-				},
-				commands: {
-					fakejoin: true,
-					fakeleave: true,
-				},
+			welcome: {
+				enabled: true,
+				message: '%user% has joined the server',
+				channel: '958901656186159106',
 			},
-			validation: z.object({
-				welcome: settings,
-				farewell: settings,
-				commands: z.object({
-					fakejoin: z.boolean(),
-					fakeleave: z.boolean(),
-				}),
-			}),
+			farewell: {
+				enabled: true,
+				message: '%user% has left the server',
+				channel: '958901656186159106',
+			},
+			commands: {
+				fakejoin: true,
+				fakeleave: true,
+			},
 		},
+		validation: z.object({
+			welcome: settings,
+			farewell: settings,
+			commands: z.object({
+				fakejoin: z.boolean(),
+				fakeleave: z.boolean(),
+			}),
+		}),
 	},
-});
+};
 
-Welcomer.onLoad = (client) => {
-	const config = Welcomer.getConfig('config');
+export default class Welcomer extends Plugin<typeof configuration> {
+	public constructor(client: any) {
+		super(client, {
+			metadata: {
+				name: 'Welcomer',
+				description: 'Simple Welcome/Farewell messages',
+				version: '1.0.0',
+				author: ['oadpoaw <github/oadpoaw>'],
+			},
+			configuration,
+		});
+	}
 
-	if (config.welcome.enabled && config.welcome.channel.length) {
-		Welcomer.addEvent('guildMemberAdd', async (member) => {
-			if (config.welcome.enabled && config.welcome.channel.length) {
+	public onLoad() {
+		const config = this.getConfig('config');
+		if (config.welcome.enabled && config.welcome.channel.length) {
+			this.addEvent('guildMemberAdd', async (member) => {
 				const channel = await member.guild.channels
 					.fetch(config.welcome.channel)
 					.catch(() => {});
@@ -62,15 +65,11 @@ Welcomer.onLoad = (client) => {
 						),
 					);
 				}
-			}
-		});
-	}
+			});
+		}
 
-	Welcomer.addInhibitor(() => true);
-
-	if (config.farewell.enabled && config.farewell.channel.length) {
-		Welcomer.addEvent('guildMemberRemove', async (member) => {
-			if (config.farewell.enabled && config.farewell.channel.length) {
+		if (config.farewell.enabled && config.farewell.channel.length) {
+			this.addEvent('guildMemberRemove', async (member) => {
 				const channel = await member.guild.channels
 					.fetch(config.farewell.channel)
 					.catch(() => {});
@@ -83,75 +82,69 @@ Welcomer.onLoad = (client) => {
 						),
 					);
 				}
-			}
-		});
-	}
+			});
+		}
 
-	if (config.commands.fakejoin) {
-		Welcomer.addCommand(
-			{
-				name: 'fakejoin',
-				description: 'Trigger `guildMemberAdd` event.',
-			},
-			async (interaction) => {
-				if (interaction.inGuild()) {
-					const member = await interaction.guild?.members.fetch(
-						interaction.user.id,
-					);
+		if (config.commands.fakejoin) {
+			this.addCommand(
+				(builder) =>
+					builder
+						.setName('fakejoin')
+						.setDescription('Triggers `guildMemberAdd` event.'),
+				async (interaction) => {
+					if (interaction.inGuild()) {
+						const member = await interaction.guild?.members.fetch(
+							interaction.user.id,
+						);
 
-					if (member) {
-						client.emit('guildMemberAdd', member);
+						if (member) {
+							this.client.emit('guildMemberAdd', member);
+						}
+
+						await interaction.reply({
+							content: 'Done!',
+							ephemeral: true,
+						});
+					} else {
+						await interaction.reply({
+							content:
+								'This command can only be executed within a guild/server.',
+							ephemeral: true,
+						});
 					}
+				},
+			);
+		}
 
-					await interaction.reply({
-						content: 'Done!',
-						ephemeral: true,
-					});
-				} else {
-					await interaction.reply({
-						content:
-							'This command can only be executed within a guild/server.',
-						ephemeral: true,
-					});
-				}
-			},
-		);
-	}
+		if (config.commands.fakeleave) {
+			this.addCommand(
+				(builder) =>
+					builder
+						.setName('fakeleave')
+						.setDescription('Triggers `guildMemberRemove` event.'),
+				async (interaction) => {
+					if (interaction.inGuild()) {
+						const member = await interaction.guild?.members.fetch(
+							interaction.user.id,
+						);
 
-	if (config.commands.fakeleave) {
-		Welcomer.addCommand(
-			{
-				name: 'fakeleave',
-				description: 'Trigger `guildMemberRemove` event.',
-			},
-			async (interaction) => {
-				if (interaction.inGuild()) {
-					const member = await interaction.guild?.members.fetch(
-						interaction.user.id,
-					);
+						if (member) {
+							this.client.emit('guildMemberRemove', member);
+						}
 
-					if (member) {
-						client.emit('guildMemberRemove', member);
+						await interaction.reply({
+							content: 'Done!',
+							ephemeral: true,
+						});
+					} else {
+						await interaction.reply({
+							content:
+								'This command can only be executed within a guild/server.',
+							ephemeral: true,
+						});
 					}
-
-					await interaction.reply({
-						content: 'Done!',
-						ephemeral: true,
-					});
-				} else {
-					await interaction.reply({
-						content:
-							'This command can only be executed within a guild/server.',
-						ephemeral: true,
-					});
-				}
-			},
-		);
+				},
+			);
+		}
 	}
-};
-
-Welcomer.onPluginsLoad = () => {
-	Welcomer.addInhibitor(() => true);
-};
-
-export default Welcomer;
+}

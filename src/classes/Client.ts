@@ -1,14 +1,26 @@
-import BotConfig from '../loaders/BotConfig.js';
 import Dispatcher from './Dispatcher.js';
-import Logger from '../utils/Logger.js';
+import Logger from '../Logger.js';
+import yaml from 'yaml';
+import z from 'zod';
 import { Client as DiscordClient, Collection } from 'discord.js';
-import type { Plugin } from '../structures/Plugin';
-import type { Command } from '../types/PluginTypes';
+import { PluginManager } from './PluginManager.js';
+import { readFile } from '@oadpoaw/utils/fs/sync';
+import type { Command } from '../types';
+
+const ConfigValidator = z.object({
+	token: z.string().nonempty(),
+});
+
+function BotConfig(): z.infer<typeof ConfigValidator> {
+	return ConfigValidator.parse(
+		yaml.parse(readFile(['config.yml']).toString()),
+	);
+}
 
 export class Client extends DiscordClient {
 	public readonly commands: Collection<string, Command> = new Collection();
 
-	public readonly plugins: Collection<string, Plugin> = new Collection();
+	public readonly plugins: PluginManager = new PluginManager(this);
 
 	public readonly logger: typeof Logger = Logger;
 
@@ -24,9 +36,9 @@ declare module 'discord.js' {
 		 */
 		readonly commands: Collection<string, Command>;
 		/**
-		 * - Collection of Plugins.
+		 * - PluginManager.
 		 */
-		readonly plugins: Collection<string, Plugin>;
+		readonly plugins: PluginManager;
 
 		/**
 		 * - The Slash Command Dispatcher.

@@ -5,8 +5,8 @@ import type {
 } from 'discord.js';
 import type z from 'zod';
 import type { SlashCommandBuilder } from '@discordjs/builders';
-import type { Plugin } from '../structures/Plugin';
-import type { PluginMetaData } from '../structures/PluginMetaData';
+import type { Plugin } from './classes/Plugin';
+import type { PluginMetaData } from './classes/PluginManager';
 
 export type InhibitorFunction = (
 	interaction: CommandInteraction,
@@ -40,15 +40,12 @@ export interface PluginParam<
 }
 
 interface CommandOptions {
-	name: string;
-	description: string;
-	permissions?: ApplicationCommandPermissionData[];
-	options?: BuilderFunction;
+	permissions: ApplicationCommandPermissionData[];
 }
 
 export interface Command {
 	plugin: Plugin;
 	slash: SlashCommandBuilder;
 	execute: ExecuteFunction;
-	options: CommandOptions;
+	options: Partial<CommandOptions>;
 }

@@ -1,25 +1,26 @@
 import { Plugin } from '#disclosure/Plugin';
 
-const Ping = new Plugin({
-	metadata: {
-		name: 'Ping',
-		description: 'Simple Ping command.',
-		version: '1.0.1',
-		author: ['oadpoaw <github/oadpoaw>'],
-	},
-	configuration: {},
-});
+export default class Ping extends Plugin {
+	public constructor(client: any) {
+		super(client, {
+			metadata: {
+				name: 'Ping',
+				description: 'Simple Ping command.',
+				version: '1.0.1',
+				author: ['oadpoaw <github/oadpoaw>'],
+			},
+			configuration: {},
+		});
+	}
 
-Ping.onLoad = () => {
-	Ping.addCommand(
-		{
-			name: 'ping',
-			description: 'Simple Ping command.',
-		},
-		(interaction) => {
-			interaction.reply(`Pong!`);
-		},
-	);
-};
-
-export default Ping;
+	public onLoad() {
+		this.addCommand(
+			(builder) =>
+				builder.setName('ping').setDescription('Simple Ping Command.'),
+			(interaction) => {
+				interaction.reply(`Pong!`);
+			},
+			{},
+		);
+	}
+}

@@ -8,37 +8,25 @@ import {
 	Guild,
 	GuildResolvable,
 } from 'discord.js';
-import type { Command, InhibitorFunction } from '../types/PluginTypes';
+import type { Command, InhibitorFunction } from '../types';
 
 export default class Dispatcher {
 	public readonly awaiting: Set<string>;
 	public readonly inhibitors: InhibitorFunction[];
 
-	private loaded: boolean;
+	private init: boolean;
 
 	public constructor(private client: Client) {
 		this.awaiting = new Set();
 		this.inhibitors = [];
-		this.loaded = false;
-	}
-
-	private async inihibit(
-		interaction: CommandInteraction<CacheType>,
-		command: Command,
-	) {
-		for (const inhibitor of this.inhibitors) {
-			if (!(await Promise.resolve(inhibitor(interaction, command)))) {
-				return true;
-			}
-		}
-		return false;
+		this.init = false;
 	}
 
 	private async sync() {
 		const guild = this.client.guilds.cache.first() as Guild;
 
 		if (this.client.commands.size && Boolean(guild)) {
-			this.client.logger.info(`[dispatcher] Syncing slash commands...`);
+			this.client.logger.info(`[Dispatcher] Syncing slash commands...`);
 
 			if (!this.client.application?.owner) {
 				await this.client.application?.fetch();
@@ -78,7 +66,7 @@ export default class Dispatcher {
 
 			for (const new_command of new_commands) {
 				this.client.logger.info(
-					`Adding slash command: ${new_command.name}`,
+					`- Adding slash command: ${new_command.name}`,
 				);
 
 				await this.client.application?.commands.create(
@@ -89,7 +77,7 @@ export default class Dispatcher {
 
 			for (const deleted_command of deleted_commands) {
 				this.client.logger.info(
-					`Deleting slash command: ${deleted_command.name}`,
+					`- Deleting slash command: ${deleted_command.name}`,
 				);
 				await deleted_command.delete();
 			}
@@ -124,7 +112,7 @@ export default class Dispatcher {
 
 					if (modified) {
 						this.client.logger.info(
-							`Updating slash command: ${updated_command.name}`,
+							`- Updating slash command: ${updated_command.name}`,
 						);
 						await previous_command.edit(updated_command);
 					}
@@ -183,21 +171,33 @@ export default class Dispatcher {
 				}
 			}
 
-			this.client.logger.info(`[dispatcher] Slash commands synced!`);
+			this.client.logger.info(`[Dispatcher] Slash commands synced!`);
 		}
 	}
 
-	public async load() {
-		if (this.loaded) {
-			throw new Error(`Dispatcher already loaded.`);
+	private async inihibit(
+		interaction: CommandInteraction<CacheType>,
+		command: Command,
+	) {
+		for (const inhibitor of this.inhibitors) {
+			if (!(await Promise.resolve(inhibitor(interaction, command)))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public async initialize() {
+		if (this.init) {
+			throw new Error(`Dispatcher has already been initialized.`);
 		}
 
-		this.client.logger.info(`[dispatcher] loading...`);
-		this.loaded = true;
+		this.init = true;
+
+		this.client.logger.info(`[Dispatcher] Initializing...`);
 
 		await this.sync();
 
-		this.client.logger.info(`[dispatcher] listening to events...`);
 		this.client.on('interactionCreate', async (interaction) => {
 			if (
 				interaction.user.bot ||
@@ -222,6 +222,6 @@ export default class Dispatcher {
 			this.awaiting.delete(interaction.user.id);
 		});
 
-		this.client.logger.info(`[dispatcher] loaded`);
+		this.client.logger.info(`[Dispatcher] Initialized.`);
 	}
 }

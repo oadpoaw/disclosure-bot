@@ -9,10 +9,11 @@ import rimraf from 'rimraf';
 
 const execute = promisify(exec);
 
-(async function () {
+(async function Upgrade() {
 	const response = await fetch(
 		`https://api.github.com/repos/${packageJSON.author}/${packageJSON.name}/releases/latest`,
 	);
+
 	const json = (await response.json()) as { tag_name: string };
 
 	if (`v${packageJSON.version}` === json.tag_name) {
@@ -26,6 +27,7 @@ const execute = promisify(exec);
 	await execute(
 		`curl -Lo ${packageJSON.name}.tar.gz https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/${packageJSON.name}.tar.gz`,
 	);
+
 	const { stdout } = await execute(
 		`curl -L https://github.com/${packageJSON.author}/${packageJSON.name}/releases/latest/download/checksum.txt`,
 	);

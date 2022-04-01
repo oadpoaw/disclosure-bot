@@ -8,7 +8,7 @@
 		"baseUrl": "./dist",
 		"paths": {
 			"#disclosure/*": [
-				"structures/*"
+				"public/*"
 			]
 		}
 	},

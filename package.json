@@ -13,7 +13,7 @@
 	"private": true,
 	"scripts": {
 		"start": "node --no-warnings .",
-		"upgrade": "node --no-warnings dist/scripts/update.js",
+		"upgrade": "node --no-warnings dist/scripts/upgrade.js",
 		"env": "node --no-warnings dist/scripts/env.js",
 		"prebuild": "npm run clean",
 		"build": "tsc --build",
@@ -65,7 +65,7 @@
 		"typescript": "^4.6.3"
 	},
 	"imports": {
-		"#disclosure/*": "./dist/structures/*.js"
+		"#disclosure/*": "./dist/public/*.js"
 	},
 	"engines": {
 		"node": ">=v17.0.0",

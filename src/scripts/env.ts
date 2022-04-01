@@ -2,9 +2,7 @@ import inquirer from 'inquirer';
 import yaml from 'yaml';
 import { execSync } from 'child_process';
 import { existsFile, writeFile } from '@oadpoaw/utils/fs/sync';
-import type BotConfig from '../loaders/BotConfig.js';
-
-type BotConfiguration = ReturnType<typeof BotConfig>;
+import type { Client } from 'discord.js';
 
 (async function env() {
 	if (existsFile(['config.yml'])) {
@@ -31,7 +29,7 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 		},
 	]);
 
-	const cfg: BotConfiguration = { token: '' };
+	const cfg: Client['config'] = { token: '' };
 
 	if (confirmed) {
 		const config = await inquirer.prompt([
@@ -43,7 +41,7 @@ type BotConfiguration = ReturnType<typeof BotConfig>;
 			},
 		]);
 
-		const cf: BotConfiguration = {
+		const cf: Client['config'] = {
 			token: config.token,
 		};
 		writeFile(['config.yml'], yaml.stringify(cf));

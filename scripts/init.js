@@ -6,9 +6,8 @@ writeFileSync(join(process.cwd(), 'plugins', 'package.json'), JSON.stringify({
 	"private": true,
 	"type": "module",
 	"dependencies": {},
-	"devDependencies": {},
 	"imports": {
-		"#disclosure/*": "./dist/structures/*.js"
+		"#disclosure/*": "./dist/public/*.js"
 	}
 }, null, 4));
 
@@ -22,7 +21,7 @@ writeFileSync(join(process.cwd(), 'plugins', 'tsconfig.json'), JSON.stringify({
 		"baseUrl": "./dist",
 		"paths": {
 			"#disclosure/*": [
-				"structures/*"
+				"public/*"
 			]
 		}
 	},

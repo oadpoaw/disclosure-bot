@@ -1,4 +1,3 @@
-import Logger from '../utils/Logger.js';
 import yaml from 'yaml';
 import { existsFile, readFile, writeFile } from '@oadpoaw/utils/fs/sync';
 import { merge } from '@oadpoaw/utils';
@@ -10,14 +9,31 @@ import type {
 	EventListener,
 	InhibitorFunction,
 	Command,
-} from '../types/PluginTypes';
+	BuilderFunction,
+} from '../types';
 import type z from 'zod';
-import type { PluginMetaData } from './PluginMetaData';
+import type { PluginMetaData } from './PluginManager.js';
 
-export class Plugin<
+export interface Plugin {
+	/**
+	 * - Called when it's the first time this plugin is loaded.
+	 */
+	onInitialize?(): void | Promise<void>;
+
+	/**
+	 * - Called when this plugin is loaded.
+	 */
+	onLoad?(): void | Promise<void>;
+
+	/**
+	 * - Called when this plugin encounters an error.
+	 */
+	onError?(_error: any): void | Promise<void>;
+}
+
+export abstract class Plugin<
 	Config extends PluginParam['configuration'] = PluginParam['configuration'],
 > {
-	private _initialized: boolean = false;
 	private _commands: Omit<Command, 'plugin'>[] = [];
 	private _events: [keyof ClientEvents, EventListener<any>][] = [];
 	private _inhibitors: InhibitorFunction[] = [];
@@ -26,41 +42,24 @@ export class Plugin<
 	/**
 	 * - Plugin's metadata.
 	 */
-	public metadata: PluginMetaData;
+	public readonly metadata: PluginMetaData;
 	/**
 	 * - Plugin's default configuration with validation.
 	 */
-	public defaultConfigs: Config;
+	protected readonly defaultConfigs: Config;
 
 	/**
 	 * - Plugin's file path.
 	 */
 	public pluginPath!: string;
 
-	public constructor(param: PluginParam<Config>) {
+	protected constructor(
+		protected client: Client<true>,
+		param: PluginParam<Config>,
+	) {
 		this.metadata = param.metadata;
-		this.defaultConfigs = param.configuration;
+		this.defaultConfigs = param.configuration || {};
 	}
-
-	/**
-	 * - Called when it's the first time this plugin is loaded.
-	 */
-	public onInitialize(_client: Client): void | Promise<void> {}
-
-	/**
-	 * - Called when this plugin is loaded.
-	 */
-	public onLoad(_client: Client): void | Promise<void> {}
-
-	/**
-	 * - Called when all plugins has been loaded.
-	 */
-	public onPluginsLoad(_client: Client, _plugins: Plugin[]): void | Promise<void> {}
-
-	/**
-	 * - Called when this plugin encounters an error.
-	 */
-	public onError(_error: any): void | Promise<void> {}
 
 	/**
 	 * - An array of commands of the plugin.
@@ -86,36 +85,28 @@ export class Plugin<
 	/**
 	 * - Add a Slash command with this plugin.
 	 */
-	public addCommand(options: Command['options'], exec: ExecuteFunction) {
-		if (!this._initialized) {
-			throw new Error(
-				`'${this.metadata.name}' plugin has not been initialized.`,
-			);
-		}
-
-		if (this._commands.some((x) => x.slash.name === options.name)) {
-			throw new Error(
-				`Command '${options.name}' is already added to the plugin. Is this a duplicate?`,
-			);
-		}
-
-		const slash = options.options
-			? options.options(new SlashCommandBuilder())
-			: new SlashCommandBuilder();
+	protected addCommand(
+		builder: BuilderFunction,
+		exec: ExecuteFunction,
+		options: Command['options'] = {},
+	) {
+		const slash = builder(new SlashCommandBuilder());
 
 		this._commands.push({
-			slash: slash
-				.setName(options.name.toLowerCase())
-				.setDescription(options.description),
+			slash,
 			execute: async (interaction) => {
 				try {
 					return await exec(interaction);
 				} catch (err) {
-					Logger.error(
-						`[plugin:${this.metadata.name}] Error occured - Command '${interaction.commandName}'`,
-					).error(err);
+					this.client.logger
+						.error(
+							`[${this.metadata.name}] Command - ${interaction.commandName}`,
+						)
+						.error(err);
 
-					this.onError(err);
+					if (typeof this.onError === 'function') {
+						this.onError(err);
+					}
 				}
 			},
 			options,
@@ -125,27 +116,23 @@ export class Plugin<
 	/**
 	 * - Add a discord event listener with this plugin.
 	 */
-	public addEvent<K extends keyof ClientEvents>(
+	protected addEvent<K extends keyof ClientEvents>(
 		eventName: K,
 		listener: EventListener<K>,
 	) {
-		if (!this._initialized) {
-			throw new Error(
-				`'${this.metadata.name}' plugin has not been initialized.`,
-			);
-		}
-
 		this._events.push([
 			eventName,
 			async (...args) => {
 				try {
 					await listener(...args);
-				} catch (error: any) {
-					Logger.error(
-						`[events:plugin:${this.metadata.name}] ${eventName} - ${this.metadata.author}`,
-					).error(error);
+				} catch (err: any) {
+					this.client.logger
+						.error(`[${this.metadata.name}] Event - ${eventName}`)
+						.error(err);
 
-					this.onError(error);
+					if (typeof this.onError === 'function') {
+						this.onError(err);
+					}
 				}
 			},
 		]);
@@ -156,28 +143,27 @@ export class Plugin<
 	 * - Return `true` to continue executing the command.
 	 * - Return `false` to discontinue executing the command.
 	 */
-	public addInhibitor(inhibitor: InhibitorFunction) {
-		if (!this._initialized) {
-			throw new Error(
-				`'${this.metadata.name}' plugin has not been initialized.`,
-			);
-		}
-
+	protected addInhibitor(inhibitor: InhibitorFunction) {
 		this._inhibitors.push((interaction, command) => {
 			try {
 				return inhibitor(interaction, command);
 			} catch (err) {
-				Logger.error(
-					`[plugin:${this.metadata.name}] Inhibitor Error occured - Breaking the inhibitor chain...`,
-				).error(err);
-				this.onError(err);
+				this.client.logger
+					.error(
+						`[${this.metadata.name}] Inhibitor - ${inhibitor.name}`,
+					)
+					.error(err);
 
-				return true;
+				if (typeof this.onError === 'function') {
+					this.onError(err);
+				}
+
+				return false;
 			}
 		});
 	}
 
-	public setConfigForce<F extends keyof Config>(
+	protected setConfigForce<F extends keyof Config>(
 		name: F,
 		cfg: z.infer<Config[F]['validation']>,
 	) {
@@ -195,16 +181,10 @@ export class Plugin<
 	 * @param name The configuration name
 	 * @param force Forcefully get the config from plugin's data folder and and not from the cache.
 	 */
-	public getConfig<F extends keyof Config>(
+	protected getConfig<F extends keyof Config>(
 		name: F,
 		force = false,
 	): z.infer<Config[F]['validation']> {
-		if (!this._initialized) {
-			throw new Error(
-				`'${this.metadata.name}' plugin has not been initialized.`,
-			);
-		}
-
 		if (Boolean(this._configs[name as string]) && !force) {
 			return this._configs[name as string];
 		}
@@ -234,16 +214,10 @@ export class Plugin<
 	 * @param name The configuration name
 	 * @param partial Partial configuration
 	 */
-	public setConfig<F extends keyof Config>(
+	protected setConfig<F extends keyof Config>(
 		name: F,
 		partial: Partial<z.infer<Config[F]['validation']>>,
 	): void {
-		if (!this._initialized) {
-			throw new Error(
-				`'${this.metadata.name}' plugin has not been initialized.`,
-			);
-		}
-
 		const defaults = this.defaultConfigs[name].config;
 		const current = this.getConfig(name);
 
