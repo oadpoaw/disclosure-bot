@@ -16,7 +16,7 @@
 	"typedocOptions": {
 		"out": "./docs/",
 		"readme": "./README.md",
-		"name": "disclosure-bot",
+		"name": "Developer Reference",
 		"entryPoints": [
 			"src/classes/Client.ts",
 			"src/classes/PluginManager.ts",
