@@ -42,7 +42,7 @@ export default async function PluginLoader(client: Client) {
 	let evs = 0;
 
 	for (const plugin of plugins) {
-		plugin.onPluginsLoad(client, plugins);
+		await plugin.onPluginsLoad(client, plugins);
 
 		for (const command of plugin.commands) {
 			const ex = client.commands.get(command.slash.name);

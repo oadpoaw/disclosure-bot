@@ -98,7 +98,7 @@ export async function PluginInitializer(
 
 			if (!existsDirectory(pluginFolder)) {
 				mkdir(pluginFolder);
-				plugin.onInitialize(client);
+				await plugin.onInitialize(client);
 			}
 
 			//@ts-ignore
@@ -124,7 +124,7 @@ export async function PluginInitializer(
 				}
 			}
 
-			plugin.onLoad(client);
+			await plugin.onLoad(client);
 		} catch (err) {
 			client.logger
 				.error(

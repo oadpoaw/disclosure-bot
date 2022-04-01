@@ -45,22 +45,22 @@ export class Plugin<
 	/**
 	 * - Called when it's the first time this plugin is loaded.
 	 */
-	public onInitialize(_client: Client) {}
+	public onInitialize(_client: Client): void | Promise<void> {}
 
 	/**
 	 * - Called when this plugin is loaded.
 	 */
-	public onLoad(_client: Client) {}
+	public onLoad(_client: Client): void | Promise<void> {}
 
 	/**
 	 * - Called when all plugins has been loaded.
 	 */
-	public onPluginsLoad(_client: Client, _plugins: Plugin[]) {}
+	public onPluginsLoad(_client: Client, _plugins: Plugin[]): void | Promise<void> {}
 
 	/**
 	 * - Called when this plugin encounters an error.
 	 */
-	public onError(_error: any) {}
+	public onError(_error: any): void | Promise<void> {}
 
 	/**
 	 * - An array of commands of the plugin.
@@ -193,7 +193,7 @@ export class Plugin<
 
 	/**
 	 * @param name The configuration name
-	 * @param force Forcefully get the config from plugin's config.yml and ignore the cache.
+	 * @param force Forcefully get the config from plugin's data folder and and not from the cache.
 	 */
 	public getConfig<F extends keyof Config>(
 		name: F,
