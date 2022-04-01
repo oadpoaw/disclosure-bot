@@ -66,6 +66,8 @@ Welcomer.onLoad = (client) => {
 		});
 	}
 
+	Welcomer.addInhibitor(() => true);
+
 	if (config.farewell.enabled && config.farewell.channel.length) {
 		Welcomer.addEvent('guildMemberRemove', async (member) => {
 			if (config.farewell.enabled && config.farewell.channel.length) {
@@ -146,6 +148,10 @@ Welcomer.onLoad = (client) => {
 			},
 		);
 	}
+};
+
+Welcomer.onPluginsLoad = () => {
+	Welcomer.addInhibitor(() => true);
 };
 
 export default Welcomer;

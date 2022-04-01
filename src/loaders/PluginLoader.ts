@@ -39,6 +39,8 @@ export default async function PluginLoader(client: Client) {
 		.map((name) => client.plugins.get(name))
 		.filter((plugin) => plugin) as Plugin[];
 
+	let evs = 0;
+
 	for (const plugin of plugins) {
 		plugin.onPluginsLoad(client, plugins);
 
@@ -56,6 +58,7 @@ export default async function PluginLoader(client: Client) {
 
 		for (const [eventName, listener] of plugin.events) {
 			client.on(eventName, listener);
+			evs++;
 		}
 
 		for (const inhibitor of plugin.inhibitors) {
@@ -67,6 +70,12 @@ export default async function PluginLoader(client: Client) {
 		`[plugin] ${client.plugins.size} plugin${
 			client.plugins.size > 1 ? 's' : ''
 		} loaded.`,
+	);
+
+	client.logger.info(`${client.commands.size} Command(s) loaded.`);
+	client.logger.info(`${evs} Event(s) loaded.`);
+	client.logger.info(
+		`${client.dispatcher.inhibitors.length} Inhibitor(s) loaded.`,
 	);
 
 	return client;
