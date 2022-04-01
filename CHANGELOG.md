@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.1.2](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.1...v2.1.2)
+## [v2.1.3](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.2...v2.1.3)
 
 ### Commits
 
+- chore: use packages and fixes [`482b7cc`](https://github.com/oadpoaw/disclosure-bot/commit/482b7cc97a0b818726a9deec0b7847c6e8b9f411)
+
+## [v2.1.2](https://github.com/oadpoaw/disclosure-bot/compare/v2.1.1...v2.1.2) - 2022-03-31
+
+### Commits
+
+- chore(release): 2.1.2 [`18b7232`](https://github.com/oadpoaw/disclosure-bot/commit/18b72328b6f1e0dbbaeccad2d7928d1275d174d9)
 - fix: typos [`5dedd75`](https://github.com/oadpoaw/disclosure-bot/commit/5dedd75f6b2ad1378d0dec813b90be11a987e925)
 - feat: remove exposure of PluginTypes.ts [`c13cf4b`](https://github.com/oadpoaw/disclosure-bot/commit/c13cf4b320b315e38f7e5d9edf2530d145dd2058)
 
