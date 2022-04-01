@@ -5,6 +5,7 @@ import sha256File from 'sha256-file';
 import { exec } from 'child_process';
 import { promises as fs } from 'fs';
 import { promisify } from 'util';
+import rimraf from 'rimraf';
 
 const execute = promisify(exec);
 
@@ -18,7 +19,7 @@ const execute = promisify(exec);
 		throw new Error(`Everything is up-to-date.`);
 	}
 
-	await fs.unlink(path.join(process.cwd(), 'dist')).catch(() => {});
+	await new Promise((resolve) => rimraf('dist', resolve));
 
 	const archive = path.join(process.cwd(), `${packageJSON.name}.tar.gz`);
 
