@@ -1,7 +1,7 @@
 import { CreateDependencyGraph } from '../functions/CreateDependencyGraph.js';
 import { PluginInitializer } from '../functions/PluginInitializer.js';
-import { readdir } from '../utils/FileSystem.js';
-import { Plugin } from '#disclosure/Plugin';
+import { readdir } from '@oadpoaw/utils/fs/sync';
+import { Plugin } from '../structures/Plugin.js';
 import type { Client } from 'discord.js';
 
 export default async function PluginLoader(client: Client) {

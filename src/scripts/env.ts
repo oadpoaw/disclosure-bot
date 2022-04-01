@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import yaml from 'yaml';
 import { execSync } from 'child_process';
-import { existsFile, writeFile } from '../utils/FileSystem.js';
+import { existsFile, writeFile } from '@oadpoaw/utils/fs/sync';
 import type BotConfig from '../loaders/BotConfig.js';
 
 type BotConfiguration = ReturnType<typeof BotConfig>;

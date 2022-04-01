@@ -1,6 +1,6 @@
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
-import { createLogger } from '@oadpoaw/utils';
+import { createLogger } from '@oadpoaw/utils/createLogger';
 
 const Logger = createLogger([
 	new DailyRotateFile({

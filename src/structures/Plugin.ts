@@ -1,6 +1,6 @@
 import Logger from '../utils/Logger.js';
 import yaml from 'yaml';
-import { existsFile, readFile, writeFile } from '../utils/FileSystem.js';
+import { existsFile, readFile, writeFile } from '@oadpoaw/utils/fs/sync';
 import { merge } from '@oadpoaw/utils';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { Client, ClientEvents } from 'discord.js';

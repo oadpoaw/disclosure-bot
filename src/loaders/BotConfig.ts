@@ -1,6 +1,6 @@
 import yaml from 'yaml';
 import z from 'zod';
-import { readFile } from '../utils/FileSystem.js';
+import { readFile } from '@oadpoaw/utils/fs/sync';
 
 const Validator = z.object({
 	token: z.string().nonempty(),

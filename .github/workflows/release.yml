@@ -27,7 +27,7 @@ jobs:
           mkdir plugins
 
       - name: Create release archive
-        run: tar -cvzf disclosure-bot.tar.gz package.json dist LICENSE plugins scripts tsconfig.base.json
+        run: tar -cvzf disclosure-bot.tar.gz package.json dist LICENSE plugins scripts
 
       - name: Create checksum.txt
         run: |
@@ -57,7 +57,7 @@ jobs:
       - run: npm ci
       - run: node ./scripts/ci-build.js
       - run: npm run docs
-      - run: rm -rf src package.json package-lock.json .github tsconfig.json create-disclosure-bot plugins scripts .vscode SECURITY.md CHANGELOG.md tsconfig.base.json
+      - run: rm -rf src package.json package-lock.json .github tsconfig.json create-disclosure-bot plugins scripts .vscode SECURITY.md CHANGELOG.md
 
       - run: cp -r docs/** .
 

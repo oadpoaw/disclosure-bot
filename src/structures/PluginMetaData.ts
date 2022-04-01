@@ -1,4 +1,4 @@
-import type { PluginMetaDataValidator } from 'functions/PluginInitializer';
+import type { PluginMetaDataValidator } from '../functions/PluginInitializer';
 import type z from 'zod';
 
 export interface PluginMetaData

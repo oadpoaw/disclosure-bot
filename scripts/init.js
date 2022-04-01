@@ -27,7 +27,7 @@ writeFileSync(join(process.cwd(), 'plugins', 'tsconfig.json'), JSON.stringify({
 		}
 	},
 	"exclude": [],
-	"extends": "../tsconfig.base.json",
+	"extends": "@oadpoaw/ts-config",
 	"include": [
 		"."
 	]

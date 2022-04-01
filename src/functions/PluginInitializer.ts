@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
-import { existsDirectory, mkdir } from '../utils/FileSystem.js';
+import { existsDirectory, mkdir } from '@oadpoaw/utils/fs/sync';
 import { promisify } from 'util';
-import type { Plugin } from '#disclosure/Plugin';
+import type { Plugin } from '../structures/Plugin';
 import type { Client } from 'discord.js';
 import type { Graph } from '../classes/Graph';
 import packageNameRegex from 'package-name-regex';
