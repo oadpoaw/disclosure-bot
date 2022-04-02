@@ -1,9 +1,6 @@
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
 import {
 	ApplicationCommand,
 	ApplicationCommandData,
-	ApplicationCommandDataResolvable,
 	CacheType,
 	Client,
 	CommandInteraction,
@@ -69,16 +66,6 @@ export default class Dispatcher {
 				await this.client.application?.fetch();
 			}
 
-			const rest = new REST({ version: '9' }).setToken(this.client.token);
-
-			const route =
-				typeof guildId === 'string'
-					? Routes.applicationGuildCommands(
-							this.client.user.id,
-							guildId,
-					  )
-					: Routes.applicationCommands(this.client.user.id);
-
 			const commands: ApplicationCommandData[] = this.client.commands.map(
 				({ slash }) => ({
 					name: slash.name,
@@ -88,10 +75,6 @@ export default class Dispatcher {
 					options: slash.options,
 				}),
 			);
-
-			await rest.put(route, {
-				body: commands,
-			});
 
 			const current_commands =
 				await this.client.application.commands.fetch({
