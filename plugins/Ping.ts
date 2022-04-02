@@ -20,7 +20,6 @@ export default class Ping extends Plugin {
 			(interaction) => {
 				interaction.reply(`Pong!`);
 			},
-			{},
 		);
 	}
 }
