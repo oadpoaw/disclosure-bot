@@ -62,26 +62,23 @@ export default class Dispatcher {
 				await this.client.application?.fetch();
 			}
 
-			await new REST({ version: '9' })
-				.setToken(this.client.token)
-				.put(
-					guildId
-						? Routes.applicationGuildCommands(
-								this.client.user.id,
-								guildId,
-						  )
-						: Routes.applicationCommands(this.client.user.id),
-					{
-						body: this.client.commands.map(({ slash }) =>
-							slash.toJSON(),
-						),
-					},
-				);
+			const rest = new REST({ version: '9' }).setToken(this.client.token);
 
-			const commands = await this.client.application.commands.fetch(
+			const route =
+				typeof guildId === 'string'
+					? Routes.applicationGuildCommands(
+							this.client.user.id,
+							guildId,
+					  )
+					: Routes.applicationCommands(this.client.user.id);
+
+			await rest.put(route, {
+				body: this.client.commands.map(({ slash }) => slash.toJSON()),
+			});
+
+			const commands = await this.client.application.commands.fetch({
 				guildId,
-				{ guildId },
-			);
+			});
 
 			for (const [, command] of commands) {
 				const { options } = this.client.commands.get(
