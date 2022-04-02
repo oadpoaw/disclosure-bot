@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const settings = z.object({
 	enabled: z.boolean(),
-	message: z.string().nonempty(),
+	message: z.string().min(6),
 	channel: z.string(),
 });
 
