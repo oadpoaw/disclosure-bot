@@ -194,6 +194,10 @@ export class PluginManager {
 							`[PluginManager] Error loading ${plugin.metadata.name} plugin.`,
 						)
 						.error(err);
+
+					if (typeof plugin.onError === 'function') {
+						await plugin.onError(err);
+					}
 				}
 			}
 		}
