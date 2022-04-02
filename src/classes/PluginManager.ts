@@ -180,10 +180,6 @@ export class PluginManager {
 
 				this.plugins.delete(plugin.metadata.name);
 				this.graph.removeNode(plugin.metadata.name);
-
-				if (typeof plugin.onError === 'function') {
-					await plugin.onError(err);
-				}
 			}
 		}
 
