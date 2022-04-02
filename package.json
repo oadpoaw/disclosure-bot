@@ -12,6 +12,7 @@
 	},
 	"private": true,
 	"scripts": {
+		"prepare": "husky install",
 		"start": "node --no-warnings .",
 		"upgrade": "node --no-warnings dist/scripts/upgrade.js",
 		"env": "node --no-warnings dist/scripts/env.js",
@@ -30,7 +31,7 @@
 		"v:patch": "npm version patch -m \"chore(release): %s\" --sign-git-tag",
 		"v:minor": "npm version minor -m \"chore(release): %s\" --sign-git-tag",
 		"v:major": "npm version major -m \"chore(release): %s\" --sign-git-tag",
-		"version": "auto-changelog -p && git add CHANGELOG.md"
+		"version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
 	},
 	"dependencies": {
 		"@discordjs/builders": "^0.12.0",
@@ -50,6 +51,7 @@
 		"zod": "^3.14.3"
 	},
 	"devDependencies": {
+		"@commitlint/cli": "^16.2.3",
 		"@oadpoaw/ts-config": "^0.1.1",
 		"@types/inquirer": "^8.2.1",
 		"@types/ms": "^0.7.31",
@@ -58,7 +60,8 @@
 		"@types/package-name-regex": "^2.0.0",
 		"@types/rimraf": "^3.0.2",
 		"@types/sha256-file": "^1.0.1",
-		"auto-changelog": "^2.4.0",
+		"conventional-changelog-cli": "^2.2.2",
+		"husky": "^7.0.4",
 		"prettier": "^2.6.1",
 		"rimraf": "^3.0.2",
 		"typedoc": "^0.22.13",
@@ -79,9 +82,32 @@
 		"endOfLine": "auto",
 		"useTabs": true
 	},
-	"auto-changelog": {
-		"hideCredit": true,
-		"template": "keepachangelog",
-		"commitLimit": false
+	"commitlint": {
+		"rules": {
+			"type-enum": [
+				2,
+				"always",
+				[
+					"chore",
+					"build",
+					"ci",
+					"docs",
+					"feat",
+					"fix",
+					"perf",
+					"refactor",
+					"revert",
+					"style",
+					"test",
+					"types",
+					"wip"
+				]
+			],
+			"scope-case": [
+				1,
+				"always",
+				"pascal-case"
+			]
+		}
 	}
 }
