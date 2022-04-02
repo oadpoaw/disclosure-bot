@@ -305,7 +305,11 @@ const PluginMetaDataValidator = z.object({
 	version: z.string().refine((arg) => semverRegex().test(arg), {
 		message: 'Version should match semver format. https://semver.org/',
 	}),
-	author: PluginAuthor.or(PluginAuthor.array().nonempty()),
+	author: PluginAuthor.or(
+		PluginAuthor.array().nonempty(
+			`Plugin.metadata.author array should not be empty.`,
+		),
+	),
 	dependencies: PluginDeps,
 	optionalDependencies: PluginDeps,
 	incompatibleDependencies: PluginDeps,
