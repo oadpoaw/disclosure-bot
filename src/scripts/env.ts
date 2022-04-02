@@ -2,6 +2,7 @@ import inquirer from 'inquirer';
 import yaml from 'yaml';
 import { execSync } from 'child_process';
 import { existsFile, writeFile } from '@oadpoaw/utils/fs/sync';
+import { merge } from '@oadpoaw/utils';
 import type { Client } from 'discord.js';
 
 (async function env() {
@@ -29,7 +30,13 @@ import type { Client } from 'discord.js';
 		},
 	]);
 
-	const cfg: Client['config'] = { token: '' };
+	const cfg: Client['config'] = {
+		environment: 'development',
+		token: '',
+		main_guild: '',
+		multiguild: false,
+		sharding: false,
+	};
 
 	if (confirmed) {
 		const config = await inquirer.prompt([
@@ -41,9 +48,7 @@ import type { Client } from 'discord.js';
 			},
 		]);
 
-		const cf: Client['config'] = {
-			token: config.token,
-		};
+		const cf: Client['config'] = merge(cfg, config);
 		writeFile(['config.yml'], yaml.stringify(cf));
 	} else {
 		writeFile(['config.yml'], yaml.stringify(cfg));

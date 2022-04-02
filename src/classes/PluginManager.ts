@@ -22,7 +22,9 @@ export class PluginManager {
 
 		this.init = true;
 
-		this.client.logger.info(`[PluginManager] Initializing...`);
+		if (!this.client.shard) {
+			this.client.logger.info(`[PluginManager] Initializing...`);
+		}
 
 		const files = readdir(['plugins']).filter((e) => e.endsWith('.js'));
 
@@ -75,11 +77,13 @@ export class PluginManager {
 			}
 		}
 
-		this.client.logger.info(
-			`[PluginManager] Loading ${this.client.plugins.size} plugin${
-				this.client.plugins.size > 1 ? 's' : ''
-			}.`,
-		);
+		if (!this.client.shard) {
+			this.client.logger.info(
+				`[PluginManager] Loading ${this.client.plugins.size} plugin${
+					this.client.plugins.size > 1 ? 's' : ''
+				}.`,
+			);
+		}
 
 		// # Create Plugin Dependency Graph
 		for (const [, plugin] of this.plugins) {
@@ -115,7 +119,9 @@ export class PluginManager {
 
 		// # Preload plugins
 		for (const plugin of this.getPlugins()) {
-			this.client.logger.info(`- ${plugin.metadata.name}`);
+			if (!this.client.config.sharding) {
+				this.client.logger.info(`- ${plugin.metadata.name}`);
+			}
 
 			try {
 				const errors: string[] = [];
@@ -228,21 +234,23 @@ export class PluginManager {
 			}
 		}
 
-		this.client.logger.info(
-			`[PluginManager] ${this.client.plugins.size} plugin${
-				this.client.plugins.size > 1 ? 's' : ''
-			} loaded.`,
-		);
+		if (!this.client.shard) {
+			this.client.logger.info(
+				`[PluginManager] ${this.client.plugins.size} plugin${
+					this.client.plugins.size > 1 ? 's' : ''
+				} loaded.`,
+			);
 
-		this.client.logger.info(
-			`- ${this.client.commands.size} Command(s) loaded`,
-		);
-		this.client.logger.info(`- ${eventCount} Event(s) loaded`);
-		this.client.logger.info(
-			`- ${this.client.dispatcher.inhibitors.length} Inhibitor(s) loaded`,
-		);
+			this.client.logger.info(
+				`- ${this.client.commands.size} Command(s) loaded`,
+			);
+			this.client.logger.info(`- ${eventCount} Event(s) loaded`);
+			this.client.logger.info(
+				`- ${this.client.dispatcher.inhibitors.length} Inhibitor(s) loaded`,
+			);
 
-		this.client.logger.info(`[PluginManager] Initialized.`);
+			this.client.logger.info(`[PluginManager] Initialized.`);
+		}
 	}
 
 	public get(pluginName: string): Plugin | undefined {

@@ -1,13 +1,6 @@
-import {
-	ApplicationCommand,
-	ApplicationCommandDataResolvable,
-	CacheType,
-	Client,
-	Collection,
-	CommandInteraction,
-	Guild,
-	GuildResolvable,
-} from 'discord.js';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+import type { CacheType, Client, CommandInteraction } from 'discord.js';
 import type { Command, InhibitorFunction } from '../types';
 
 export default class Dispatcher {
@@ -16,157 +9,135 @@ export default class Dispatcher {
 
 	private init: boolean;
 
-	public constructor(private client: Client) {
+	public constructor(private client: Client<true>) {
 		this.awaiting = new Set();
 		this.inhibitors = [];
 		this.init = false;
 	}
 
 	private async sync() {
-		const guild = this.client.guilds.cache.first() as Guild;
+		if (this.client.commands.size) {
+			let guildId: string | undefined | false;
 
-		if (this.client.commands.size && Boolean(guild)) {
+			const isDevelopment =
+				this.client.config.environment === 'development';
+
+			const isProduction = !isDevelopment;
+
+			const isMultiGuild = this.client.config.multiguild;
+
+			if (isDevelopment) {
+				guildId = this.client.config.main_guild;
+			}
+
+			if (isDevelopment && isMultiGuild && !!this.client.shard) {
+				if (this.client.shard.ids.includes(0)) {
+					guildId = undefined;
+				} else {
+					guildId = false;
+				}
+			}
+
+			if (isProduction && isMultiGuild) {
+				guildId = undefined;
+			}
+
+			if (isProduction && !isMultiGuild) {
+				guildId = this.client.config.main_guild;
+			}
+
+			if (isProduction && isMultiGuild && !!this.client.shard) {
+				if (this.client.shard.ids.includes(0)) {
+					guildId = undefined;
+				} else {
+					guildId = false;
+				}
+			}
+
+			if (typeof guildId === 'boolean') return;
+
 			this.client.logger.info(`[Dispatcher] Syncing slash commands...`);
 
 			if (!this.client.application?.owner) {
 				await this.client.application?.fetch();
 			}
 
-			const commands = this.client.commands.map(({ slash }) => ({
-				name: slash.name,
-				description: slash.description,
-				options: slash.options,
-				type: 'CHAT_INPUT',
-			})) as unknown as ApplicationCommandDataResolvable[];
+			await new REST({ version: '9' })
+				.setToken(this.client.token)
+				.put(
+					guildId
+						? Routes.applicationGuildCommands(
+								this.client.user.id,
+								guildId,
+						  )
+						: Routes.applicationCommands(this.client.user.id),
+					{
+						body: this.client.commands.map(({ slash }) =>
+							slash.toJSON(),
+						),
+					},
+				);
 
-			const current_commands =
-				(await this.client.application?.commands.fetch({
-					guildId: guild.id,
-				})) as Collection<
-					string,
-					ApplicationCommand<{
-						guild?: GuildResolvable;
-					}>
-				>;
-
-			const new_commands = commands.filter(
-				(command) =>
-					!current_commands.some((c) => c.name === command.name),
+			const commands = await this.client.application.commands.fetch(
+				guildId,
+				{ guildId },
 			);
 
-			const deleted_commands = current_commands
-				.filter(
-					(command) => !commands.some((c) => c.name === command.name),
-				)
-				.toJSON();
+			for (const [, command] of commands) {
+				const { options } = this.client.commands.get(
+					command.name,
+				) as Command;
 
-			const updated_commands = commands.filter((command) =>
-				current_commands.some((c) => c.name === command.name),
-			);
+				if (
+					options.permissions &&
+					options.permissions.length &&
+					guildId
+				) {
+					const { permissions } = options;
 
-			for (const new_command of new_commands) {
-				this.client.logger.info(
-					`- Adding slash command: ${new_command.name}`,
-				);
-
-				await this.client.application?.commands.create(
-					new_command,
-					guild.id,
-				);
-			}
-
-			for (const deleted_command of deleted_commands) {
-				this.client.logger.info(
-					`- Deleting slash command: ${deleted_command.name}`,
-				);
-				await deleted_command.delete();
-			}
-
-			for (const updated_command of updated_commands) {
-				if (updated_command.type === 'CHAT_INPUT') {
-					const previous_command = current_commands.find(
-						(c) => c.name === updated_command.name,
+					const current_permissions = await command.permissions.fetch(
+						{
+							guild: guildId,
+						},
 					);
 
-					if (!previous_command) {
-						continue;
-					}
+					const new_permissions = permissions.filter(
+						(permission) =>
+							!current_permissions.some(
+								(p) =>
+									p.id === permission.id &&
+									p.type === permission.type,
+							),
+					);
 
-					let modified = false;
+					const deleted_permissions = current_permissions.filter(
+						(permission) =>
+							!permissions.some(
+								(p) =>
+									p.id === permission.id &&
+									p.type === permission.type,
+							),
+					);
+
+					const updated_permissions = permissions.filter(
+						(permission) =>
+							current_permissions.some(
+								(p) =>
+									p.id === permission.id &&
+									p.type === permission.type &&
+									p.permission !== permission.permission,
+							),
+					);
 
 					if (
-						previous_command.description !==
-						updated_command.description
+						new_permissions.length ||
+						deleted_permissions.length ||
+						updated_permissions.length
 					) {
-						modified = true;
-					}
-
-					if (
-						!ApplicationCommand.optionsEqual(
-							previous_command.options ?? [],
-							updated_command.options ?? [],
-						)
-					) {
-						modified = true;
-					}
-
-					if (modified) {
-						this.client.logger.info(
-							`- Updating slash command: ${updated_command.name}`,
-						);
-						await previous_command.edit(updated_command);
-					}
-
-					const { options } = this.client.commands.get(
-						previous_command.name,
-					) as Command;
-
-					if (options.permissions && options.permissions.length) {
-						const { permissions } = options;
-
-						const current_permissions =
-							await previous_command.permissions.fetch({
-								guild: guild.id,
-							});
-
-						const new_permissions = permissions.filter(
-							(permission) =>
-								!current_permissions.some(
-									(p) =>
-										p.id === permission.id &&
-										p.type === permission.type,
-								),
-						);
-
-						const deleted_permissions = current_permissions.filter(
-							(permission) =>
-								!permissions.some(
-									(p) =>
-										p.id === permission.id &&
-										p.type === permission.type,
-								),
-						);
-
-						const updated_permissions = permissions.filter(
-							(permission) =>
-								current_permissions.some(
-									(p) =>
-										p.id === permission.id &&
-										p.type === permission.type &&
-										p.permission !== permission.permission,
-								),
-						);
-
-						if (
-							new_permissions.length ||
-							deleted_permissions.length ||
-							updated_permissions.length
-						) {
-							previous_command.permissions.set({
-								guild: guild.id,
-								permissions,
-							});
-						}
+						command.permissions.set({
+							guild: guildId,
+							permissions,
+						});
 					}
 				}
 			}
