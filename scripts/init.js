@@ -1,7 +1,10 @@
-import { symlinkSync, writeFileSync } from "fs";
+import { symlinkSync } from "fs";
 import { join } from "path";
+import { writeFile } from '@oadpoaw/utils/fs/sync';
 
-writeFileSync(join(process.cwd(), 'plugins', 'package.json'), JSON.stringify({
+const stringify = (json) => JSON.stringify(json, null, 4);
+
+const packageJson = {
 	"$schema": "http://json.schemastore.org/package",
 	"private": true,
 	"type": "module",
@@ -9,9 +12,9 @@ writeFileSync(join(process.cwd(), 'plugins', 'package.json'), JSON.stringify({
 	"imports": {
 		"#disclosure/*": "./dist/public/*.js"
 	}
-}, null, 4));
+};
 
-writeFileSync(join(process.cwd(), 'plugins', 'tsconfig.json'), JSON.stringify({
+const tsConfigJson = {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
 		"declaration": false,
@@ -30,6 +33,9 @@ writeFileSync(join(process.cwd(), 'plugins', 'tsconfig.json'), JSON.stringify({
 	"include": [
 		"."
 	]
-}, null, 4));
+};
+
+writeFile(['plugins', 'package.json'], stringify(packageJson));
+writeFile(['plugins', 'tsconfig.json'], stringify(tsConfigJson));
 
 symlinkSync(join(process.cwd(), 'dist'), join(process.cwd(), 'plugins', 'dist'));

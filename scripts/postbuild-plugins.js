@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, sep } from 'path';
+
 const makePath = (p = '') => join(process.cwd(), 'plugins', p);
 
 for (const file of readdirSync(makePath('plugins'))) {
