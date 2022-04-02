@@ -52,6 +52,7 @@
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^16.2.3",
+		"@commitlint/config-conventional": "^16.2.1",
 		"@oadpoaw/ts-config": "^0.1.1",
 		"@types/inquirer": "^8.2.1",
 		"@types/ms": "^0.7.31",
@@ -62,6 +63,7 @@
 		"@types/sha256-file": "^1.0.1",
 		"conventional-changelog-cli": "^2.2.2",
 		"husky": "^7.0.4",
+		"lint-staged": "^12.3.7",
 		"prettier": "^2.6.1",
 		"rimraf": "^3.0.2",
 		"typedoc": "^0.22.13",
@@ -74,6 +76,11 @@
 		"node": ">=v17.0.0",
 		"npm": ">=8.0.0"
 	},
+	"lint-staged": {
+		"src/**/*.{ts}": [
+			"prettier --write"
+		]
+	},
 	"prettier": {
 		"singleQuote": true,
 		"trailingComma": "all",
@@ -83,6 +90,9 @@
 		"useTabs": true
 	},
 	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		],
 		"rules": {
 			"type-enum": [
 				2,
