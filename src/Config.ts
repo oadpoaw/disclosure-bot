@@ -45,6 +45,6 @@ export const Config: ConfigInterface = BotConfig();
 
 export function BotConfig(): ConfigInterface {
 	return ConfigValidator.parse(
-		yaml.parse(readFile(['config.yml']).toString())
+		yaml.parse(readFile(['config.yml']).toString()),
 	);
 }

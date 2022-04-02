@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import packageJSON from '../package.json';
-import { Config } from "./Config.js";
+import { Config } from './Config.js';
 import Logger from './Logger.js';
 
 if (Number(process.versions.node.split('.')[0]) < 17) {
