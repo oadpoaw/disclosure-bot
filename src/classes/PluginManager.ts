@@ -101,11 +101,11 @@ export class PluginManager {
 
 			if (plugin.metadata.loadBefore) {
 				for (const dependency of plugin.metadata.loadBefore) {
-					if (!this.graph.hasEdge(plugin.metadata.name, dependency)) {
+					if (!this.graph.hasEdge(dependency, plugin.metadata.name)) {
 						if (this.has(dependency)) {
 							this.graph.addEdge(
-								plugin.metadata.name,
 								dependency,
+								plugin.metadata.name,
 							);
 						}
 					}
@@ -389,7 +389,7 @@ export interface PluginMetaData
 	 */
 	incompatibleDependencies?: string[];
 	/**
-	 * - A list of plugins that should be loaded **before** your plugin.
+	 * - A list of plugins that should be loaded **after** your plugin.
 	 * - Treated as if the listed plugins are optional dependencies.
 	 * - Circular optional dependencies are loaded arbitrarily.
 	 */
