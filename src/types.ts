@@ -30,9 +30,9 @@ interface Config<T extends PluginValidation = PluginValidation> {
 	validation: T;
 }
 
-type PluginConfiguration = Record<string, Config>;
+export type PluginConfiguration = Record<string, Config>;
 
-export interface PluginParam<
+export interface PluginParameters<
 	C extends PluginConfiguration = PluginConfiguration,
 > {
 	metadata: PluginMetaData;

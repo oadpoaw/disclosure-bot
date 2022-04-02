@@ -4,7 +4,7 @@ import { merge } from '@oadpoaw/utils';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { Client, ClientEvents } from 'discord.js';
 import type {
-	PluginParam,
+	PluginParameters,
 	ExecuteFunction,
 	EventListener,
 	InhibitorFunction,
@@ -32,7 +32,7 @@ export interface Plugin {
 }
 
 export abstract class Plugin<
-	Config extends PluginParam['configuration'] = PluginParam['configuration'],
+	Config extends PluginParameters['configuration'] = PluginParameters['configuration'],
 > {
 	private _commands: Omit<Command, 'plugin'>[] = [];
 	private _events: [keyof ClientEvents, EventListener<any>][] = [];
@@ -54,8 +54,8 @@ export abstract class Plugin<
 	public pluginPath!: string;
 
 	protected constructor(
-		protected client: Client<true>,
-		param: PluginParam<Config>,
+		protected client: Client,
+		param: PluginParameters<Config>,
 	) {
 		this.metadata = param.metadata;
 		this.defaultConfigs = param.configuration || {};
