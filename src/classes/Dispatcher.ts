@@ -66,14 +66,8 @@ export default class Dispatcher {
 				await this.client.application?.fetch();
 			}
 
-			const commands: ApplicationCommandData[] = this.client.commands.map(
-				({ slash }) => ({
-					name: slash.name,
-					description: slash.description,
-					defaultPermission: slash.defaultPermission,
-					type: 'CHAT_INPUT',
-					options: slash.options,
-				}),
+			const commands = this.client.commands.map(({ slash }) =>
+				slash.toJSON(),
 			);
 
 			const current_commands =
@@ -111,12 +105,11 @@ export default class Dispatcher {
 				this.client.logger.info(
 					`- Deleting slash command: ${deleted_command.name}`,
 				);
-
 				await deleted_command.delete();
 			}
 
 			for (const updated_command of updated_commands) {
-				if (updated_command.type === 'CHAT_INPUT') {
+				if (updated_command.type === 1) {
 					const previous_command = current_commands.find(
 						(c) => c.name === updated_command.name,
 					);
@@ -135,6 +128,13 @@ export default class Dispatcher {
 					}
 
 					if (
+						previous_command.defaultPermission !==
+						updated_command.default_permission
+					) {
+						modified = true;
+					}
+
+					if (
 						!ApplicationCommand.optionsEqual(
 							previous_command.options ?? [],
 							updated_command.options ?? [],
@@ -147,7 +147,11 @@ export default class Dispatcher {
 						this.client.logger.info(
 							`- Updating slash command: ${updated_command.name}`,
 						);
-						await previous_command.edit(updated_command);
+
+						await previous_command.edit({
+							...updated_command,
+							type: 'CHAT_INPUT',
+						} as ApplicationCommandData);
 					}
 
 					const { options } = this.client.commands.get(
