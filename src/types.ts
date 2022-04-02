@@ -40,6 +40,10 @@ export interface PluginParam<
 }
 
 interface CommandOptions {
+	/**
+	 * - The required permisssions in order to run this slash command.
+	 * - This property is only used when the bot's environment is set to `development` or config property `multiguild` is set to false.
+	 */
 	permissions: ApplicationCommandPermissionData[];
 }
 
