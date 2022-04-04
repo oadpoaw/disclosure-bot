@@ -45,7 +45,7 @@
 		"package-name-regex": "^2.0.6",
 		"semver-regex": "^4.0.2",
 		"sha256-file": "^1.0.0",
-		"winston": "^3.6.0",
+		"winston": "^3.7.1",
 		"winston-daily-rotate-file": "^4.6.1",
 		"yaml": "^1.10.2",
 		"zod": "^3.14.3"
