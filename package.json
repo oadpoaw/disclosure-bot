@@ -37,7 +37,7 @@
 		"@discordjs/builders": "^0.12.0",
 		"@discordjs/rest": "^0.3.0",
 		"@oadpoaw/utils": "^1.0.3",
-		"discord-api-types": "^0.31.0",
+		"discord-api-types": "^0.31.1",
 		"discord.js": "^13.6.0",
 		"inquirer": "^8.2.2",
 		"ms": "^2.1.3",
