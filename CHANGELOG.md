@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.2.1...v0.3.0) (2022-04-23)
+
+
+### Features
+
+* update dispatcher ([072d8b5](https://github.com/oadpoaw/disclosure-bot/commit/072d8b5839db4746a87b8136b9a474f5358538d0))
+
+
+
 ## [0.2.1](https://github.com/oadpoaw/disclosure-bot/compare/v0.2.0...v0.2.1) (2022-04-02)
 
 
