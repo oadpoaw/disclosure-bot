@@ -34,7 +34,7 @@
 		"version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
 	},
 	"dependencies": {
-		"@discordjs/builders": "^0.12.0",
+		"@discordjs/builders": "^0.13.0",
 		"@discordjs/rest": "^0.4.1",
 		"@oadpoaw/utils": "^1.0.3",
 		"discord-api-types": "^0.31.2",
