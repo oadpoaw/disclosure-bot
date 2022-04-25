@@ -1,3 +1,17 @@
+## [0.3.1](https://github.com/oadpoaw/disclosure-bot/compare/v0.3.0...v0.3.1) (2022-04-25)
+
+
+### Bug Fixes
+
+* slash command sync deletion ([9dc2f7d](https://github.com/oadpoaw/disclosure-bot/commit/9dc2f7de83d3d9aea3afe497c08282bb716ad16e))
+
+
+### Features
+
+* modified plugin logger ([5565377](https://github.com/oadpoaw/disclosure-bot/commit/5565377fa76ec34104eee427f22aa982f67721c9))
+
+
+
 # [0.3.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.2.1...v0.3.0) (2022-04-23)
 
 
