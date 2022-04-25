@@ -16,115 +16,113 @@ export default class Dispatcher {
 	}
 
 	private async sync() {
-		if (this.client.commands.size) {
-			let guildId: string | undefined | false;
+		let guildId: string | undefined | false;
 
-			const isDevelopment =
-				this.client.config.environment === 'development';
+		const isDevelopment = this.client.config.environment === 'development';
 
-			const isProduction = !isDevelopment;
+		const isProduction = !isDevelopment;
 
-			const isMultiGuild = this.client.config.multiguild;
+		const isMultiGuild = this.client.config.multiguild;
 
-			if (isDevelopment) {
-				guildId = this.client.config.main_guild;
-			}
+		if (isDevelopment) {
+			guildId = this.client.config.main_guild;
+		}
 
-			if (isDevelopment && isMultiGuild && !!this.client.shard) {
-				if (this.client.shard.ids.includes(0)) {
-					guildId = undefined;
-				} else {
-					guildId = false;
-				}
-			}
-
-			if (isProduction && isMultiGuild) {
+		if (isDevelopment && isMultiGuild && !!this.client.shard) {
+			if (this.client.shard.ids.includes(0)) {
 				guildId = undefined;
+			} else {
+				guildId = false;
 			}
+		}
 
-			if (isProduction && !isMultiGuild) {
-				guildId = this.client.config.main_guild;
+		if (isProduction && isMultiGuild) {
+			guildId = undefined;
+		}
+
+		if (isProduction && !isMultiGuild) {
+			guildId = this.client.config.main_guild;
+		}
+
+		if (isProduction && isMultiGuild && !!this.client.shard) {
+			if (this.client.shard.ids.includes(0)) {
+				guildId = undefined;
+			} else {
+				guildId = false;
 			}
+		}
 
-			if (isProduction && isMultiGuild && !!this.client.shard) {
-				if (this.client.shard.ids.includes(0)) {
-					guildId = undefined;
-				} else {
-					guildId = false;
-				}
-			}
+		if (typeof guildId === 'boolean') return;
 
-			if (typeof guildId === 'boolean') return;
+		this.client.logger.info(`[Dispatcher] Syncing slash commands...`);
 
-			this.client.logger.info(`[Dispatcher] Syncing slash commands...`);
+		if (!this.client.application?.owner) {
+			await this.client.application?.fetch();
+		}
 
-			if (!this.client.application?.owner) {
-				await this.client.application?.fetch();
-			}
+		const route = guildId
+			? Routes.applicationGuildCommands(this.client.user.id, guildId)
+			: Routes.applicationCommands(this.client.user.id);
 
-			const route = guildId
-				? Routes.applicationGuildCommands(this.client.user.id, guildId)
-				: Routes.applicationCommands(this.client.user.id);
+		await new REST().setToken(this.client.token).put(route, {
+			body: this.client.commands.map(({ slash }) => slash.toJSON()),
+		});
 
-			await new REST().setToken(this.client.token).put(route, {
-				body: this.client.commands.map(({ slash }) => slash.toJSON()),
-			});
+		if (guildId) {
+			const current_commands =
+				await this.client.application.commands.fetch({ guildId });
 
-			if (guildId) {
-				const current_commands =
-					await this.client.application.commands.fetch({ guildId });
+			for (const [, command] of current_commands) {
+				const { options } = this.client.commands.get(
+					command.name,
+				) as Command;
 
-				for (const [, command] of current_commands) {
-					const { options } = this.client.commands.get(
-						command.name,
-					) as Command;
+				if (options.permissions && options.permissions.length) {
+					const { permissions } = options;
 
-					if (options.permissions && options.permissions.length) {
-						const { permissions } = options;
+					const current_permissions = await command.permissions.fetch(
+						{
+							guild: guildId,
+						},
+					);
 
-						const current_permissions =
-							await command.permissions.fetch({
-								guild: guildId,
-							});
+					const new_permissions = permissions.filter(
+						(permission) =>
+							!current_permissions.some(
+								(p) =>
+									p.id === permission.id &&
+									p.type === permission.type,
+							),
+					);
 
-						const new_permissions = permissions.filter(
-							(permission) =>
-								!current_permissions.some(
-									(p) =>
-										p.id === permission.id &&
-										p.type === permission.type,
-								),
-						);
+					const deleted_permissions = current_permissions.filter(
+						(permission) =>
+							!permissions.some(
+								(p) =>
+									p.id === permission.id &&
+									p.type === permission.type,
+							),
+					);
 
-						const deleted_permissions = current_permissions.filter(
-							(permission) =>
-								!permissions.some(
-									(p) =>
-										p.id === permission.id &&
-										p.type === permission.type,
-								),
-						);
+					const updated_permissions = permissions.filter(
+						(permission) =>
+							current_permissions.some(
+								(p) =>
+									p.id === permission.id &&
+									p.type === permission.type &&
+									p.permission !== permission.permission,
+							),
+					);
 
-						const updated_permissions = permissions.filter(
-							(permission) =>
-								current_permissions.some(
-									(p) =>
-										p.id === permission.id &&
-										p.type === permission.type &&
-										p.permission !== permission.permission,
-								),
-						);
-
-						if (
-							new_permissions.length ||
-							deleted_permissions.length ||
-							updated_permissions.length
-						) {
-							command.permissions.set({
-								guild: guildId,
-								permissions,
-							});
-						}
+					if (
+						new_permissions.length ||
+						deleted_permissions.length ||
+						updated_permissions.length
+					) {
+						command.permissions.set({
+							guild: guildId,
+							permissions,
+						});
 					}
 				}
 			}
