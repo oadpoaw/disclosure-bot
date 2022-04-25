@@ -1,3 +1,12 @@
+## [0.3.2](https://github.com/oadpoaw/disclosure-bot/compare/v0.3.1...v0.3.2) (2022-04-25)
+
+
+### Features
+
+* add shardOptions to env ([e9e82d1](https://github.com/oadpoaw/disclosure-bot/commit/e9e82d12df4bf23154f3b9c9c9a16c84c88da5f4))
+
+
+
 ## [0.3.1](https://github.com/oadpoaw/disclosure-bot/compare/v0.3.0...v0.3.1) (2022-04-25)
 
 
