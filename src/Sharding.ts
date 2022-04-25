@@ -18,7 +18,6 @@ import ms from 'ms';
 
 			if (shard.id === 0) {
 				await shard.eval(`this.dispatcher.initialize();`);
-				Logger.info(`Done! ${ms(Date.now() - startingTime)}`);
 			} else {
 				Logger.info(
 					`[ShardingManager] [ID: ${shard.id}] [PID: ${shard.process?.pid}] ready!`,
@@ -56,4 +55,6 @@ import ms from 'ms';
 
 	Logger.info(`[ShardingManager] Spawning shards...`);
 	await manager.spawn();
+
+	Logger.info(`Done! ${ms(Date.now() - startingTime)}`);
 })();
