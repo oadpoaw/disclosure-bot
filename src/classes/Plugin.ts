@@ -62,6 +62,20 @@ export abstract class Plugin<
 	}
 
 	/**
+	 * - Modified Logger that prepends all logging calls with the name of the plugin doing the logging.
+	 */
+	protected get logger() {
+		return {
+			info: (message: string) =>
+				this.client.logger.info(`[${this.metadata.name}] ${message}`),
+			warn: (message: string) =>
+				this.client.logger.warn(`[${this.metadata.name}] ${message}`),
+			error: (message: string) =>
+				this.client.logger.error(`[${this.metadata.name}] ${message}`),
+		};
+	}
+
+	/**
 	 * - An array of commands of the plugin.
 	 */
 	public get commands(): Command[] {
@@ -98,10 +112,8 @@ export abstract class Plugin<
 				try {
 					return await exec(interaction);
 				} catch (err) {
-					this.client.logger
-						.error(
-							`[${this.metadata.name}] Command - ${interaction.commandName}`,
-						)
+					this.logger
+						.error(`Command - ${interaction.commandName}`)
 						.error(err);
 
 					if (typeof this.onError === 'function') {
@@ -126,9 +138,7 @@ export abstract class Plugin<
 				try {
 					await listener(...args);
 				} catch (err: any) {
-					this.client.logger
-						.error(`[${this.metadata.name}] Event - ${eventName}`)
-						.error(err);
+					this.logger.error(`Event - ${eventName}`).error(err);
 
 					if (typeof this.onError === 'function') {
 						this.onError(err);
@@ -148,11 +158,7 @@ export abstract class Plugin<
 			try {
 				return inhibitor(interaction, command);
 			} catch (err) {
-				this.client.logger
-					.error(
-						`[${this.metadata.name}] Inhibitor - ${inhibitor.name}`,
-					)
-					.error(err);
+				this.logger.error(`Inhibitor - ${inhibitor.name}`).error(err);
 
 				if (typeof this.onError === 'function') {
 					this.onError(err);
