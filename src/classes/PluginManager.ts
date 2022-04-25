@@ -38,6 +38,7 @@ export class PluginManager {
 				if (constr.prototype instanceof Plugin) {
 					const plugin = new constr(this.client);
 
+					// @ts-ignore
 					plugin.pluginPath = pluginPath;
 
 					PluginMetaDataValidator.refine(

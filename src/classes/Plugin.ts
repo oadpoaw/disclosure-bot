@@ -51,7 +51,7 @@ export abstract class Plugin<
 	/**
 	 * - Plugin's file path.
 	 */
-	public pluginPath!: string;
+	public readonly pluginPath!: string;
 
 	protected constructor(
 		protected client: Client,
