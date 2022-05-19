@@ -1,3 +1,7 @@
+# [0.6.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.5.0...v0.6.0) (2022-05-19)
+
+
+
 # [0.5.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.4.0...v0.5.0) (2022-05-15)
 
 
