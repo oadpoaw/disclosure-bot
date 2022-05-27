@@ -1,3 +1,12 @@
+## [0.6.1](https://github.com/oadpoaw/disclosure-bot/compare/v0.6.0...v0.6.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* type fixes ([10079e3](https://github.com/oadpoaw/disclosure-bot/commit/10079e3b492675cae7f7a9103085d79ada55bc43))
+
+
+
 # [0.6.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.5.0...v0.6.0) (2022-05-19)
 
 
