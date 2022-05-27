@@ -176,7 +176,7 @@ export abstract class Plugin<
 		this.defaultConfigs[name].validation.parse(cfg);
 
 		writeFile(
-			['plugins', this.metadata.name, `${name}.yml`],
+			['plugins', this.metadata.name, `${<string>name}.yml`],
 			yaml.stringify(cfg),
 		);
 
@@ -195,7 +195,7 @@ export abstract class Plugin<
 			return this._configs[name as string];
 		}
 
-		const filePath = ['plugins', this.metadata.name, `${name}.yml`];
+		const filePath = ['plugins', this.metadata.name, `${<string>name}.yml`];
 
 		if (existsFile(filePath)) {
 			const buffer = readFile(filePath);
