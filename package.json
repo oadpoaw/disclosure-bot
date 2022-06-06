@@ -67,7 +67,7 @@
 		"prettier": "^2.6.2",
 		"rimraf": "^3.0.2",
 		"typedoc": "^0.22.17",
-		"typescript": "^4.7.2"
+		"typescript": "^4.7.3"
 	},
 	"imports": {
 		"#disclosure/*": "./dist/public/*.js"
