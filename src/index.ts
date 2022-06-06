@@ -3,8 +3,8 @@ import packageJSON from '../package.json';
 import { Config } from './Config.js';
 import Logger from './Logger.js';
 
-if (Number(process.versions.node.split('.')[0]) < 17) {
-	throw new Error(`DisclosureBot only supports Node.js 17 and above`);
+if (Number(process.versions.node.split('.')[0]) < 16) {
+	throw new Error(`DisclosureBot only supports Node.js 16 and above`);
 }
 
 (async function Start() {

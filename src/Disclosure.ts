@@ -2,8 +2,8 @@ import ms from 'ms';
 import { Client } from './classes/Client.js';
 import { clientOptions } from '../config.js';
 
-if (Number(process.versions.node.split('.')[0]) < 17) {
-	throw new Error(`DisclosureBot only supports Node.js 17 and above`);
+if (Number(process.versions.node.split('.')[0]) < 16) {
+	throw new Error(`DisclosureBot only supports Node.js 16 and above`);
 }
 
 (async function Start() {
