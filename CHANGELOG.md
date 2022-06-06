@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.7.0...v0.8.0) (2022-06-06)
+
+
+### Features
+
+* support node 16 ([3aa539f](https://github.com/oadpoaw/disclosure-bot/commit/3aa539fe066cc51b23a42ed6fe9fa379a9d2a0aa))
+
+
+
 # [0.7.0](https://github.com/oadpoaw/disclosure-bot/compare/v0.6.1...v0.7.0) (2022-06-06)
 
 
