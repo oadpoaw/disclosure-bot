@@ -1,9 +1,0 @@
-{
-	"recommendations": [
-		"yzhang.markdown-all-in-one",
-		"dbaeumer.vscode-eslint",
-		"redhat.vscode-yaml",
-		"foxundermoon.shell-format",
-		"esbenp.prettier-vscode"
-	]
-}
